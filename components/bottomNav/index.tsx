@@ -14,6 +14,9 @@ export default function BottomNav() {
     }
 
 
+    if (['/login', '/register'].includes(path)) {
+        return null;
+    }
 
     return (
         <SafeAreaView edges={['bottom']} style={styles.container}>
@@ -27,21 +30,21 @@ export default function BottomNav() {
                 </Button>
 
                 <Button
-                    onPress={() => goToPage("s")}
-                    mode={path == "/s" ? 'contained-tonal' : 'outlined'}
-                    icon={path == "/s" ? "magnify" : "magnify"}
+                    onPress={() => goToPage("/watch")}
+                    mode={path == "/watch" ? 'contained-tonal' : 'outlined'}
+                    icon={path == "/watch" ? "play-circle" : "play-circle-outline"}
                 >
-                    Search
+                    Watch
                 </Button>
                 <Button
-                    onPress={() => goToPage("login")}
-                    mode={path == "/login" ? 'contained-tonal' : 'outlined'}
-                    icon={path == "/login" ? 'account' : 'account-outline'}
+                    onPress={() => goToPage("profile")}
+                    mode={path == "/profile" ? 'contained-tonal' : 'outlined'}
+                    icon={path == "/profile" ? 'account' : 'account-outline'}
                 >
                     Profile
                 </Button>
             </View>
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 

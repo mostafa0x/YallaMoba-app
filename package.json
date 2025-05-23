@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
+    "dot-env": "^0.0.1",
     "expo": "^53.0.9",
     "expo-constants": "~17.1.6",
     "expo-linking": "~7.1.5",
