@@ -12,14 +12,14 @@ type formvaluesFace = {
   password: string;
 };
 
-export const handleLogin = async (formValues: formvaluesFace, dispatch: any) => {
+export const handleLogin = async (formValues: formvaluesFace, dispatch: any, path: any) => {
   try {
     const res = await axios.post(`${API_BASE_URL}/users/login/`, formValues);
     const data: resLoginFace = res.data;
+    dispatch(changeUserLoading(true));
     dispatch(fillUserInfo({ userToken: data.userToken, userData: data.userData }));
     await storeUserInfo(data.userToken, data.userData);
-    dispatch(changeUserLoading(true));
-
+    console.log(path);
     console.log(data);
     callToast({
       type: 'success',

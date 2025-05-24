@@ -26,7 +26,7 @@ export default function Login() {
         setApiError(null)
         setIsSubmiting(true)
         try {
-            await handleLogin(formvalues, dispatch)
+            await handleLogin(formvalues, dispatch, path)
         } catch (err: any) {
             setApiError(err)
             setIsSubmiting(false)

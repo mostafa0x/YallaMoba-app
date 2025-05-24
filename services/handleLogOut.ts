@@ -4,12 +4,13 @@ import callToast from 'components/toast';
 
 export default async function handleLoutOut(dispath: any, router: any) {
   try {
-     dispath(changeUserLoading(true));
+    dispath(changeUserLoading(true));
 
     await clearUserInfo();
     dispath(fillUserInfo({ userData: null, userToken: null }));
     callToast({ type: 'success', text1: 'Yalla Moba', text2: 'Done Logotu' });
     router.push('/login');
+    dispath(changeUserLoading(false));
   } catch (err) {
     console.log(err);
   }

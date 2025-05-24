@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 import React, { useState } from 'react'
-import { TextInput } from 'react-native-paper';
+import { TextInput, HelperText } from 'react-native-paper';
 
 
 type propsFace = {
@@ -29,11 +29,10 @@ export default function TextField({ label, formik, name, placeholder }: propsFac
                 placeholder={placeholder}
 
             />
-            {
-                formik.touched?.[name] && formik.errors?.[name] && (
-                    <Text className='text-red-500'>{formik.errors?.[name]}</Text>
-                )
-            }
+            <HelperText type="error" visible={formik.touched?.[name] && formik.errors?.[name]}>
+                {formik.errors?.[name]}
+            </HelperText>
+
         </>
     )
 }
