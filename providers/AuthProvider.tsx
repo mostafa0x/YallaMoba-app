@@ -30,10 +30,12 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
     useEffect(() => {
         if (!isReady) return;
+        console.log(path);
 
-        const publicRoutes = ['/login', '/signup'];
+        const authRoute = ['/'];
+        const publicRoutes = ['/login', '/signup', '/+not-found'];
         const isPublicRoute = publicRoutes.includes(path);
-        const isAuthRoute = path === '/';
+        const isAuthRoute = authRoute.includes(path)
 
         if (isPublicRoute) {
             if (userToken) {
@@ -41,7 +43,10 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
             }
             dispatch(changeUserLoading(false));
         } else if (!userToken) {
-            router.replace('/login');
+            if (isAuthRoute) {
+                router.replace('/login');
+
+            }
         } else if (isAuthRoute) {
             dispatch(changeUserLoading(false));
         }

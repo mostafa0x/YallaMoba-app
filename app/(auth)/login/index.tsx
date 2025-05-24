@@ -9,6 +9,7 @@ import { useContext, useEffect, useState } from 'react';
 import { authContext } from 'contexts/Auth/authContext';
 import { useDispatch } from 'react-redux';
 import { changeUserLoading } from 'lib/Store/slices/UserSlice';
+import { Image } from 'expo-image';
 
 export default function Login() {
     const { isSubmiting, setIsSubmiting, apiError, setApiError } = useContext(authContext)
@@ -42,9 +43,13 @@ export default function Login() {
         }
     }, [])
     return (
-
         <View style={{ flex: 1, justifyContent: 'center', padding: 20, gap: 10 }}>
-            <Text className='text-blue-500 text-5xl text-center py-16 animate-shake animate-infinite'>Yalla Moba</Text>
+            <View className=' absolute top-[310px] left-[0px]'>
+                <Image contentFit="contain"
+                    style={{ width: 200, height: 150 }} source={require("../../../assets/laylaIntro.png")} />
+            </View>
+
+            <Text className='text-blue-500 text-5xl text-center py-16 pl-5 animate-shake animate-infinite'>Yalla Moba</Text>
             <TextField name='identifier' label="Email or Username" placeholder="enter you email or username" formik={formik} />
             <TextField name='password' label="Password" placeholder="enter you password" formik={formik} />
             <Button buttonColor='green' textColor='white' loading={isSubmiting} disabled={isSubmiting} onPress={() => {

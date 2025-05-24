@@ -8,10 +8,11 @@ export default async function handleLoutOut(dispath: any, router: any) {
 
     await clearUserInfo();
     dispath(fillUserInfo({ userData: null, userToken: null }));
-    callToast({ type: 'success', text1: 'Yalla Moba', text2: 'Done Logotu' });
+    callToast({ type: 'success', text1: 'Yalla Moba', text2: 'You are logged out' });
     router.push('/login');
     dispath(changeUserLoading(false));
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
+    callToast({ type: 'error', text1: 'Yalla Moba', text2: err });
   }
 }

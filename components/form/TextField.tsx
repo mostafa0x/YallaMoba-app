@@ -20,7 +20,7 @@ export default function TextField({ label, formik, name, placeholder }: propsFac
             <TextInput
                 value={formik.values?.[name]}
                 secureTextEntry={name === "password" && hidePassword}
-                right={name === "password" && <TextInput.Icon icon="eye" onPress={() => showPassword()} />}
+                right={name === "password" && <TextInput.Icon icon={hidePassword ? "eye" : "eye-outline"} onPress={() => showPassword()} />}
                 onChangeText={formik.handleChange(name)}
                 onBlur={formik.handleBlur(name)}
                 error={formik.touched?.[name] && !!formik.errors?.[name]}
