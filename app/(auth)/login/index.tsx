@@ -8,17 +8,29 @@ import TextField from 'components/form/TextField';
 import { useContext, useEffect, useState } from 'react';
 import { authContext } from 'contexts/Auth/authContext';
 import Toast from 'react-native-toast-message';
+import { useDispatch } from 'react-redux';
 
 export default function Login() {
     const { isSubmiting, setIsSubmiting } = useContext(authContext)
-
+    const dispatch = useDispatch()
     const formik = useFormik({
         initialValues: {
             identifier: "",
             password: ""
 
-        }, validationSchema, onSubmit: handleLogin
+        }, validationSchema, onSubmit: SubmitLogin
     })
+
+    async function SubmitLogin(formvalues: any) {
+        setIsSubmiting(true)
+        try {
+            await handleLogin(formvalues, dispatch)
+        } catch (err) {
+            setIsSubmiting(false)
+        } finally {
+            //empty 
+        }
+    }
 
     useEffect(() => {
 
@@ -30,16 +42,9 @@ export default function Login() {
         <View style={{ flex: 1, justifyContent: 'center', padding: 20, gap: 10 }}>
             <Text className='text-blue-500 text-5xl text-center py-16 animate-shake animate-infinite'>Yalla Moba</Text>
             <TextField name='identifier' label="Email or Username" placeholder="enter you email or username" formik={formik} />
-            <TextField name='password' label="Password" placeholder="enter you password" formik={formik} secureTextEntry={"secureTextEntry"} />
+            <TextField name='password' label="Password" placeholder="enter you password" formik={formik} />
             <Button buttonColor='green' textColor='white' loading={isSubmiting} onPress={() => {
-                setIsSubmiting(true)
                 formik.handleSubmit()
-                Toast.show({
-                    type: 'success',
-                    text1: 'تم الحفظ بنجاح',
-                    text2: 'تم حفظ البيانات بنجاح',
-                    visibilityTime: 2000,
-                });
             }}
             >Login</Button>
             <Text className='pt-4'>i not have account , <Link href="/register">
