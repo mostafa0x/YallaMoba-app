@@ -3,13 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fillUserInfo } from 'lib/Store/slices/UserSlice';
 import { userDataFace } from 'types/interfaces/store/UserFace';
 
-export const storeUserInfo = async (userToken: string, userData: userDataFace,) => {
+export const storeUserInfo = async (userToken: string, userData: userDataFace) => {
   try {
     await AsyncStorage.multiSet([
       ['@userData', JSON.stringify(userData)],
       ['@userToken', userToken],
     ]);
-
   } catch (error) {
     console.error('Error saving user info:', error);
   }
@@ -21,11 +20,6 @@ export const getUserInfo = async (dispatch: any) => {
     const [userToken, userDataRaw] = store.map((item) => item[1]);
     const userData = userDataRaw ? await JSON.parse(userDataRaw) : null;
     dispatch(fillUserInfo({ userToken, userData }));
-
-    // return {
-    //   userToken,
-    //   userData: userDataRaw ? JSON.parse(userDataRaw) : null,
-    // };
   } catch (error) {
     console.error('Error reading user info:', error);
     return null;
@@ -34,8 +28,10 @@ export const getUserInfo = async (dispatch: any) => {
 
 export const clearUserInfo = async () => {
   try {
-    await AsyncStorage.multiRemove(['userToken', 'userData']);
+    await AsyncStorage.multiRemove(['@userToken', '@userData']);
+    return true;
   } catch (error) {
     console.error('Error clearing user info:', error);
+    throw `Error clearing user info:, ${error}`;
   }
 };

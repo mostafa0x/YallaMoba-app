@@ -1,21 +1,17 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import { Button, Drawer } from 'react-native-paper'
-import { useRouter } from 'expo-router';
+import { useRouter } from 'expo-router'
+import { useDispatch } from 'react-redux'
+import handleLoutOut from 'services/handleLogOut'
 
 export default function Menu() {
-    const [active, setActive] = React.useState('');
+    const [active, setActive] = React.useState('')
     const router = useRouter()
-
-    const handleLogout = () => {
-        setActive('3');
-        // أضف هنا منطق تسجيل الخروج
-        console.log('تم تسجيل الخروج');
-        // router.replace('/login'); // يمكنك توجيه المستخدم لصفحة تسجيل الدخول
-    };
+    const dispatch = useDispatch() // تصحيح typo من dispath إلى dispatch
 
     return (
-        <View className="flex-1 justify-between"> {/* التعديل الرئيسي هنا */}
+        <View className="flex-1 justify-between">
             <View>
                 <Button
                     className="items-start my-5"
@@ -39,12 +35,14 @@ export default function Menu() {
                 </Drawer.Section>
             </View>
 
-
             <View className="mb-6">
                 <Drawer.Item
                     label="Logout"
                     active={active === '3'}
-                    onPress={handleLogout}
+                    onPress={() => {
+                        setActive('3')
+                        handleLoutOut(dispatch, router)
+                    }}
                     style={{ backgroundColor: '#ffeeee' }}
                 />
             </View>

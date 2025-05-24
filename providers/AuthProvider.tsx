@@ -17,23 +17,27 @@ export default function AuthProvider({ children }: any) {
     async function cheackStore() {
         await getUserInfo(dispatch)
         setIsReady(true);
+
     }
     useEffect(() => {
-        cheackStore()
+        const TimeOut = setTimeout(() => {
+            cheackStore()
+
+        }, 200);
+
+        return () => {
+            clearTimeout(TimeOut)
+        }
     }, []);
 
     useEffect(() => {
-        if (isReady && ["/"].includes(path)) {
-            if (!userToken) {
-                router.replace("/login")
-            }
-        }
+
         if (["/login"].includes(path) && isReady) {
             if (!userToken) {
-                if (["/login"].includes(path) && isReady) {
-                    dispatch(changeUserLoading(false))
-                }
-            } else {
+
+                dispatch(changeUserLoading(false))
+
+            } else if (userToken) {
                 router.replace("/")
                 dispatch(changeUserLoading(false))
 
@@ -41,41 +45,18 @@ export default function AuthProvider({ children }: any) {
         }
         if (["/"].includes(path) && isReady) {
             if (!userToken) {
-                // if (["/login"].includes(path) && isReady) {
-                //     dispatch(changeUserLoading(false))
+                router.replace("/login")
             }
-        } else {
-            // router.replace("/")
+        } else if (userToken) {
             dispatch(changeUserLoading(false))
 
         }
 
 
 
-    }, [path, isReady, userToken]);
+    }, [path, isReady, userToken, router]);
 
 
-
-    // if (userLoading || !isReady) {
-
-    //     return (
-    //         <SpinnerLoading />
-    //     );
-    // }
-
-    // if (userLoading && isReady) {
-    //     if (userToken) {
-    //         path == "login" ? router.replace("/") : null
-    //     }
-    //     return (
-    //         <SpinnerLoading />
-    //     );
-    // }
-    // if (userLoading) {
-    //     return (
-    //         <SpinnerLoading />
-    //     );
-    // }
 
 
 
