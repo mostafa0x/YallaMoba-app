@@ -7,8 +7,8 @@ import { validationSchema } from 'lib/Validations/LoginSchema';
 import TextField from 'components/form/TextField';
 import { useContext, useEffect, useState } from 'react';
 import { authContext } from 'contexts/Auth/authContext';
-import Toast from 'react-native-toast-message';
 import { useDispatch } from 'react-redux';
+import { changeUserLoading } from 'lib/Store/slices/UserSlice';
 
 export default function Login() {
     const { isSubmiting, setIsSubmiting, apiError, setApiError } = useContext(authContext)
@@ -35,17 +35,18 @@ export default function Login() {
     }
 
     useEffect(() => {
-
+        dispatch(changeUserLoading(false))
         return () => {
             setIsSubmiting(false)
         }
     }, [])
     return (
+
         <View style={{ flex: 1, justifyContent: 'center', padding: 20, gap: 10 }}>
             <Text className='text-blue-500 text-5xl text-center py-16 animate-shake animate-infinite'>Yalla Moba</Text>
             <TextField name='identifier' label="Email or Username" placeholder="enter you email or username" formik={formik} />
             <TextField name='password' label="Password" placeholder="enter you password" formik={formik} />
-            <Button buttonColor='green' textColor='white' loading={isSubmiting} onPress={() => {
+            <Button buttonColor='green' textColor='white' loading={isSubmiting} disabled={isSubmiting} onPress={() => {
                 formik.handleSubmit()
             }}
             >Login</Button>

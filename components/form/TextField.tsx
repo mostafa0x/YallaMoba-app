@@ -21,6 +21,7 @@ export default function TextField({ label, formik, name, placeholder }: propsFac
                 label={label}
                 className={formik.values?.[name] == "" ? "placeholder:opacity-50" : "placeholder:opacity-100"}
                 placeholder={placeholder}
+
             />
             {
                 formik.touched?.[name] && formik.errors?.[name] && (
