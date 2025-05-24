@@ -22,11 +22,11 @@ export default function AuthProvider({ children }: any) {
     useEffect(() => {
         const TimeOut = setTimeout(() => {
             cheackStore()
-
-        }, 200);
+        }, 250);
 
         return () => {
             clearTimeout(TimeOut)
+            setIsReady(false)
         }
     }, []);
 
@@ -34,13 +34,10 @@ export default function AuthProvider({ children }: any) {
 
         if (["/login"].includes(path) && isReady) {
             if (!userToken) {
-
                 dispatch(changeUserLoading(false))
-
             } else if (userToken) {
                 router.replace("/")
                 dispatch(changeUserLoading(false))
-
             }
         }
         if (["/"].includes(path) && isReady) {

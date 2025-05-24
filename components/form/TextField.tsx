@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { TextInput } from 'react-native-paper';
 
 
@@ -10,11 +10,17 @@ type propsFace = {
     formik: any
 }
 export default function TextField({ label, formik, name, placeholder }: propsFace) {
+    const [hidePassword, setHidePassword] = useState(true)
+
+    const showPassword = () => {
+        hidePassword ? setHidePassword(false) : setHidePassword(true)
+    }
     return (
         <>
             <TextInput
                 value={formik.values?.[name]}
-                secureTextEntry={name === "password"}
+                secureTextEntry={name === "password" && hidePassword}
+                right={name === "password" && <TextInput.Icon icon="eye" onPress={() => showPassword()} />}
                 onChangeText={formik.handleChange(name)}
                 onBlur={formik.handleBlur(name)}
                 error={formik.touched?.[name] && !!formik.errors?.[name]}
