@@ -1,9 +1,9 @@
 import { View, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button } from 'react-native-paper'
 import { useTheme } from 'react-native-paper'
-import { usePathname, useRouter } from 'expo-router'
+import { useLocalSearchParams, usePathname, useRouter } from 'expo-router'
 import { useSelector } from 'react-redux'
 import { StateFace } from 'types/interfaces/store/StateFace'
 import { Image } from 'expo-image'
@@ -12,9 +12,11 @@ export default function BottomNav() {
     const { userData } = useSelector((state: StateFace) => state.UserReducer)
     const path = usePathname()
     const router = useRouter()
+    const { uid } = useLocalSearchParams()
     const goToPage = (url: string) => {
         router.push(url)
     }
+
 
     if (['/login', '/register'].includes(path)) {
         return null;
@@ -40,7 +42,7 @@ export default function BottomNav() {
                 </Button>
                 <Button
                     onPress={() => goToPage(`/profile/${userData?.UID}`)}
-                    mode={path == "/profile" ? 'contained-tonal' : 'outlined'}
+                    mode={path.startsWith("/profile/") ? 'contained-tonal' : 'outlined'}
                     icon={() => (
                         <Image
                             source={{ uri: userData?.avatar }}
@@ -52,6 +54,7 @@ export default function BottomNav() {
 
                     {userData?.username}
                 </Button>
+
             </View>
         </SafeAreaView>
     )
