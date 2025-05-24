@@ -17,14 +17,14 @@ export default function TextField({ label, formik, name, placeholder }: propsFac
                 secureTextEntry={name === "password"}
                 onChangeText={formik.handleChange(name)}
                 onBlur={formik.handleBlur(name)}
-                error={!!formik.errors?.[name]}
+                error={formik.touched?.[name] && !!formik.errors?.[name]}
                 label={label}
                 className={formik.values?.[name] == "" ? "placeholder:opacity-50" : "placeholder:opacity-100"}
                 placeholder={placeholder}
             />
             {
                 formik.touched?.[name] && formik.errors?.[name] && (
-                    <Text >{formik.errors?.[name]}</Text>
+                    <Text className='text-red-500'>{formik.errors?.[name]}</Text>
                 )
             }
         </>

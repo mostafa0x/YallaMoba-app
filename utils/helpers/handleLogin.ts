@@ -22,6 +22,6 @@ export const handleLogin = async (formValues: formvaluesFace, dispatch: any) => 
     console.log(errorMes);
     callToast({ type: 'error', text1: 'Login', text2: errorMes, visibilityTime: 5000 });
 
-    throw new Error(errorMes);
+    throw errorMes;
   }
 };

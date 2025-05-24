@@ -11,7 +11,7 @@ import Toast from 'react-native-toast-message';
 import { useDispatch } from 'react-redux';
 
 export default function Login() {
-    const { isSubmiting, setIsSubmiting } = useContext(authContext)
+    const { isSubmiting, setIsSubmiting, apiError, setApiError } = useContext(authContext)
     const dispatch = useDispatch()
     const formik = useFormik({
         initialValues: {
@@ -22,10 +22,12 @@ export default function Login() {
     })
 
     async function SubmitLogin(formvalues: any) {
+        setApiError(null)
         setIsSubmiting(true)
         try {
             await handleLogin(formvalues, dispatch)
-        } catch (err) {
+        } catch (err: any) {
+            setApiError(err)
             setIsSubmiting(false)
         } finally {
             //empty 
@@ -47,6 +49,7 @@ export default function Login() {
                 formik.handleSubmit()
             }}
             >Login</Button>
+            {apiError && <Text className='text-lg text-red-500 text-center'>{apiError}</Text>}
             <Text className='pt-4'>i not have account , <Link href="/register">
                 <Text style={{ textDecorationLine: 'underline' }}>Create Now</Text>
             </Link></Text>
