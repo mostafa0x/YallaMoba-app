@@ -1,26 +1,31 @@
 // src/services/storage.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fillUserInfo } from 'lib/Store/slices/UserSlice';
 import { userDataFace } from 'types/interfaces/store/UserFace';
 
-export const storeUserInfo = async (userToken: string, userData: userDataFace) => {
+export const storeUserInfo = async (userToken: string, userData: userDataFace,) => {
   try {
     await AsyncStorage.multiSet([
       ['@userData', JSON.stringify(userData)],
       ['@userToken', userToken],
     ]);
+
   } catch (error) {
     console.error('Error saving user info:', error);
   }
 };
 
-export const getUserInfo = async () => {
+export const getUserInfo = async (dispatch: any) => {
   try {
     const store = await AsyncStorage.multiGet(['@userToken', '@userData']);
-    const [userToken, userData] = store.map((item) => item[1]);
-    return {
-      userToken,
-      userData: userData ? JSON.parse(userData) : null,
-    };
+    const [userToken, userDataRaw] = store.map((item) => item[1]);
+    const userData = userDataRaw ? await JSON.parse(userDataRaw) : null;
+    dispatch(fillUserInfo({ userToken, userData }));
+
+    // return {
+    //   userToken,
+    //   userData: userDataRaw ? JSON.parse(userDataRaw) : null,
+    // };
   } catch (error) {
     console.error('Error reading user info:', error);
     return null;

@@ -5,6 +5,7 @@ import { changeUserLoading, fillUserInfo } from 'lib/Store/slices/UserSlice';
 import Toast from 'react-native-toast-message';
 import { useDispatch } from 'react-redux';
 import resLoginFace from 'types/interfaces/responses/resLoginFace';
+import { storeUserInfo } from './storage';
 
 type formvaluesFace = {
   identifier: string;
@@ -16,6 +17,7 @@ export const handleLogin = async (formValues: formvaluesFace, dispatch: any) => 
     const res = await axios.post(`${API_BASE_URL}/users/login/`, formValues);
     const data: resLoginFace = res.data;
     dispatch(fillUserInfo({ userToken: data.userToken, userData: data.userData }));
+    await storeUserInfo(data.userToken, data.userData);
     dispatch(changeUserLoading(true));
 
     console.log(data);

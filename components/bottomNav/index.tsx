@@ -39,7 +39,7 @@ export default function BottomNav() {
                     Watch
                 </Button>
                 <Button
-                    onPress={() => goToPage("profile")}
+                    onPress={() => goToPage(`/profile/${userData?.UID}`)}
                     mode={path == "/profile" ? 'contained-tonal' : 'outlined'}
                     icon={() => (
                         <Image

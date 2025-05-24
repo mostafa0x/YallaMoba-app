@@ -5,6 +5,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { changeUserLoading } from 'lib/Store/slices/UserSlice';
 import SpinnerLoading from 'components/spinnerLoading';
+import { getUserInfo } from 'services/storage';
 
 export default function AuthProvider({ children }: any) {
     const { userToken, userLoading } = useSelector((state: StateFace) => state.UserReducer);
@@ -12,8 +13,13 @@ export default function AuthProvider({ children }: any) {
     const [isReady, setIsReady] = useState(false);
     const router = useRouter()
     const path = usePathname()
-    useEffect(() => {
+
+    async function cheackStore() {
+        await getUserInfo(dispatch)
         setIsReady(true);
+    }
+    useEffect(() => {
+        cheackStore()
     }, []);
 
     useEffect(() => {
@@ -33,6 +39,18 @@ export default function AuthProvider({ children }: any) {
 
             }
         }
+        if (["/"].includes(path) && isReady) {
+            if (!userToken) {
+                // if (["/login"].includes(path) && isReady) {
+                //     dispatch(changeUserLoading(false))
+            }
+        } else {
+            // router.replace("/")
+            dispatch(changeUserLoading(false))
+
+        }
+
+
 
     }, [path, isReady, userToken]);
 

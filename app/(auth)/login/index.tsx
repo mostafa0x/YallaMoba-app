@@ -2,7 +2,7 @@ import { View, Text } from 'react-native';
 import { Link, usePathname } from 'expo-router';
 import { TextInput, Button } from 'react-native-paper';
 import { useFormik } from 'formik';
-import { handleLogin } from 'utils/helpers/handleLogin';
+import { handleLogin } from 'services/handleLogin';
 import { validationSchema } from 'lib/Validations/LoginSchema';
 import TextField from 'components/form/TextField';
 import { useContext, useEffect, useState } from 'react';
