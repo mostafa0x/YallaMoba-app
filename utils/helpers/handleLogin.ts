@@ -17,6 +17,7 @@ export const handleLogin = async (formValues: formvaluesFace, dispatch: any) => 
     const data: resLoginFace = res.data;
     dispatch(fillUserInfo({ userToken: data.userToken, userData: data.userData }));
     dispatch(changeUserLoading(true));
+
     console.log(data);
     callToast({
       type: 'success',

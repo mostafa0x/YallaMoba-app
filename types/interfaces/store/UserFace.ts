@@ -1,8 +1,6 @@
 export interface UserFace {
   userToken: null | string;
-  userData: {
-    userData: userDataFace;
-  } | null;
+  userData: userDataFace | null;
   userLoading: boolean;
 }
 

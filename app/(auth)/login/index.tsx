@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, usePathname } from 'expo-router';
 import { TextInput, Button } from 'react-native-paper';
 import { useFormik } from 'formik';
 import { handleLogin } from 'utils/helpers/handleLogin';
@@ -13,6 +13,7 @@ import { changeUserLoading } from 'lib/Store/slices/UserSlice';
 export default function Login() {
     const { isSubmiting, setIsSubmiting, apiError, setApiError } = useContext(authContext)
     const dispatch = useDispatch()
+    const path = usePathname()
     const formik = useFormik({
         initialValues: {
             identifier: "",

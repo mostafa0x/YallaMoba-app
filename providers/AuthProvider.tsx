@@ -26,13 +26,15 @@ export default function AuthProvider({ children }: any) {
             if (!userToken) {
                 if (["/login"].includes(path) && isReady) {
                     dispatch(changeUserLoading(false))
-                } else {
-                    router.replace("/")
                 }
+            } else {
+                router.replace("/")
+                dispatch(changeUserLoading(false))
+
             }
         }
 
-    }, [path, isReady]);
+    }, [path, isReady, userToken]);
 
 
 

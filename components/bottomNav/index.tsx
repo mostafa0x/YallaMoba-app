@@ -4,9 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button } from 'react-native-paper'
 import { useTheme } from 'react-native-paper'
 import { usePathname, useRouter } from 'expo-router'
+import { useSelector } from 'react-redux'
+import { StateFace } from 'types/interfaces/store/StateFace'
+import { Image } from 'expo-image'
 
 export default function BottomNav() {
-    const { colors } = useTheme()
+    const { userData } = useSelector((state: StateFace) => state.UserReducer)
     const path = usePathname()
     const router = useRouter()
     const goToPage = (url: string) => {
@@ -38,9 +41,16 @@ export default function BottomNav() {
                 <Button
                     onPress={() => goToPage("profile")}
                     mode={path == "/profile" ? 'contained-tonal' : 'outlined'}
-                    icon={path == "/profile" ? 'account' : 'account-outline'}
+                    icon={() => (
+                        <Image
+                            source={{ uri: userData?.avatar }}
+                            style={{ width: 34, height: 34, borderRadius: 12 }}
+                        />
+                    )}
+
                 >
-                    Profile
+
+                    {userData?.username}
                 </Button>
             </View>
         </SafeAreaView>
