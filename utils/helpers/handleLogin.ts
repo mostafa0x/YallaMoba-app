@@ -1,5 +1,7 @@
 import axios from 'axios';
+import { fillUserInfo } from 'lib/Store/slices/UserSlice';
 import Toast from 'react-native-toast-message';
+import resLoginFace from 'types/interfaces/responses/resLoginFace';
 
 type formvaluesFace = {
   identifier: string;
@@ -9,6 +11,8 @@ type formvaluesFace = {
 export const handleLogin = async (formvalues: formvaluesFace) => {
   try {
     const res = await axios.post(`${process.env.BASE_URL}/users/login/`);
-    console.log(res.data);
+    const data: resLoginFace = res.data.data;
+    fillUserInfo({ userToken: data.userToken, userData: data.userData });
+    console.log(data);
   } catch (err) {}
 };

@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import { handleLogin } from 'utils/helpers/handleLogin';
 import { validationSchema } from 'lib/Validations/LoginSchema';
 import TextField from 'components/form/TextField';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { authContext } from 'contexts/Auth/authContext';
 import Toast from 'react-native-toast-message';
 
@@ -19,6 +19,13 @@ export default function Login() {
 
         }, validationSchema, onSubmit: handleLogin
     })
+
+    useEffect(() => {
+
+        return () => {
+            setIsSubmiting(false)
+        }
+    }, [])
     return (
         <View style={{ flex: 1, justifyContent: 'center', padding: 20, gap: 10 }}>
             <Text className='text-blue-500 text-5xl text-center py-16 animate-shake animate-infinite'>Yalla Moba</Text>

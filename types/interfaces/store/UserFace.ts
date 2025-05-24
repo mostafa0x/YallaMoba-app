@@ -1,15 +1,17 @@
-export default interface UserFace {
+export interface UserFace {
   userToken: null | string;
   userData: {
-    userData: {
-      username: string;
-      email: string;
-      gender: string;
-      role: string;
-      avatar: string;
-      UID: string;
-      popularity: number;
-    };
+    userData: userDataFace;
   } | null;
   userLoading: boolean;
+}
+
+export interface userDataFace {
+  username: string;
+  email: string;
+  gender: string;
+  role: string;
+  avatar: string;
+  UID: string;
+  popularity: number;
 }

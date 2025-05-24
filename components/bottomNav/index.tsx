@@ -1,7 +1,7 @@
 import { View, StyleSheet } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Button, Text } from 'react-native-paper'
+import { Button } from 'react-native-paper'
 import { useTheme } from 'react-native-paper'
 import { usePathname, useRouter } from 'expo-router'
 
@@ -13,13 +13,12 @@ export default function BottomNav() {
         router.push(url)
     }
 
-
     if (['/login', '/register'].includes(path)) {
         return null;
     }
 
     return (
-        <SafeAreaView edges={['bottom']} style={styles.container}>
+        <SafeAreaView edges={['right', 'left']} style={styles.container}>
             <View style={styles.navContainer}>
                 <Button
                     onPress={() => goToPage("/")}
@@ -44,7 +43,7 @@ export default function BottomNav() {
                     Profile
                 </Button>
             </View>
-        </SafeAreaView >
+        </SafeAreaView>
     )
 }
 
@@ -52,16 +51,13 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
         borderTopWidth: 1,
-        borderTopColor: '#f0f0f0'
+        borderTopColor: '#f0f0f0',
     },
     navContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        paddingVertical: 8,
-        height: 60
+        paddingVertical: 4,  // تقليل المساحة الرأسية داخل الـ Nav
+        paddingBottom: 0,    // إضافة مسافة صغيرة جداً من الأسفل إذا لزم الأمر
     },
-
-
-
-})
+});

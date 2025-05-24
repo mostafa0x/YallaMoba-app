@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import UserFace from 'types/interfaces/store/UserFace';
+import fillFaces from 'types/interfaces/fillUserInfo';
+import { UserFace } from 'types/interfaces/store/UserFace';
+
 const initialState: UserFace = {
   userToken: null,
   userData: null,
@@ -9,6 +11,10 @@ const UserSlice = createSlice({
   name: 'UserSlice',
   initialState,
   reducers: {
+    fillUserInfo: (state, action: fillFaces) => {
+      state.userToken = action.payload.userToken;
+      state.userData = action.payload.userData;
+    },
     changeUserLoading: (state, action) => {
       state.userLoading = action.payload;
     },
@@ -16,4 +22,4 @@ const UserSlice = createSlice({
 });
 
 export const UserReducer = UserSlice.reducer;
-export const { changeUserLoading } = UserSlice.actions;
+export const { changeUserLoading, fillUserInfo } = UserSlice.actions;
