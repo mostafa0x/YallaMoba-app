@@ -1,7 +1,7 @@
 import { View, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Button } from 'react-native-paper'
+import { Avatar, Button } from 'react-native-paper'
 import { useTheme } from 'react-native-paper'
 import { useLocalSearchParams, usePathname, useRouter } from 'expo-router'
 import { useSelector } from 'react-redux'
@@ -40,7 +40,9 @@ export default function BottomNav() {
                 >
                     Watch
                 </Button>
-                <Button
+
+                <Avatar.Image onTouchStart={() => goToPage(`/profile/${userData?.UID}`)} size={42} source={{ uri: userData?.avatar }} />
+                {/* <Button
                     onPress={() => goToPage(`/profile/${userData?.UID}`)}
                     mode={path.startsWith("/profile/") ? 'contained-tonal' : 'outlined'}
                     icon={() => (
@@ -52,8 +54,8 @@ export default function BottomNav() {
 
                 >
 
-                    {userData?.username}
-                </Button>
+                    profile
+                </Button> */}
 
             </View>
         </SafeAreaView>

@@ -10,7 +10,7 @@ import IconRole from 'components/iconRole';
 
 export default function Proflie() {
     const { uid } = useLocalSearchParams()
-    const { userData } = useSelector((state: StateFace) => state.UserReducer)
+    const { userData, userFollowers, userFollowing } = useSelector((state: StateFace) => state.UserReducer)
 
     const router = useRouter()
     return (
@@ -47,16 +47,16 @@ export default function Proflie() {
                     <Text>posts</Text>
                 </View>
                 <View className='text-center'>
-                    <Text className='text-center'>9999</Text>
+                    <Text className='text-center'>{userFollowers.length}</Text>
                     <Text>Followers</Text>
                 </View>
                 <View className='text-center'>
-                    <Text className='text-center'>9999</Text>
+                    <Text className='text-center'>{userFollowing.length}</Text>
                     <Text>Following</Text>
                 </View>
             </View>
             <View className=' absolute top-[175px] left-56'>
-                <Button style={{ backgroundColor: "royalblue", width: 240 }}><Text className='text-white'>Follow</Text></Button>
+                <Button style={{ backgroundColor: "lavender", width: 240 }}><Text className='text-black'>Edit Profile</Text></Button>
 
             </View>
 

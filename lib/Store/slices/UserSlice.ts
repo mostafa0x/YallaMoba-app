@@ -6,6 +6,8 @@ const initialState: UserFace = {
   userToken: null,
   userData: null,
   userLoading: true,
+  userFollowers: [],
+  userFollowing: [],
 };
 const UserSlice = createSlice({
   name: 'UserSlice',
