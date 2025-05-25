@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { View, Text } from 'react-native'
+import { View, Text, FlatList } from 'react-native'
 import { Button, Icon } from 'react-native-paper';
 import { Avatar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,11 +13,12 @@ import { Image } from 'expo-image';
 import axios from 'axios';
 import { API_BASE_URL } from 'config';
 import { ProfileFace } from 'types/interfaces/store/ProfileFace';
+import PostView from 'components/Post/postView';
 
 
 export default function Proflie() {
     const { uid } = useLocalSearchParams()
-    const { userData, userFollowers, userFollowing, userPosts, headers } = useSelector((state: StateFace) => state.UserReducer)
+    const { userToken, userData, userFollowers, userFollowing, userPosts, headers } = useSelector((state: StateFace) => state.UserReducer)
     const { ownerData, ownerPosts } = useSelector((state: StateFace) => state.ProfileReducer)
     const router = useRouter()
     const { pageLoading, isMyProfile, setIsMyProfile, setPageLoading } = useContext(profileContext)
@@ -47,6 +48,8 @@ export default function Proflie() {
         }
     }
     useEffect(() => {
+        console.log(userToken);
+
         CheckMyProfile()
         if (isMyProfile) {
             dispatch(fillProfile({ ownerData: userData, ownerPosts: null }))
@@ -65,7 +68,7 @@ export default function Proflie() {
         return <SpinnerLoading />
     }
     return (<>
-        <View className='flex-2'>
+        <View className='flex justify-between'>
             <View className='flex justify-between flex-row mt-5'>
                 <Button onPress={() => router.back()} icon="keyboard-return"><Text className='text-black' style={{ fontSize: 28 }}>{ownerData?.username}</Text></Button>
                 <Button onPress={() => router.push("/menu")} ><Text className='text-black' style={{ fontSize: 28 }}>...</Text></Button>
@@ -113,13 +116,23 @@ export default function Proflie() {
 
 
         </View >
-        <View className='flex-1'>
-            <View className=' absolute justify-center items-center top-[180px] left-[165px]'>
-                <Image style={{ width: 254, height: 254, objectFit: 'cover', borderRadius: "100%" }} source={require("../../../../assets/gifs/kaguraGif.gif")} />
-                <Text>Loading...</Text>
-            </View>
+        <View className='mt-5 mb-64 '>
+            <FlatList
+                data={ownerPosts}
+                numColumns={3}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => <PostView post={item} />}
+                columnWrapperStyle={{}}
+            />
+
         </View>
     </>
 
     )
 }
+
+
+{/* <View className=' absolute justify-center items-center top-[180px] left-[165px]'>
+                <Image style={{ width: 254, height: 254, objectFit: 'cover', borderRadius: "100%" }} source={require("../../../../assets/gifs/kaguraGif.gif")} />
+                <Text>Loading...</Text>
+            </View> */}

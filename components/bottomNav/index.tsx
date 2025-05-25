@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderTopWidth: 1,
         borderTopColor: '#f0f0f0',
+
     },
     navContainer: {
         flexDirection: 'row',
@@ -83,5 +84,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 4,
         paddingBottom: 0,
+
     },
 });
