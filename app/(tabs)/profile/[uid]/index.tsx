@@ -67,9 +67,21 @@ export default function Proflie() {
     return (
 
         <View style={{ backgroundColor: "#FFFFFF", height: "100%" }}>
+            <View className='flex justify-between flex-row border-b-2  border-slate-200'>
+                <View style={{ width: 60 }} className='flex-row items-center text-center pl-4 '>
+                    <Text onPress={() => router.back()} className='text-6xl font-normal' >{"<"}</Text>
+                    <Icon size={80} source={require('../../../../assets/splash.png')} />
 
+                </View>
+
+                <Text style={{ width: 200 }} className='text-2xl items-center  text-center mt-8'>{userData?.username.toLocaleUpperCase()}</Text>
+                <View className=''>
+                    <Text onPress={() => router.push("/menu")} className='text-5xl items-center  text-center'>...!</Text>
+                </View>
+
+            </View>
             {/*Posts */}
-            <View className='mt-8'>
+            <View className=''>
                 <FlatList
 
                     data={ownerPosts}
@@ -77,23 +89,12 @@ export default function Proflie() {
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => <PostView post={item} />}
                     columnWrapperStyle={{}}
+                    style={{ backgroundColor: '#ffffff' }}
                     ListHeaderComponent={<>
                         {/* top bar */}
-                        <View className='flex justify-between flex-row border-b-2 mb-4 border-slate-200'>
-                            <View style={{ width: 60 }} className='flex-row items-center text-center pl-4 '>
-                                <Text onPress={() => router.back()} className='text-6xl font-normal' >{"<"}</Text>
-                                <Icon size={80} source={require('../../../../assets/splash.png')} />
 
-                            </View>
 
-                            <Text style={{ width: 200 }} className='text-2xl items-center  text-center mt-8'>{userData?.username.toLocaleUpperCase()}</Text>
-                            <View className=''>
-                                <Text onPress={() => router.push("/menu")} className='text-5xl items-center  text-center'>...!</Text>
-                            </View>
-
-                        </View>
-
-                        <View className=''>
+                        <View style={{ marginBottom: 100 }}>
 
                             <View className='flex-row items-center justify-around pr-10 '>
 
