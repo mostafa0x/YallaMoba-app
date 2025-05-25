@@ -56,5 +56,5 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         return <SpinnerLoading />;
     }
 
-    return children;
+    return children
 }

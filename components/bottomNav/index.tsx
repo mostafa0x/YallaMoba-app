@@ -16,6 +16,7 @@ export default function BottomNav() {
     const goToPage = (url: string) => {
         router.push(url)
     }
+    const IconSize = 35
 
 
     if (['/login', '/register'].includes(path)) {
@@ -34,12 +35,17 @@ export default function BottomNav() {
                 </Button> */}
                 <View onTouchStart={() => goToPage("/")}
                 >
-                    <Icon size={42} source={path == "/" ? "home" : "home-outline"} />
+                    <Icon color="#ce4500" size={IconSize} source={path == "/" ? "home" : "home-outline"} />
                 </View>
                 <View onTouchStart={() => goToPage("/watch")}
                 >
-                    <Icon size={42} source={path.startsWith("/watch") ? "movie" : "movie-outline"} />
+                    <Icon color="#ce4500" size={IconSize} source={path.startsWith("/watch") ? "wrench" : "wrench-outline"} />
                 </View>
+                <View onTouchStart={() => goToPage("/watch")}
+                >
+                    <Icon color="#ce4500" size={IconSize} source={path.startsWith("/watch") ? "movie" : "movie-outline"} />
+                </View>
+
 
 
                 {/* <Button

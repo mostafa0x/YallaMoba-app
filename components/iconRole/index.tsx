@@ -25,8 +25,9 @@ export default function IconRole({ Role }: props) {
     }, [])
     return (
         <Icon
+
             source={CurrentIcon}
-            size={25}
+            size={60}
         />
     )
 }
