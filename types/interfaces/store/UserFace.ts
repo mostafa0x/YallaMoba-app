@@ -4,11 +4,13 @@ export interface UserFace {
   userLoading: boolean;
 }
 
+export type RoleFace = 'MM' | 'exp' | 'jg' | 'Mid' | 'Roam';
+
 export interface userDataFace {
   username: string;
   email: string;
   gender: string;
-  role: string;
+  role: RoleFace;
   avatar: string;
   UID: string;
   popularity: number;

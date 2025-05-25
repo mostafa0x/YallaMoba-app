@@ -5,11 +5,13 @@ import { Button, Icon } from 'react-native-paper';
 import { Avatar } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { StateFace } from 'types/interfaces/store/StateFace';
+import IconRole from 'components/iconRole';
 
 
 export default function Proflie() {
     const { uid } = useLocalSearchParams()
     const { userData } = useSelector((state: StateFace) => state.UserReducer)
+
     const router = useRouter()
     return (
         <View className=''>
@@ -19,22 +21,21 @@ export default function Proflie() {
             </View>
             <View className='flex justify-around flex-row items-center mt-8'>
                 <View className=''>
-                    <View className=' absolute left-36'>
+                    <View className=' absolute left-[120px]'>
                         <Icon
-                            color={userData?.gender == "Male" ? "green" : "deeppink"}
+                            color={userData?.gender == "Male" ? "blue" : "deeppink"}
                             source={userData?.gender == "Male" ? "gender-male" : "gender-female"}
                             // source={userData?.gender == "Male" ? "face-man" : "face-woman"}
-
-                            size={20}
+                            size={25}
                         />
                     </View>
                     <View className=' absolute top-28 left-32'>
-                        <Icon
-                            source={userData?.gender == "Male" ? "gender-male" : "gender-female"}
+                        {/* <Icon
+                            source={require(`../../../../assets/roles/MM.png`)}
                             // source={userData?.gender == "Male" ? "face-man" : "face-woman"}
-
-                            size={20}
-                        />
+                            size={25}
+                        /> */}
+                        <IconRole Role={userData?.role ?? "Roam"} />
                     </View>
                     <Avatar.Image size={124} source={{ uri: userData?.avatar }} />
 
