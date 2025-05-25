@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { View, Text, FlatList, StyleSheet } from 'react-native'
+import { View, Text, FlatList, StyleSheet, ScrollView } from 'react-native'
 import { Button, Icon } from 'react-native-paper';
 import { Avatar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +23,7 @@ export default function Proflie() {
     const router = useRouter()
     const { pageLoading, isMyProfile, setIsMyProfile, setPageLoading } = useContext(profileContext)
     const dispatch = useDispatch()
+    const [showInfo, setShowInfo] = useState(true)
 
     function CheckMyProfile() {
         if (uid == userData?.UID) {
@@ -51,8 +52,8 @@ export default function Proflie() {
         if (isMyProfile) {
             dispatch(fillProfile({ ownerData: userData, ownerPosts: null }))
         }
-        setPageLoading(false)
-        //   FatchProfile()
+        // setPageLoading(false)
+        FatchProfile()
         return () => {
             setIsMyProfile(false)
             setPageLoading(true)
@@ -64,66 +65,72 @@ export default function Proflie() {
     }
 
     return (
+
         <View style={{ backgroundColor: "#FFFFFF", height: "100%" }}>
-            {/* top bar */}
-            <View className='flex justify-between flex-row border-b-2 mb-4 border-slate-200'>
-                <View style={{ width: 60 }} className='flex-row items-center text-center pl-4 '>
-                    <Text onPress={() => router.back()} className='text-6xl font-normal' >{"<"}</Text>
-                    <Icon size={80} source={require('../../../../assets/splash.png')} />
 
-                </View>
-
-                <Text style={{ width: 200 }} className='text-2xl items-center  text-center mt-8'>{userData?.username.toLocaleUpperCase()}</Text>
-                <View className=''>
-                    <Text onPress={() => router.push("/menu")} className='text-5xl items-center  text-center'>...!</Text>
-                </View>
-
-            </View>
-            {/*Header */}
-            <View className='pb-4'>
-                {/*avatar and text */}
-                <View className='flex-row items-center justify-around pr-10 '>
-
-                    <Avatar.Image size={115} source={{ uri: userData?.avatar }} />
-                    <View>
-                        <Text style={Style.headerTextTop}>371</Text>
-                        <Text style={Style.headerTextBottom}>posts.</Text>
-                    </View>
-                    <View>
-                        <Text style={Style.headerTextTop}>104.4K.</Text>
-                        <Text style={Style.headerTextBottom}>follwers.</Text>
-                    </View>
-                    <View>
-                        <Text style={Style.headerTextTop}  >272</Text>
-                        <Text style={Style.headerTextBottom}>following.</Text>
-                    </View>
-                </View>
-                {/*buttons */}
-                <View className=''>
-                    <View className='flex-row pl-[185px] gap-2 '>
-
-                        <Button textColor='white' style={Style.buttonsMain}>Follow</Button>
-                        <Button textColor='white' style={Style.buttons}>message</Button>
-                    </View>
-                    <View className='flex-row pl-[185px] gap-2 mt-6 '>
-
-                        <Button textColor='white' style={Style.buttonsMain}>999432432</Button>
-                    </View>
-                    {/* Role ICON */}
-                    <View className=' absolute top-[50px] left-[385px]'>
-                        <IconRole Role={ownerData?.role ?? "Roam"} />
-                    </View>
-
-                </View>
-            </View>
             {/*Posts */}
-            <View>
+            <View className='mt-8'>
                 <FlatList
+
                     data={ownerPosts}
                     numColumns={3}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => <PostView post={item} />}
                     columnWrapperStyle={{}}
+                    ListHeaderComponent={<>
+                        {/* top bar */}
+                        <View className='flex justify-between flex-row border-b-2 mb-4 border-slate-200'>
+                            <View style={{ width: 60 }} className='flex-row items-center text-center pl-4 '>
+                                <Text onPress={() => router.back()} className='text-6xl font-normal' >{"<"}</Text>
+                                <Icon size={80} source={require('../../../../assets/splash.png')} />
+
+                            </View>
+
+                            <Text style={{ width: 200 }} className='text-2xl items-center  text-center mt-8'>{userData?.username.toLocaleUpperCase()}</Text>
+                            <View className=''>
+                                <Text onPress={() => router.push("/menu")} className='text-5xl items-center  text-center'>...!</Text>
+                            </View>
+
+                        </View>
+
+                        <View className=''>
+
+                            <View className='flex-row items-center justify-around pr-10 '>
+
+                                <Avatar.Image size={115} source={{ uri: userData?.avatar }} />
+                                <View>
+                                    <Text style={Style.headerTextTop}>371</Text>
+                                    <Text style={Style.headerTextBottom}>posts.</Text>
+                                </View>
+                                <View>
+                                    <Text style={Style.headerTextTop}>104.4K.</Text>
+                                    <Text style={Style.headerTextBottom}>follwers.</Text>
+                                </View>
+                                <View>
+                                    <Text style={Style.headerTextTop}  >272</Text>
+                                    <Text style={Style.headerTextBottom}>following.</Text>
+                                </View>
+                            </View>
+
+                            <View className=''>
+                                <View className='flex-row pl-[185px] gap-2 '>
+
+                                    <Button textColor='white' style={Style.buttonsMain}>Follow</Button>
+                                    <Button textColor='white' style={Style.buttons}>message</Button>
+                                </View>
+                                <View className='flex-row pl-[185px] gap-2 mt-6 '>
+
+                                    <Button textColor='white' style={Style.buttonsMain}>999432432</Button>
+                                </View>
+                                {/* Role ICON */}
+                                <View className=' absolute top-[50px] left-[385px]'>
+                                    <IconRole Role={ownerData?.role ?? "Roam"} />
+                                </View>
+
+                            </View>
+                        </View>
+
+                    </>}
                 />
             </View>
         </View >
