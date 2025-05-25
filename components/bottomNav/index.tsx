@@ -1,7 +1,7 @@
 import { View, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Avatar, Button } from 'react-native-paper'
+import { Avatar, Button, Icon } from 'react-native-paper'
 import { useTheme } from 'react-native-paper'
 import { useLocalSearchParams, usePathname, useRouter } from 'expo-router'
 import { useSelector } from 'react-redux'
@@ -25,21 +25,30 @@ export default function BottomNav() {
     return (
         <SafeAreaView edges={['right', 'left']} style={styles.container}>
             <View style={styles.navContainer}>
-                <Button
+                {/* <Button
                     onPress={() => goToPage("/")}
                     mode={path == "/" ? 'contained-tonal' : 'outlined'}
                     icon={path == "/" ? "home" : "home-outline"}
                 >
                     Home
-                </Button>
+                </Button> */}
+                <View onTouchStart={() => goToPage("/")}
+                >
+                    <Icon size={42} source={path == "/" ? "home" : "home-outline"} />
+                </View>
+                <View onTouchStart={() => goToPage("/watch")}
+                >
+                    <Icon size={42} source={path.startsWith("/watch") ? "movie" : "movie-outline"} />
+                </View>
 
-                <Button
+
+                {/* <Button
                     onPress={() => goToPage("/watch")}
                     mode={path == "/watch" ? 'contained-tonal' : 'outlined'}
                     icon={path == "/watch" ? "play-circle" : "play-circle-outline"}
                 >
-                    Watch
-                </Button>
+                    x
+                </Button> */}
 
                 <Avatar.Image onTouchStart={() => goToPage(`/profile/${userData?.UID}`)} size={42} source={{ uri: userData?.avatar }} />
                 {/* <Button
@@ -72,7 +81,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        paddingVertical: 4,  // تقليل المساحة الرأسية داخل الـ Nav
-        paddingBottom: 0,    // إضافة مسافة صغيرة جداً من الأسفل إذا لزم الأمر
+        paddingVertical: 4,
+        paddingBottom: 0,
     },
 });
