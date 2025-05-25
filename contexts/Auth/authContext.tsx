@@ -1,6 +1,8 @@
 import { View, Text } from 'react-native'
 import React, { useState } from 'react'
 import { createContext } from "react";
+
+
 interface AuthContextFace {
     isSubmiting: boolean;
     setIsSubmiting: React.Dispatch<React.SetStateAction<boolean>>;

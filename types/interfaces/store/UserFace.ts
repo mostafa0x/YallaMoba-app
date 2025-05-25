@@ -1,9 +1,15 @@
+import { PostFace } from './ProfileFace';
+
 export interface UserFace {
   userToken: null | string;
   userData: userDataFace | null;
   userLoading: boolean;
   userFollowers: followersFace[];
   userFollowing: followersFace[];
+  userPosts: PostFace[];
+  headers: {
+    Authorization: string;
+  };
 }
 
 export type RoleFace = 'MM' | 'exp' | 'jg' | 'Mid' | 'Roam';

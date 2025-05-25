@@ -8,6 +8,8 @@ const initialState: UserFace = {
   userLoading: true,
   userFollowers: [],
   userFollowing: [],
+  userPosts: [],
+  headers: { Authorization: '' },
 };
 const UserSlice = createSlice({
   name: 'UserSlice',
@@ -16,6 +18,9 @@ const UserSlice = createSlice({
     fillUserInfo: (state, action: fillFaces) => {
       state.userToken = action.payload.userToken;
       state.userData = action.payload.userData;
+      state.headers = {
+        Authorization: `Bearer ${action.payload.userToken}`,
+      };
     },
     changeUserLoading: (state, action) => {
       state.userLoading = action.payload;

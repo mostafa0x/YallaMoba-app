@@ -1,8 +1,8 @@
 import { userDataFace } from './UserFace';
 
 export interface ProfileFace {
-  ownerData: userDataFace;
-  ownerPosts: PostFace[];
+  ownerData: userDataFace | null;
+  ownerPosts: PostFace[] | null;
 }
 
 export interface PostFace {

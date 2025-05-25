@@ -1,11 +1,14 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import AuthContextProvider from './Auth/authContext'
+import ProfileContextProvider from './Profile/ProfileContext'
 
 export default function ProvidersContexts({ children }: any) {
     return (
         <AuthContextProvider>
-            {children}
+            <ProfileContextProvider>
+                {children}
+            </ProfileContextProvider>
         </AuthContextProvider>
     )
 }
