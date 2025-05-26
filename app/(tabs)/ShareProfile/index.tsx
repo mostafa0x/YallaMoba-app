@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Button, Alert, Text } from 'react-native';
+import { View, Button, Alert, Text, TouchableOpacity } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
@@ -55,11 +55,17 @@ export default function ShareProfile() {
     return (
         <View style={{ flex: 1, backgroundColor: randomBg[bgColor] }} >
             <View>
-                <View className='flex-row justify-start'>
-                    <View onTouchStart={() => router.back()} className='m-5 bg-white border-white border-[1px] rounded-[50px]'>
-                        <Icon size={50} source={"close"} />
-                    </View>
-
+                <View className='flex-row justify-between'>
+                    <TouchableOpacity onPress={() => router.back()}>
+                        <View className='m-5 bg-white border-white border-[1px] rounded-[50px]'>
+                            <Icon size={50} source={"close"} />
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push("/ScanQr")}>
+                        <View className='m-5 bg-white border-white border-[1px] justify-center p-2 rounded-[15px]'>
+                            <Icon size={35} source={"scan-helper"} />
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </View>
             <View ref={qrRef} onTouchStart={() => getRandomInt(0, randomBg.length - 1)} style={{ flex: 1, backgroundColor: randomBg[bgColor] }}>

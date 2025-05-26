@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import { View, Text, FlatList, StyleSheet, ScrollView } from 'react-native'
+import { Link, useLocalSearchParams, useRouter } from 'expo-router'
+import { View, Text, FlatList, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { Button, Icon } from 'react-native-paper';
 import { Avatar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,18 +16,35 @@ import { ProfileFace } from 'types/interfaces/store/ProfileFace';
 import PostView from 'components/Post/postView';
 import * as Clipboard from "expo-clipboard"
 import callToast from 'components/toast';
+import useProfile from 'Hooks/useProfile';
 
 export default function Proflie() {
     const { uid } = useLocalSearchParams()
     const { userToken, userData, userFollowers, userFollowing, userPosts, headers } = useSelector((state: StateFace) => state.UserReducer)
     const { ownerData, ownerPosts } = useSelector((state: StateFace) => state.ProfileReducer)
     const router = useRouter()
-    const { pageLoading, isMyProfile, setIsMyProfile, setPageLoading } = useContext(profileContext)
+    const { isMyProfile, setIsMyProfile } = useContext(profileContext)
     const dispatch = useDispatch()
     const [showInfo, setShowInfo] = useState(true)
+    // const [isLoading, setIsLoading] = useState(true)
+    const { data, isLoading, error, isError } = useProfile(uid as string, headers)
+
+    useEffect(() => {
+        if (!data) {
+            dispatch(fillProfile({
+                ownerData: null,
+                ownerPosts: null,
+            }));
+        }
+        dispatch(fillProfile({
+            ownerData: data?.ownerData ?? null,
+            ownerPosts: data?.ownerPosts ?? null,
+        }));
+    }, [data])
+
 
     function CheckMyProfile() {
-        if (uid == userData?.UID) {
+        if (uid === userData?.UID) {
             setIsMyProfile(true)
         } else setIsMyProfile(false)
     }
@@ -58,8 +75,6 @@ export default function Proflie() {
                 ownerData: data.ownerData,
                 ownerPosts: data.ownerPosts,
             }));
-
-            setPageLoading(false)
             return data
         } catch (err) {
             console.log(err);
@@ -68,24 +83,37 @@ export default function Proflie() {
     useEffect(() => {
         CheckMyProfile();
 
-        if (isMyProfile) {
-            dispatch(fillProfile({
-                ownerData: userData,
-                ownerPosts: [],
-            }));
-            setPageLoading(false);
-        }
-        FatchProfile()
+        // if (isMyProfile) {
+        //     dispatch(fillProfile({
+        //         ownerData: userData,
+        //         ownerPosts: null,
+        //     }));
+        // }
+        //     FatchProfile()
 
 
 
         return () => {
             setIsMyProfile(false);
-            setPageLoading(true);
+            // setIsLoading(true)
+
+            // dispatch(fillProfile({
+            //     ownerData: null,
+            //     ownerPosts: null,
+            // }));
         };
     }, []);
 
-    if (pageLoading) {
+    if (isError) {
+        return (
+            <View className='flex-1 justify-center items-center'>
+                <Text className='text-2xl text-red-500'>Error Loading Profile</Text>
+            </View>
+        )
+    }
+
+
+    if (isLoading) {
         return <SpinnerLoading />
     }
 
@@ -93,17 +121,15 @@ export default function Proflie() {
         <View style={{ backgroundColor: "#FFFFFF", flex: 1 }}>
             <View className='flex justify-between flex-row border-b-2  border-slate-200'>
                 <View style={{ width: 60 }} className='flex-row items-center text-center pl-2 '>
-                    <View onTouchStart={() => router.back()}>
+                    <TouchableOpacity onPress={() => router.back()}>
                         <Icon size={40} source="less-than" />
-                    </View>
-
-                    {/* <Text onPress={() => router.back()} className='text-6xl font-normal' >{"<"}</Text> */}
+                    </TouchableOpacity>
                     <Icon size={80} source={require('../../../../assets/splash.png')} />
                 </View>
                 <Text style={{ width: 200 }} className='text-2xl items-center  text-center mt-8'>{ownerData?.username.toLocaleUpperCase()}</Text>
-                <View className=''>
-                    <Text onPress={() => router.push("/menu")} className='text-5xl items-center  text-center'>...!</Text>
-                </View>
+                <TouchableOpacity onPress={() => router.push("/menu")}>
+                    <Text className='text-5xl items-center  text-center'>...!</Text>
+                </TouchableOpacity>
             </View>
             {/*Posts */}
             <View className=''>
@@ -119,6 +145,13 @@ export default function Proflie() {
                         <View style={{ marginBottom: 100, marginTop: 25 }}>
                             <View className='flex-row items-center justify-around pr-10 '>
                                 <Avatar.Image size={115} source={{ uri: ownerData?.avatar }} />
+                                <View className=' absolute left-[118px] top-[-5px]' >
+                                    <Icon
+                                        color={ownerData?.gender == "Male" ? "blue" : "deeppink"}
+                                        source={ownerData?.gender == "Male" ? "gender-male" : "gender-female"}
+                                        size={25}
+                                    />
+                                </View>
                                 <View>
                                     <Text style={Style.headerTextTop}>{ownerPosts?.length ?? 0}</Text>
                                     <Text style={Style.headerTextBottom}>posts.</Text>
@@ -180,10 +213,3 @@ const Style = StyleSheet.create({
         backgroundColor: "#ce4500"
     }
 })
-//   < View className = ' absolute left-[120px]' >
-//                     <Icon
-//                         color={ownerData?.gender == "Male" ? "blue" : "deeppink"}
-//                         source={ownerData?.gender == "Male" ? "gender-male" : "gender-female"}
-//                         size={25}
-//                     />
-//                 </>
