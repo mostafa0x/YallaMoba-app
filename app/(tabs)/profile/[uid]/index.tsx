@@ -25,8 +25,6 @@ export default function Proflie() {
     const router = useRouter()
     const { isMyProfile, setIsMyProfile } = useContext(profileContext)
     const dispatch = useDispatch()
-    const [showInfo, setShowInfo] = useState(true)
-    // const [isLoading, setIsLoading] = useState(true)
     const { data, isLoading, error, isError } = useProfile(uid as string, headers)
 
     useEffect(() => {
@@ -83,24 +81,9 @@ export default function Proflie() {
     useEffect(() => {
         CheckMyProfile();
 
-        // if (isMyProfile) {
-        //     dispatch(fillProfile({
-        //         ownerData: userData,
-        //         ownerPosts: null,
-        //     }));
-        // }
-        //     FatchProfile()
-
-
 
         return () => {
             setIsMyProfile(false);
-            // setIsLoading(true)
-
-            // dispatch(fillProfile({
-            //     ownerData: null,
-            //     ownerPosts: null,
-            // }));
         };
     }, []);
 

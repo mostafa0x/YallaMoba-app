@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Avatar, Button, Icon } from 'react-native-paper'
@@ -26,56 +26,25 @@ export default function BottomNav() {
     return (
         <SafeAreaView edges={['right', 'left']} style={styles.container}>
             <View style={styles.navContainer}>
-                {/* <Button
-                    onPress={() => goToPage("/")}
-                    mode={path == "/" ? 'contained-tonal' : 'outlined'}
-                    icon={path == "/" ? "home" : "home-outline"}
-                >
-                    Home
-                </Button> */}
-                <View onTouchStart={() => goToPage("/")}
+                <TouchableOpacity onPress={() => goToPage("/")}
                 >
                     <Icon color="#ce4500" size={IconSize} source={path == "/" ? "home" : "home-outline"} />
-                </View>
-                <View onTouchStart={() => goToPage("/watch")}
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => goToPage("/watch")}
                 >
                     <Icon color="#ce4500" size={IconSize} source={path.startsWith("/watch") ? "wrench" : "wrench-outline"} />
-                </View>
-                <View onTouchStart={() => goToPage("/AddPost")}
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => goToPage("/AddPost")}
                 >
                     <Icon color="#ce4500" size={IconSize} source={path.startsWith("/AddPost") ? "movie" : "movie-outline"} />
-                </View>
-                <View onTouchStart={() => goToPage("/watch")}
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => goToPage("/watch")}
                 >
                     <Icon color="#ce4500" size={IconSize} source={path.startsWith("/watch") ? "movie" : "movie-outline"} />
-                </View>
-
-
-
-                {/* <Button
-                    onPress={() => goToPage("/watch")}
-                    mode={path == "/watch" ? 'contained-tonal' : 'outlined'}
-                    icon={path == "/watch" ? "play-circle" : "play-circle-outline"}
-                >
-                    x
-                </Button> */}
-
-                <Avatar.Image onTouchStart={() => goToPage(`/profile/${userData?.UID}`)} size={42} source={{ uri: userData?.avatar }} />
-                {/* <Button
-                    onPress={() => goToPage(`/profile/${userData?.UID}`)}
-                    mode={path.startsWith("/profile/") ? 'contained-tonal' : 'outlined'}
-                    icon={() => (
-                        <Image
-                            source={{ uri: userData?.avatar }}
-                            style={{ width: 34, height: 34, borderRadius: 12 }}
-                        />
-                    )}
-
-                >
-
-                    profile
-                </Button> */}
-
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => goToPage(`/profile/${userData?.UID}`)}>
+                    <Avatar.Image size={42} source={{ uri: userData?.avatar }} />
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     )

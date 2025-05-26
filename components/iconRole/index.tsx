@@ -20,8 +20,6 @@ export default function IconRole({ Role }: props) {
 
 
     useEffect(() => {
-        console.log(Role);
-
     }, [])
     return (
         <Icon

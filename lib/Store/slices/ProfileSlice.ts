@@ -16,8 +16,6 @@ const ProfileSlices = createSlice({
   initialState,
   reducers: {
     fillProfile: (state, action: ActionProps) => {
-      console.log(action.payload.ownerData);
-
       state.ownerData = action.payload.ownerData;
       state.ownerPosts = action.payload.ownerPosts;
     },

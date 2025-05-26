@@ -30,7 +30,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
     useEffect(() => {
         if (!isReady) return;
-        console.log(path);
 
         const authRoute = ['/'];
         const publicRoutes = ['/login', '/signup', '/+not-found'];
