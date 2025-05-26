@@ -21,6 +21,7 @@ export interface userDataFace {
   role: RoleFace;
   avatar: string;
   UID: string;
+  uid?: string;
   popularity: string;
 }
 

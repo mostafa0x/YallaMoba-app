@@ -6,9 +6,9 @@ export interface ProfileFace {
 }
 
 export interface PostFace {
-  id: string;
+  id: number;
   body: string;
-  files: string[];
+  files: string[] | null;
   created_at: string;
   updated_at: string;
 }

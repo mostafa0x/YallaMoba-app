@@ -51,16 +51,14 @@ export default function Proflie() {
 
             const res = await axios.get(`${API_BASE_URL}/profiles/${uid}`, { headers })
             const data: ProfileFace = res.data
-            // console.log(data);
+            // console.log(data.ownerPosts);
 
-            if (data?.ownerData && data?.ownerPosts) {
-                dispatch(fillProfile({
-                    ownerData: data.ownerData,
-                    ownerPosts: data.ownerPosts ?? [],
-                }));
-            } else {
-                console.warn("Profile data incomplete", data);
-            }
+
+            dispatch(fillProfile({
+                ownerData: data.ownerData,
+                ownerPosts: data.ownerPosts,
+            }));
+
             setPageLoading(false)
             return data
         } catch (err) {
@@ -102,21 +100,15 @@ export default function Proflie() {
                     {/* <Text onPress={() => router.back()} className='text-6xl font-normal' >{"<"}</Text> */}
                     <Icon size={80} source={require('../../../../assets/splash.png')} />
                 </View>
-                <Text style={{ width: 200 }} className='text-2xl items-center  text-center mt-8'>{userData?.username.toLocaleUpperCase()}</Text>
+                <Text style={{ width: 200 }} className='text-2xl items-center  text-center mt-8'>{ownerData?.username.toLocaleUpperCase()}</Text>
                 <View className=''>
                     <Text onPress={() => router.push("/menu")} className='text-5xl items-center  text-center'>...!</Text>
                 </View>
             </View>
             {/*Posts */}
             <View className=''>
-                <FlatList
-                    data={ownerPosts ?? [{
-                        id: "",
-                        body: "string",
-                        files: [],
-                        created_at: "string",
-                        updated_at: "string"
-                    }]}
+                {ownerPosts ? <FlatList
+                    data={ownerPosts}
                     numColumns={3}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => <PostView post={item} />}
@@ -126,7 +118,7 @@ export default function Proflie() {
                         {/* Info Box */}
                         <View style={{ marginBottom: 100, marginTop: 25 }}>
                             <View className='flex-row items-center justify-around pr-10 '>
-                                <Avatar.Image size={115} source={{ uri: userData?.avatar }} />
+                                <Avatar.Image size={115} source={{ uri: ownerData?.avatar }} />
                                 <View>
                                     <Text style={Style.headerTextTop}>{ownerPosts?.length ?? 0}</Text>
                                     <Text style={Style.headerTextBottom}>posts.</Text>
@@ -143,10 +135,10 @@ export default function Proflie() {
                             <View className=''>
                                 <View className='flex-row pl-[185px] gap-2 '>
                                     {isMyProfile ? <Button textColor='white' style={Style.buttonsMain}>Edit Profile</Button> : <Button textColor='white' style={Style.buttonsMain}>Follow</Button>}
-                                    <Avatar.Icon onTouchStart={() => router.push({ pathname: "/ShareProfile", params: { username: userData?.username ?? "empty", uid: userData?.UID ?? 0 } })} size={45} style={{ backgroundColor: "#ce4500", borderRadius: 20, width: 65, height: 40, marginLeft: 5 }} icon={"share"} />
+                                    <Avatar.Icon onTouchStart={() => router.push({ pathname: "/ShareProfile", params: { username: ownerData?.username ?? "empty", uid: ownerData?.UID ?? 0 } })} size={45} style={{ backgroundColor: "#ce4500", borderRadius: 20, width: 65, height: 40, marginLeft: 5 }} icon={"share"} />
                                 </View>
                                 <View className='flex-row pl-[185px] gap-2 mt-6 '>
-                                    <Button onPress={() => { CopyID(userData?.UID ?? null) }} textColor='white' style={Style.buttonsMain}>{userData?.UID}</Button>
+                                    <Button onPress={() => { CopyID(ownerData?.UID ?? null) }} textColor='white' style={Style.buttonsMain}>{ownerData?.uid}</Button>
                                 </View>
                                 {/* Role ICON */}
                                 <View className=' absolute top-[50px] left-[385px]'>
@@ -156,7 +148,9 @@ export default function Proflie() {
                             </View>
                         </View>
                     </>}
-                />
+                /> : <View className='flex-1 justify-center items-center'>
+                    <Text className='text-2xl text-gray-500'>No Posts Yet</Text></View>}
+
 
             </View>
         </View >

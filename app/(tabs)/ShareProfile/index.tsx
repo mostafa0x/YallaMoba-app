@@ -68,7 +68,7 @@ export default function ShareProfile() {
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
 
                     <View className='border-white border-[30px]  bg-white ' collapsable={false}>
-                        <QRCode value={`yallamoba:///profile/1000001`} size={300} />
+                        <QRCode value={`yallamoba:///profile/${uid}`} size={300} />
                         <Text className='text-6xl text-center mt-5'>{username.toString().toLocaleUpperCase()}</Text>
 
                     </View>
