@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { StateFace } from '../types/interfaces/store/StateFace';
 import { useEffect, useState } from 'react';
 import { changeUserLoading } from 'lib/Store/slices/UserSlice';
-import SpinnerLoading from 'components/spinnerLoading';
+import SpinnerLoading from 'components/SpinnerLoading';
 import { getUserInfo } from 'services/storage';
 import { ActivityIndicator, View } from 'react-native';
 

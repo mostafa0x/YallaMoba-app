@@ -6,7 +6,7 @@ import { Avatar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { StateFace } from 'types/interfaces/store/StateFace';
 import IconRole from 'components/iconRole';
-import SpinnerLoading from 'components/spinnerLoading';
+import SpinnerLoading from 'components/SpinnerLoading';
 import { profileContext } from 'contexts/Profile/ProfileContext';
 import { fillProfile } from 'lib/Store/slices/ProfileSlice';
 import { Image } from 'expo-image';
@@ -37,7 +37,6 @@ export default function Proflie() {
             throw "Error Copy id !"
         }
         try {
-
             await Clipboard.setStringAsync(id)
             callToast({ type: 'success', text1: "Yalla Moba", text2: "Copy ID Done" })
         } catch (err: any) {
@@ -52,7 +51,6 @@ export default function Proflie() {
 
             const res = await axios.get(`${API_BASE_URL}/profiles/${uid}`, { headers })
             const data: ProfileFace = res.data
-            console.log(data.ownerPosts);
             dispatch(fillProfile(data))
             setPageLoading(false)
             return data
@@ -80,10 +78,14 @@ export default function Proflie() {
     }
 
     return (
-        <View style={{ backgroundColor: "#FFFFFF", height: "100%" }}>
+        <View style={{ backgroundColor: "#FFFFFF", flex: 1 }}>
             <View className='flex justify-between flex-row border-b-2  border-slate-200'>
                 <View style={{ width: 60 }} className='flex-row items-center text-center pl-4 '>
-                    <Text onPress={() => router.back()} className='text-6xl font-normal' >{"<"}</Text>
+                    <View onTouchStart={() => router.back()}>
+                        <Icon size={40} source="less-than" />
+                    </View>
+
+                    {/* <Text onPress={() => router.back()} className='text-6xl font-normal' >{"<"}</Text> */}
                     <Icon size={80} source={require('../../../../assets/splash.png')} />
                 </View>
                 <Text style={{ width: 200 }} className='text-2xl items-center  text-center mt-8'>{userData?.username.toLocaleUpperCase()}</Text>
@@ -106,7 +108,7 @@ export default function Proflie() {
                             <View className='flex-row items-center justify-around pr-10 '>
                                 <Avatar.Image size={115} source={{ uri: userData?.avatar }} />
                                 <View>
-                                    <Text style={Style.headerTextTop}>371</Text>
+                                    <Text style={Style.headerTextTop}>{ownerPosts?.length ?? 0}</Text>
                                     <Text style={Style.headerTextBottom}>posts.</Text>
                                 </View>
                                 <View>
@@ -121,7 +123,7 @@ export default function Proflie() {
                             <View className=''>
                                 <View className='flex-row pl-[185px] gap-2 '>
                                     {isMyProfile ? <Button textColor='white' style={Style.buttonsMain}>Edit Profile</Button> : <Button textColor='white' style={Style.buttonsMain}>Follow</Button>}
-                                    <Avatar.Icon size={45} style={{ backgroundColor: "#ce4500", borderRadius: 20, width: 65, height: 40, marginLeft: 5 }} icon={"send"} />
+                                    <Avatar.Icon onTouchStart={() => router.push({ pathname: "/ShareProfile", params: { username: userData?.username ?? "sss" } })} size={45} style={{ backgroundColor: "#ce4500", borderRadius: 20, width: 65, height: 40, marginLeft: 5 }} icon={"share"} />
                                 </View>
                                 <View className='flex-row pl-[185px] gap-2 mt-6 '>
                                     <Button onPress={() => { CopyID(userData?.UID ?? null) }} textColor='white' style={Style.buttonsMain}>{userData?.UID}</Button>

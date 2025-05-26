@@ -4,7 +4,7 @@ import { Image } from 'expo-image';
 import { Text } from 'react-native-paper';
 export default function SpinnerLoading() {
     return (
-        <View className='flex-1 justify-center items-center'>
+        <View style={{ flex: 1, backgroundColor: "#ffffff" }} className='justify-center items-center'>
             <Image
                 source={require('../../assets/gifs/Loading.gif')}
                 contentFit="contain"

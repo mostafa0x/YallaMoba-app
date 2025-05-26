@@ -41,6 +41,10 @@ export default function BottomNav() {
                 >
                     <Icon color="#ce4500" size={IconSize} source={path.startsWith("/watch") ? "wrench" : "wrench-outline"} />
                 </View>
+                <View onTouchStart={() => goToPage("/AddPost")}
+                >
+                    <Icon color="#ce4500" size={IconSize} source={path.startsWith("/AddPost") ? "movie" : "movie-outline"} />
+                </View>
                 <View onTouchStart={() => goToPage("/watch")}
                 >
                     <Icon color="#ce4500" size={IconSize} source={path.startsWith("/watch") ? "movie" : "movie-outline"} />
