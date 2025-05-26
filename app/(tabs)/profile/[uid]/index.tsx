@@ -51,7 +51,16 @@ export default function Proflie() {
 
             const res = await axios.get(`${API_BASE_URL}/profiles/${uid}`, { headers })
             const data: ProfileFace = res.data
-            dispatch(fillProfile(data))
+            // console.log(data);
+
+            if (data?.ownerData && data?.ownerPosts) {
+                dispatch(fillProfile({
+                    ownerData: data.ownerData,
+                    ownerPosts: data.ownerPosts ?? [],
+                }));
+            } else {
+                console.warn("Profile data incomplete", data);
+            }
             setPageLoading(false)
             return data
         } catch (err) {
@@ -59,19 +68,24 @@ export default function Proflie() {
         }
     }
     useEffect(() => {
-        // setPageLoading(false)
+        CheckMyProfile();
 
-        CheckMyProfile()
         if (isMyProfile) {
-            dispatch(fillProfile({ ownerData: userData, ownerPosts: null }))
+            dispatch(fillProfile({
+                ownerData: userData,
+                ownerPosts: [],
+            }));
+            setPageLoading(false);
         }
-        // setPageLoading(false)
         FatchProfile()
+
+
+
         return () => {
-            setIsMyProfile(false)
-            setPageLoading(true)
-        }
-    }, [])
+            setIsMyProfile(false);
+            setPageLoading(true);
+        };
+    }, []);
 
     if (pageLoading) {
         return <SpinnerLoading />
@@ -80,7 +94,7 @@ export default function Proflie() {
     return (
         <View style={{ backgroundColor: "#FFFFFF", flex: 1 }}>
             <View className='flex justify-between flex-row border-b-2  border-slate-200'>
-                <View style={{ width: 60 }} className='flex-row items-center text-center pl-4 '>
+                <View style={{ width: 60 }} className='flex-row items-center text-center pl-2 '>
                     <View onTouchStart={() => router.back()}>
                         <Icon size={40} source="less-than" />
                     </View>
@@ -96,7 +110,13 @@ export default function Proflie() {
             {/*Posts */}
             <View className=''>
                 <FlatList
-                    data={ownerPosts}
+                    data={ownerPosts ?? [{
+                        id: "",
+                        body: "string",
+                        files: [],
+                        created_at: "string",
+                        updated_at: "string"
+                    }]}
                     numColumns={3}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => <PostView post={item} />}
@@ -123,7 +143,7 @@ export default function Proflie() {
                             <View className=''>
                                 <View className='flex-row pl-[185px] gap-2 '>
                                     {isMyProfile ? <Button textColor='white' style={Style.buttonsMain}>Edit Profile</Button> : <Button textColor='white' style={Style.buttonsMain}>Follow</Button>}
-                                    <Avatar.Icon onTouchStart={() => router.push({ pathname: "/ShareProfile", params: { username: userData?.username ?? "sss" } })} size={45} style={{ backgroundColor: "#ce4500", borderRadius: 20, width: 65, height: 40, marginLeft: 5 }} icon={"share"} />
+                                    <Avatar.Icon onTouchStart={() => router.push({ pathname: "/ShareProfile", params: { username: userData?.username ?? "empty", uid: userData?.UID ?? 0 } })} size={45} style={{ backgroundColor: "#ce4500", borderRadius: 20, width: 65, height: 40, marginLeft: 5 }} icon={"share"} />
                                 </View>
                                 <View className='flex-row pl-[185px] gap-2 mt-6 '>
                                     <Button onPress={() => { CopyID(userData?.UID ?? null) }} textColor='white' style={Style.buttonsMain}>{userData?.UID}</Button>
@@ -137,6 +157,7 @@ export default function Proflie() {
                         </View>
                     </>}
                 />
+
             </View>
         </View >
 

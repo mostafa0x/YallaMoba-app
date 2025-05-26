@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ProfileFace } from 'types/interfaces/store/ProfileFace';
+import { PostFace, ProfileFace } from 'types/interfaces/store/ProfileFace';
+import { userDataFace } from 'types/interfaces/store/UserFace';
 
 type ActionProps = {
-  payload: { ownerData: any; ownerPosts: any };
+  payload: { ownerData: userDataFace | null; ownerPosts: PostFace[] | null };
   type: string;
 };
 
@@ -15,6 +16,8 @@ const ProfileSlices = createSlice({
   initialState,
   reducers: {
     fillProfile: (state, action: ActionProps) => {
+      console.log(action.payload);
+
       state.ownerData = action.payload.ownerData;
       state.ownerPosts = action.payload.ownerPosts;
     },

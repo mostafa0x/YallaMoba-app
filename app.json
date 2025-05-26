@@ -1,8 +1,9 @@
 {
   "expo": {
-    "scheme": "myapp",
-    "name": "my-expo-app",
-    "slug": "my-expo-app",
+    "scheme": "yallamoba",
+    "deepLinks": ["https://yallamoba.com", "yallamoba://"],
+    "name": "Yalla Moba",
+    "slug": "yalla-moba",
     "version": "1.0.0",
     "web": {
       "favicon": "./assets/favicon.png"
@@ -10,7 +11,17 @@
     "experiments": {
       "tsconfigPaths": true
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ]
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

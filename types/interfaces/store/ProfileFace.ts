@@ -6,7 +6,7 @@ export interface ProfileFace {
 }
 
 export interface PostFace {
-  id: number;
+  id: string;
   body: string;
   files: string[];
   created_at: string;
