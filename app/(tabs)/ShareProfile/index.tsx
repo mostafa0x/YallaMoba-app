@@ -68,6 +68,7 @@ export default function ShareProfile() {
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
 
                     <View className='border-white border-[30px]  bg-white ' collapsable={false}>
+                        <Text className='text-6xl text-center mb-5'>YALLA MOBA</Text>
                         <QRCode value={`yallamoba:///profile/${uid}`} size={300} />
                         <Text className='text-6xl text-center mt-5'>{username.toString().toLocaleUpperCase()}</Text>
 
@@ -75,7 +76,7 @@ export default function ShareProfile() {
 
                 </View>
             </View >
-            <View style={{ marginTop: 40 }} className=' absolute top-[750px] left-[185px]'>
+            <View style={{ marginTop: 65 }} className='w-[250px]  absolute top-[750px] left-[130px]'>
                 <Button title="Share QR Code" onPress={shareQR} />
             </View>
         </View>
