@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import { List } from "react-native-paper";
 import { RoleFace } from "types/interfaces/store/UserFace";
-
+const AllRole = require('../../assets/roles/allroles.png')
 interface PropsFace {
   ActiveRole: string;
   handleChangeRole: (role: RoleFace) => any
@@ -15,7 +15,7 @@ export default function RoleList({
     marginHorizontal: 20,
     borderRadius: 20,
     paddingHorizontal: 15
-  }} title={`Roles (${ActiveRole == "" ? "select one" : ActiveRole})`} id={'1'} left={props => <List.Icon color='black' icon={require('../../../../assets/roles/allroles.png')} />}>
+  }} title={`Roles (${ActiveRole == "" ? "select one" : ActiveRole})`} id={'1'} left={props => <List.Icon color='black' icon={AllRole} />}>
     <TouchableOpacity onPress={() => handleChangeRole("Roam")}>
       <List.Item style={ActiveRole == "Roam" && {
         backgroundColor: 'lightgray'
