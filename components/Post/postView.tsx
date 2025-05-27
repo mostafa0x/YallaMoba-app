@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { PostFace } from 'types/interfaces/store/ProfileFace';
 import { Image } from 'expo-image';
-import { MaterialIcons } from '@expo/vector-icons'; // أيقونة تشغيل
+import { MaterialIcons } from '@expo/vector-icons';
 
 interface PostViewProps {
     post: PostFace;
@@ -10,14 +10,13 @@ interface PostViewProps {
 
 export default function PostView({ post }: PostViewProps) {
     const [showVideo, setShowVideo] = useState(false);
-    const firstFile = post.files?.[0];
+    const thumbnailPlaceholder =
+        'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM='
 
-    if (!firstFile) return null;
+    const firstFile = post.files?.[0] ?? thumbnailPlaceholder;
 
     const isVideo = /\.(mp4|mov|webm)$/i.test(firstFile);
 
-    const thumbnailPlaceholder =
-        'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM='
 
     return (
         <View style={{ position: 'relative' }}>

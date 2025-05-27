@@ -19,6 +19,7 @@ export default function RootLayout() {
                 <Provider store={store}>
                     <ProvidersContexts>
                         <AuthProvider>
+
                             <SafeAreaView style={{ flex: 1 }}>
                                 <Stack screenOptions={{ headerShown: false }} />
                                 <BottomNav />

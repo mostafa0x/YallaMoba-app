@@ -151,11 +151,16 @@ export default function Proflie() {
                             </View>
                             <View className=''>
                                 <View className='flex-row pl-[185px] gap-2 '>
-                                    {isMyProfile ? <Button textColor='white' style={Style.buttonsMain}>Edit Profile</Button> : <Button textColor='white' style={Style.buttonsMain}>Follow</Button>}
+                                    <TouchableOpacity >
+                                        {isMyProfile ? <Button onPress={() => router.push("/profile/EditProfile")} textColor='white' style={Style.buttonsMain}>Edit Profile</Button> : <Button textColor='white' style={Style.buttonsMain}>Follow</Button>}
+
+                                    </TouchableOpacity>
                                     <Avatar.Icon onTouchStart={() => router.push({ pathname: "/ShareProfile", params: { username: ownerData?.username ?? "empty", uid: ownerData?.UID ?? 0 } })} size={45} style={{ backgroundColor: "#ce4500", borderRadius: 20, width: 65, height: 40, marginLeft: 5 }} icon={"share"} />
                                 </View>
                                 <View className='flex-row pl-[185px] gap-2 mt-6 '>
-                                    <Button onPress={() => { CopyID(ownerData?.uid ?? null) }} textColor='white' style={Style.buttonsMain}>{ownerData?.uid}</Button>
+                                    <TouchableOpacity onPress={() => { CopyID(ownerData?.uid ?? null) }}>
+                                        <Button textColor='white' style={Style.buttonsMain}>{ownerData?.uid}</Button>
+                                    </TouchableOpacity>
                                 </View>
                                 {/* Role ICON */}
                                 <View className=' absolute top-[50px] left-[385px]'>
