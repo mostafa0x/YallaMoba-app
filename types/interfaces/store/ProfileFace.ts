@@ -3,6 +3,8 @@ import { userDataFace } from './UserFace';
 export interface ProfileFace {
   ownerData: userDataFace | null;
   ownerPosts: PostFace[] | null;
+  ownerFollowers: followersFace[] | null;
+  ownerFollowing: followersFace[] | null;
 }
 
 export interface PostFace {
@@ -11,4 +13,9 @@ export interface PostFace {
   files: string[] | null;
   created_at: string;
   updated_at: string;
+}
+export interface followersFace {
+  id: string;
+  username: string;
+  avatar: string;
 }

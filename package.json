@@ -37,7 +37,8 @@
     "react-native-toast-message": "^2.3.0",
     "react-native-view-shot": "^4.0.3",
     "react-redux": "^9.2.0",
-    "yup": "^1.6.1"
+    "yup": "^1.6.1",
+    "expo-video": "~2.1.9"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -48,13 +48,15 @@ export default function ScanQr() {
                     barcodeTypes: ['qr'],
                 }}
             >
-                <View className='flex justify-center items-center mt-5'>
-                    <Text className='text-4xl text-white '>Yalla Moba Scan</Text>
-                </View>
+
 
             </CameraView>
-
-
+            <View className='flex justify-center items-center absolute left-[175px] mt-5'>
+                <Text className='text-4xl text-white '>Yalla Moba Scan</Text>
+            </View>
+            <View className='flex justify-center items-center absolute top-[600px] left-[225px] mt-5'>
+                <Text className='text-xl opacity-50 text-white '>scan  code</Text>
+            </View>
             {scanned && (
                 <View style={{ padding: 20 }}>
                     <Button title="Scan QR Again" onPress={() => setScanned(false)} />

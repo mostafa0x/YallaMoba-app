@@ -10,6 +10,8 @@ type ActionProps = {
 const initialState: ProfileFace = {
   ownerData: null,
   ownerPosts: null,
+  ownerFollowers: null,
+  ownerFollowing: null,
 };
 const ProfileSlices = createSlice({
   name: 'ProfileSlices',
@@ -19,8 +21,14 @@ const ProfileSlices = createSlice({
       state.ownerData = action.payload.ownerData;
       state.ownerPosts = action.payload.ownerPosts;
     },
+    ChangeOwnerFollowers: (state, action) => {
+      state.ownerFollowers = action.payload;
+    },
+    ChangeOwnerFollowing: (state, action) => {
+      state.ownerFollowing = action.payload;
+    },
   },
 });
 
 export const ProfileReducer = ProfileSlices.reducer;
-export const { fillProfile } = ProfileSlices.actions;
+export const { fillProfile, ChangeOwnerFollowers, ChangeOwnerFollowing } = ProfileSlices.actions;

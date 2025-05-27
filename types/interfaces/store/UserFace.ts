@@ -4,8 +4,7 @@ export interface UserFace {
   userToken: null | string;
   userData: userDataFace | null;
   userLoading: boolean;
-  userFollowers: followersFace[];
-  userFollowing: followersFace[];
+
   userPosts: PostFace[];
   headers: {
     Authorization: string;
@@ -27,9 +26,3 @@ export interface userDataFace {
 
 // followers: followersFace;
 // following: followersFace;
-
-export interface followersFace {
-  id: string;
-  username: string;
-  avatar: string;
-}
