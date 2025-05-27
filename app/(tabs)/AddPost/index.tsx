@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Image, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Video, ResizeMode } from 'expo-av';
+import { useVideoPlayer, VideoView } from 'expo-video';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { Icon } from 'react-native-paper';
 import { useRouter } from 'expo-router';
@@ -17,6 +17,10 @@ const AddPostScreen: React.FC = () => {
     const [caption, setCaption] = useState<string>('');
     const { showActionSheetWithOptions } = useActionSheet();
     const router = useRouter()
+    const player = useVideoPlayer(media?.uri ?? '', player => {
+        player.loop = true;
+        player.play();
+    });
     const pickFromGallery = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -102,23 +106,26 @@ const AddPostScreen: React.FC = () => {
             </View>
 
             <View className='m-10'>
-                <TouchableOpacity style={styles.mediaBox} onPress={openActionSheet}>
-                    {media ? (
-                        media.type === 'video' ? (
-                            <Video
-                                source={{ uri: media.uri }}
-                                style={styles.media}
-                                useNativeControls
-                                resizeMode={ResizeMode.COVER}
-                                isLooping
-                            />
-                        ) : (
-                            <Image source={{ uri: media.uri }} style={styles.media} />
-                        )
-                    ) : (
-                        <Text style={styles.placeholder}>Select Galley or Camera</Text>
-                    )}
+
+                {!media ? <TouchableOpacity onPress={openActionSheet} style={styles.mediaBox}>
+
+
+
+                    <Text style={styles.placeholder}>Select Galley or Camera</Text>
+
                 </TouchableOpacity>
+                    : media && media.type == 'video' ? <VideoView
+                        player={player}
+                        style={styles.media}
+                        allowsFullscreen
+                        allowsPictureInPicture
+
+                    /> : <Image source={{ uri: media?.uri }} style={styles.media} />}
+
+
+
+
+
 
                 <TextInput
                     placeholder="describe your post..."
@@ -148,7 +155,7 @@ const styles = StyleSheet.create({
     },
     mediaBox: {
         width: '100%',
-        height: 500,
+        height: 400,
         backgroundColor: '#eee',
         justifyContent: 'center',
         alignItems: 'center',
