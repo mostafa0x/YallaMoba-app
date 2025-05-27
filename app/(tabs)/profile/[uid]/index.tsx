@@ -26,7 +26,7 @@ export default function Proflie() {
     const router = useRouter()
     const { isMyProfile, setIsMyProfile } = useContext(profileContext)
     const dispatch = useDispatch()
-    const { data, isLoading, error, isError } = useProfile(uid as string, headers)
+    const { data, isLoading, error, isError, refetch } = useProfile(uid as string, headers)
 
     useEffect(() => {
         if (!data) {
