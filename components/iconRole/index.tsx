@@ -11,8 +11,8 @@ type props = {
 export default function IconRole({ Role }: props) {
     const RolesIcons = {
         MM: require(`../../assets/roles/MM.png`),
-        jg: require(`../../assets/roles/jg.png`),
-        exp: require(`../../assets/roles/exp.png`),
+        Jungle: require(`../../assets/roles/jg.png`),
+        Exp: require(`../../assets/roles/exp.png`),
         Mid: require(`../../assets/roles/mid.png`),
         Roam: require(`../../assets/roles/Roam.png`)
     }
@@ -24,7 +24,6 @@ export default function IconRole({ Role }: props) {
     }, [])
     return (
         <Icon
-
             source={CurrentIcon}
             size={60}
         />

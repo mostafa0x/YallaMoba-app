@@ -30,13 +30,13 @@ export default function BottomNav() {
                 >
                     <Icon color="#ce4500" size={IconSize} source={path == "/" ? "home" : "home-outline"} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => goToPage("/watch")}
+                <TouchableOpacity onPress={() => goToPage("/Search")}
                 >
-                    <Icon color="#ce4500" size={IconSize} source={path.startsWith("/watch") ? "wrench" : "wrench-outline"} />
+                    <Icon color="#ce4500" size={IconSize} source={path.startsWith("/Search") ? "magnify" : "magnify"} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => goToPage("/AddPost")}
                 >
-                    <Icon color="#ce4500" size={IconSize} source={path.startsWith("/AddPost") ? "movie" : "movie-outline"} />
+                    <Icon color="#ce4500" size={IconSize} source={path.startsWith("/AddPost") ? "sticker-plus" : "sticker-plus-outline"} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => goToPage("/watch")}
                 >

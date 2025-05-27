@@ -110,7 +110,7 @@ export default function Proflie() {
                     </TouchableOpacity>
                     <Icon size={80} source={require('../../../../assets/splash.png')} />
                 </View>
-                <Text style={{ width: 200 }} className='text-2xl items-center  text-center mt-8'>{isMyProfile ? userData?.username.toLocaleUpperCase() : ownerData?.username.toLocaleUpperCase()}</Text>
+                <Text style={{ width: 200 }} className='text-2xl items-center  text-center mt-8'>{ownerData?.username.toLocaleUpperCase()}</Text>
                 <TouchableOpacity onPress={() => router.push("/menu")}>
                     <Text className='text-5xl items-center  text-center'>...!</Text>
                 </TouchableOpacity>
