@@ -11,7 +11,7 @@ export interface UserFace {
   };
 }
 
-export type RoleFace = 'MM' | 'exp' | 'jg' | 'mid' | 'Roam';
+export type RoleFace = 'MM' | 'Exp' | 'Jungle' | 'Mid' | 'Roam';
 
 export interface userDataFace {
   username: string;

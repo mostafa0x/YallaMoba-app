@@ -6,7 +6,7 @@ import { userDataFace } from 'types/interfaces/store/UserFace';
 export const storeUserInfo = async (userToken: string, userData: userDataFace) => {
   try {
     await AsyncStorage.multiSet([
-      ['@userData', JSON.stringify(userData)],
+      ['@userData',  JSON.stringify(userData)],
       ['@userToken', userToken],
     ]);
   } catch (error) {

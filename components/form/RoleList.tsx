@@ -21,8 +21,8 @@ export default function RoleList({
         backgroundColor: 'lightgray'
       }} title="Roam" />
     </TouchableOpacity>
-    <TouchableOpacity onPress={() => handleChangeRole("exp")}>
-      <List.Item style={ActiveRole == "exp" && {
+    <TouchableOpacity onPress={() => handleChangeRole("Exp")}>
+      <List.Item style={ActiveRole == "Exp" && {
         backgroundColor: 'lightgray'
       }} title="Exp" />
     </TouchableOpacity>
@@ -31,16 +31,16 @@ export default function RoleList({
         backgroundColor: 'lightgray'
       }} title="MM" />
     </TouchableOpacity>
-    <TouchableOpacity onPress={() => handleChangeRole("mid")}>
-      <List.Item style={ActiveRole == "mid" && {
+    <TouchableOpacity onPress={() => handleChangeRole("Mid")}>
+      <List.Item style={ActiveRole == "Mid" && {
         backgroundColor: 'lightgray'
       }} title="mid" />
     </TouchableOpacity>
 
-    <TouchableOpacity onPress={() => handleChangeRole("jg")}>
-      <List.Item style={ActiveRole == "jg" && {
+    <TouchableOpacity onPress={() => handleChangeRole("Jungle")}>
+      <List.Item style={ActiveRole == "Jungle" && {
         backgroundColor: 'lightgray'
-      }} title="Jg" />
+      }} title="JJungleg" />
     </TouchableOpacity>
   </List.Accordion>;
 }

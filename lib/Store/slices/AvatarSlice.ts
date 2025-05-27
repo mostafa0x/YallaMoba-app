@@ -43,10 +43,12 @@ const AvatarSlice = createSlice({
         if (state.currentAvatarIndex - 1 < 0) {
           state.currentAvatarIndex = state.avatars.length - 1;
         } else state.currentAvatarIndex -= 1;
+      } else {
+        state.currentAvatarIndex = parseInt(action.payload.type);
       }
     },
   },
 });
 
 export const AvatarReducer = AvatarSlice.reducer;
-export const {} = AvatarSlice.actions;
+export const { ChangeCurrentAvatar } = AvatarSlice.actions;

@@ -110,7 +110,7 @@ export default function Proflie() {
                     </TouchableOpacity>
                     <Icon size={80} source={require('../../../../assets/splash.png')} />
                 </View>
-                <Text style={{ width: 200 }} className='text-2xl items-center  text-center mt-8'>{ownerData?.username.toLocaleUpperCase()}</Text>
+                <Text style={{ width: 200 }} className='text-2xl items-center  text-center mt-8'>{isMyProfile ? userData?.username.toLocaleUpperCase() : ownerData?.username.toLocaleUpperCase()}</Text>
                 <TouchableOpacity onPress={() => router.push("/menu")}>
                     <Text className='text-5xl items-center  text-center'>...!</Text>
                 </TouchableOpacity>
@@ -152,7 +152,7 @@ export default function Proflie() {
                             <View className=''>
                                 <View className='flex-row pl-[185px] gap-2 '>
                                     <TouchableOpacity >
-                                        {isMyProfile ? <Button onPress={() => router.push("/profile/EditProfile")} textColor='white' style={Style.buttonsMain}>Edit Profile</Button> : <Button textColor='white' style={Style.buttonsMain}>Follow</Button>}
+                                        {isMyProfile ? <Button onPress={() => router.push({ pathname: "/profile/EditProfile" })} textColor='white' style={Style.buttonsMain}>Edit Profile</Button> : <Button textColor='white' style={Style.buttonsMain}>Follow</Button>}
 
                                     </TouchableOpacity>
                                     <Avatar.Icon onTouchStart={() => router.push({ pathname: "/ShareProfile", params: { username: ownerData?.username ?? "empty", uid: ownerData?.UID ?? 0 } })} size={45} style={{ backgroundColor: "#ce4500", borderRadius: 20, width: 65, height: 40, marginLeft: 5 }} icon={"share"} />

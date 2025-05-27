@@ -6,8 +6,6 @@ const initialState: UserFace = {
   userToken: null,
   userData: null,
   userLoading: true,
-  userFollowers: [],
-  userFollowing: [],
   userPosts: [],
   headers: { Authorization: '' },
 };
@@ -22,6 +20,9 @@ const UserSlice = createSlice({
         Authorization: `Bearer ${action.payload.userToken}`,
       };
     },
+    ChangeUserData: (state, action) => {
+      state.userData = action.payload;
+    },
     changeUserLoading: (state, action) => {
       state.userLoading = action.payload;
     },
@@ -29,4 +30,4 @@ const UserSlice = createSlice({
 });
 
 export const UserReducer = UserSlice.reducer;
-export const { changeUserLoading, fillUserInfo } = UserSlice.actions;
+export const { changeUserLoading, fillUserInfo, ChangeUserData } = UserSlice.actions;
