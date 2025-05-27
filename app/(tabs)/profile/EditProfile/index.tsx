@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { RoleFace } from 'types/interfaces/store/UserFace'
 import RoleList from 'components/form/RoleList'
 import AvatarUser from 'components/AvatarUser/AvatarUser'
+import EditAvatar from 'components/form/EditAvatar'
 
 export default function EditProfile() {
     const router = useRouter()
@@ -42,7 +43,8 @@ export default function EditProfile() {
             </View>
             <View className='flex mt-20 justify-around '>
                 <View className='justify-center items-center my-10'>
-                    <AvatarUser url='' size={50} />
+                    <EditAvatar />
+
                 </View>
                 <FieldProfile label={'username'} name={'username'} formik={formik} />
                 <RoleList ActiveRole={ActiveRole} handleChangeRole={handleChangeRole} />
