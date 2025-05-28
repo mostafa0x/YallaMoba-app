@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Image, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { Icon } from 'react-native-paper';
+import { Icon, Button, HelperText, TextInput } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import { useFormik } from 'formik';
+import { validationSchemaAddPost } from 'lib/Validations/AddPostSchema';
+import axiosClient from 'lib/api/axiosClient';
 
 interface MediaAsset {
     uri: string;
@@ -21,6 +24,32 @@ const AddPostScreen: React.FC = () => {
         player.loop = true;
         player.play();
     });
+
+
+    const handleAddPost = async (formvalues: any) => {
+        try {
+
+            const res = await axiosClient.post('/posts/', formvalues)
+            console.log(res.data);
+
+        } catch (err) {
+            console.log(err);
+
+        }
+
+    }
+
+    const formik = useFormik({
+        initialValues: {
+            body: '',
+            files: null
+        }, validationSchema: validationSchemaAddPost,
+        onSubmit: handleAddPost
+    })
+
+
+
+
     const pickFromGallery = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -31,6 +60,8 @@ const AddPostScreen: React.FC = () => {
         if (!result.canceled && result.assets.length > 0) {
             const asset = result.assets[0];
             const mediaType = asset.type === 'video' ? 'video' : 'image';
+            formik.setFieldValue('files', asset)
+            console.log(asset);
 
             setMedia({
                 uri: asset.uri,
@@ -50,7 +81,7 @@ const AddPostScreen: React.FC = () => {
         if (!result.canceled && result.assets.length > 0) {
             const asset = result.assets[0];
             const mediaType = asset.type === 'video' ? 'video' : 'image';
-
+            formik.setFieldValue('files', asset)
             setMedia({
                 uri: asset.uri,
                 type: mediaType,
@@ -59,10 +90,11 @@ const AddPostScreen: React.FC = () => {
         }
     };
     const DeletMedia = () => {
+        formik.resetForm()
         setMedia(null)
     }
     const openActionSheet = () => {
-        const options = media ? ['❌ Delete Media', '❌ Close'] : ['📸 Camera', '🖼️ Gallery', '❌ Close'];
+        const options = media ? ['❌ Delete Media', 'Close'] : ['📸 Camera', '🖼️ Gallery', '❌ Close'];
         const cancelButtonIndex = media ? 1 : 2;
 
         showActionSheetWithOptions(
@@ -72,7 +104,6 @@ const AddPostScreen: React.FC = () => {
             },
             (selectedIndex) => {
                 switch (selectedIndex) {
-
                     case 0:
                         media ? DeletMedia() : takePhoto();
                         break;
@@ -87,10 +118,7 @@ const AddPostScreen: React.FC = () => {
         );
     };
 
-    const handlePost = () => {
-        if (!media) return;
-        console.log('Posting:', { media, caption });
-    };
+
 
     return (
         <View style={styles.container}>
@@ -107,43 +135,52 @@ const AddPostScreen: React.FC = () => {
 
             <View className='m-10'>
 
-                {!media ? <TouchableOpacity onPress={openActionSheet} style={styles.mediaBox}>
+                <View className='h-[500px] mb-10'>
 
+                    {!media ? <TouchableOpacity onPress={openActionSheet} style={styles.mediaBox}>
+                        <Text style={styles.placeholder}>Select Galley or Camera</Text>
 
+                    </TouchableOpacity>
+                        : media && media.type == 'video' ?
+                            <View style={styles.media} className='gap-5'>
+                                <VideoView
 
-                    <Text style={styles.placeholder}>Select Galley or Camera</Text>
+                                    player={player}
+                                    style={styles.media}
+                                    allowsFullscreen
+                                    allowsPictureInPicture
+                                />
 
-                </TouchableOpacity>
-                    : media && media.type == 'video' ? <VideoView
-                        player={player}
-                        style={styles.media}
-                        allowsFullscreen
-                        allowsPictureInPicture
+                                <Button onPress={DeletMedia} buttonColor='red' textColor='white'>Delete Video</Button>
 
-                    /> : <Image source={{ uri: media?.uri }} style={styles.media} />}
+                            </View>
 
+                            :
+                            <TouchableOpacity onPress={openActionSheet} >
+                                <Image resizeMode='contain' source={{ uri: media?.uri }} style={styles.media} />
+                            </TouchableOpacity>
+                    }
 
-
-
-
-
-                <TextInput
-                    placeholder="describe your post..."
-                    style={styles.input}
-                    multiline
-                    numberOfLines={4}
-                    value={caption}
-                    onChangeText={setCaption}
-                />
-                <View className='items-center mt-10'>
-                    <View className=' w-[180px]'>
-
-                        <Button color={"green"} title="Post Now" onPress={handlePost} disabled={!media || caption.trim() === ''} />
-                    </View>
                 </View>
 
-            </View>
 
+                <View className='mt-16'>
+                    <TextInput
+                        onChangeText={formik.handleChange("body")}
+                        onBlur={formik.handleBlur("body")}
+                        placeholder="describe your post..."
+                        style={styles.input}
+                        multiline
+                        numberOfLines={4}
+                        value={formik.values.body}
+                    />
+                    <View className='items-center mt-10'>
+                        <View className=' w-[180px]'>
+                            <Button disabled={!media} textColor='white' buttonColor='green' onPress={() => formik.handleSubmit()}  >{!media ? "Select Media" : " Post Now"}</Button>
+                        </View>
+                    </View>
+                </View>
+            </View>
         </View >
     );
 };
@@ -159,7 +196,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#eee',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 40,
         borderRadius: 10,
         overflow: 'hidden',
     },
