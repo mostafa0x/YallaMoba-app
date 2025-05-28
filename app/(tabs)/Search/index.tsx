@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { Icon, Searchbar } from 'react-native-paper'
 import { useRouter } from 'expo-router'
+import callToast from 'components/toast'
 
 
 export default function Search() {
@@ -45,11 +46,15 @@ export default function Search() {
                 </View>
                 <View className='mt-16  ml-2 justify-between flex-row '>
                     <View>
-                        <Text className=''>History</Text>
+                        <Text className=''>History Search...</Text>
 
                     </View>
                     <View className=''>
-                        <TouchableOpacity onPress={() => setSearchHistory([])}>
+                        <TouchableOpacity onPress={() => {
+                            setSearchHistory([])
+                            callToast({ type: 'success', text1: "Yalla Moba", text2: "Cleared history" })
+                        }
+                        }>
                             <Icon size={35} source='trash-can' />
                         </TouchableOpacity>
 
