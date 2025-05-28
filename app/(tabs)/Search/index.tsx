@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React, { useRef, useState } from 'react'
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 import { Icon, Searchbar } from 'react-native-paper'
 import { useRouter } from 'expo-router'
 
@@ -8,20 +8,19 @@ export default function Search() {
     const [searchHistory, setSearchHistory] = useState<string[]>([])
     const router = useRouter()
     const [searchTxt, setSearchTxt] = useState<string>('')
-    const SearchBarRef = useRef<any>(null)
+    const searchBarRef = useRef<React.ComponentRef<typeof Searchbar>>(null);
 
     const handleSerach = (srearchItem: string) => {
-
-
         const foundItem = searchHistory.includes(srearchItem)
         if (!foundItem) {
             const NewArray = [srearchItem, ...searchHistory]
             setSearchHistory(NewArray)
         }
-        SearchBarRef.current.clear()
-
-
+        setSearchTxt('')
+        searchBarRef.current?.clear()
     }
+
+
     return (
         <View className='flex-1 bg-white'>
             <View className='flex-row justify-between border-b-2 border-gray-200 p-2 items-center mb-5'>
@@ -36,7 +35,7 @@ export default function Search() {
             </View>
             <View className='m-2'>
                 <View className='flex-row items-center'>
-                    <Searchbar ref={SearchBarRef} onIconPress={() => handleSerach(searchTxt)} onSubmitEditing={() => handleSerach(searchTxt)} style={{ width: 450 }} value={searchTxt} onChangeText={setSearchTxt} placeholder='Sercah by username' />
+                    <Searchbar autoFocus ref={searchBarRef} onIconPress={() => handleSerach(searchTxt)} onSubmitEditing={() => handleSerach(searchTxt)} style={{ width: 450 }} value={searchTxt} onChangeText={setSearchTxt} placeholder='Sercah by username' />
                     <View className='pl-2 bg-white border-white border-[1px] justify-center p-2 rounded-[15px]'>
                         <TouchableOpacity onPress={() => router.push("/ScanQr")}>
                             <Icon size={35} source={"scan-helper"} />
@@ -51,20 +50,27 @@ export default function Search() {
                     </View>
                     <View className=''>
                         <TouchableOpacity onPress={() => setSearchHistory([])}>
-
-                            <Icon size={40} source='trash-can' />
+                            <Icon size={35} source='trash-can' />
                         </TouchableOpacity>
 
                     </View>
                 </View>
-                <View className='pl-2 mt-10 gap-10'>
-                    {searchHistory.map((item, index: number) => {
-                        return <TouchableOpacity onPress={() => handleSerach(item)}>
-                            <Text className='text-xl' key={index}>{item}</Text>
-                        </TouchableOpacity>
-                    })}
-                </View>
+                <ScrollView style={{ height: 763 }}
+                >
+                    <View className='pl-2 mt-10 gap-10 '>
+
+
+                        {searchHistory.map((item, index: number) => {
+                            return <TouchableOpacity key={index} onPress={() => handleSerach(item)}>
+                                <Text className='text-xl'>{item}</Text>
+                            </TouchableOpacity>
+                        })}
+                    </View>
+
+                </ScrollView>
+
             </View>
-        </View>
+
+        </View >
     )
 }
