@@ -9,12 +9,12 @@ import { StateFace } from 'types/interfaces/store/StateFace'
 import { Image } from 'expo-image'
 
 export default function BottomNav() {
-    const { userData } = useSelector((state: StateFace) => state.UserReducer)
+    const { userData, tv } = useSelector((state: StateFace) => state.UserReducer)
     const path = usePathname()
     const router = useRouter()
     const { uid } = useLocalSearchParams()
     const goToPage = (url: string) => {
-        router.push(url)
+        !tv && router.push(url)
     }
     const IconSize = 35
 
@@ -25,6 +25,7 @@ export default function BottomNav() {
 
     return (
         <SafeAreaView edges={['right', 'left']} style={styles.container}>
+
             <View style={styles.navContainer}>
                 <TouchableOpacity onPress={() => goToPage("/")}
                 >

@@ -8,6 +8,7 @@ const initialState: UserFace = {
   userLoading: true,
   userPosts: [],
   headers: { Authorization: '' },
+  tv: false,
 };
 const UserSlice = createSlice({
   name: 'UserSlice',
@@ -20,6 +21,9 @@ const UserSlice = createSlice({
         Authorization: `Bearer ${action.payload.userToken}`,
       };
     },
+    ChangeTV: (state, action) => {
+      state.tv = action.payload;
+    },
     ChangeUserData: (state, action) => {
       state.userData = action.payload;
     },
@@ -30,4 +34,4 @@ const UserSlice = createSlice({
 });
 
 export const UserReducer = UserSlice.reducer;
-export const { changeUserLoading, fillUserInfo, ChangeUserData } = UserSlice.actions;
+export const { changeUserLoading, fillUserInfo, ChangeUserData, ChangeTV } = UserSlice.actions;

@@ -4,6 +4,7 @@ export interface UserFace {
   userToken: null | string;
   userData: userDataFace | null;
   userLoading: boolean;
+  tv: boolean;
 
   userPosts: PostFace[];
   headers: {
