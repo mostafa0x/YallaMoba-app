@@ -37,7 +37,7 @@ export default function Proflie() {
             const { uri } = await VideoThumbnails.getThumbnailAsync(
                 URL,
                 {
-                    time: 15000,
+                    time: 1000,
                 }
             );
             return uri
@@ -144,7 +144,7 @@ export default function Proflie() {
     }
 
 
-    if (isLoading) {
+    if (isLoading || !ownerPosts) {
         return <SpinnerLoading />
     }
 

@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { PostFace } from 'types/interfaces/store/ProfileFace';
 import { Image } from 'expo-image';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 interface PostViewProps {
     post: PostFace;
@@ -11,41 +12,43 @@ interface PostViewProps {
 export default function PostView({ post }: PostViewProps) {
     const thumbnailPlaceholder =
         'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM='
-
+    const router = useRouter()
     const firstFile = post.files?.[0] ?? thumbnailPlaceholder;
 
     const isVideo = /\.(mp4|mov|webm)$/i.test(firstFile);
 
 
     return (
-        <View style={{ position: 'relative' }}>
-            {isVideo ? (
-                <TouchableOpacity >
-                    <Image
-                        source={{ uri: post.icon }}
-                        style={styles.image}
-                        contentFit="cover"
-                    />
-                    <MaterialIcons
-                        name="play-circle-outline"
-                        size={50}
-                        color="white"
-                        style={styles.playIcon}
-                    />
-                </TouchableOpacity>
-            ) : (
-                <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push({ pathname: "/Posts" })}>
+            <View style={{ position: 'relative' }} >
+                {isVideo ? (
+                    <>
+                        <Image
+                            source={{ uri: post.icon }}
+                            style={styles.image}
+                            contentFit="cover"
+                        />
+                        <MaterialIcons
+                            name="play-circle-outline"
+                            size={50}
+                            color="white"
+                            style={styles.playIcon}
+                        />
+                    </>
+                ) : (
+
                     <Image
                         source={{ uri: firstFile }}
                         style={styles.image}
                         contentFit="cover"
                     />
-                </TouchableOpacity>
-            )
-            }
+
+                )
+                }
 
 
-        </View >
+            </View >
+        </TouchableOpacity>
     );
 }
 
