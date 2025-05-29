@@ -1,13 +1,19 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native'
+import { View, Text, FlatList, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { StateFace } from 'types/interfaces/store/StateFace'
 import AllPost from 'components/Post/AllPost'
-import { Icon } from 'react-native-paper'
+import { Icon, TextInput } from 'react-native-paper'
 import { PostFace } from 'types/interfaces/store/ProfileFace'
 import ImageViewing from 'react-native-image-viewing';
 import { useLocalSearchParams } from 'expo-router'
+import { Modalize } from 'react-native-modalize';
 
+const comments = [
+    { id: '1', user: 'Ali', text: 'رائع جدًا 👍' },
+    { id: '2', user: 'Sara', text: 'فين ده؟' },
+    // ... ممكن تعليقات أكتر
+];
 
 export default function Post() {
     const { ownerData, ownerPosts } = useSelector((state: StateFace) => state.ProfileReducer)
@@ -20,6 +26,15 @@ export default function Post() {
         imagePosts.length - 1,
         Math.max(0, Number(parsedIndexRaw))
     ) : 0
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const modalRef = useRef<Modalize>(null);
+
+    const openModal = () => {
+        modalRef.current?.open();
+        setIsMenuOpen(true)
+    };
+
     // useEffect(() => {
     //     if (ownerPosts) {
     //         const ImgPosts = ownerPosts
@@ -51,35 +66,70 @@ export default function Post() {
                 <Icon size={50} source={'arrow-left-thin'} />
                 <Text className='text-2xl pl-5 '>Posts</Text>
             </View>
-            <FlatList
-                ref={flatListRef}
-                data={ownerPosts}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item, index }) =>
-                    ownerData ? (
-                        <AllPost
-                            post={item}
-                            ownerData={ownerData}
-                            isVisible={index === isVisible}
-                        />
-                    ) : null
-                }
-                onViewableItemsChanged={({ viewableItems }) => {
-                    if (viewableItems.length > 0) {
-                        setVisibleIndex(viewableItems[0].index ?? 0);
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                style={{ flex: 1 }}
+            >
+                <FlatList
+                    ref={flatListRef}
+                    data={ownerPosts}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item, index }) =>
+                        ownerData ? (
+                            <AllPost
+                                post={item}
+                                ownerData={ownerData}
+                                isVisible={index === isVisible}
+                                openModal={openModal}
+                            />
+                        ) : null
                     }
-                }}
-                viewabilityConfig={{
-                    itemVisiblePercentThreshold: 80,
-                }}
-                getItemLayout={(data, index) => ({
-                    length: 650,
-                    offset: 650 * index,
-                    index,
-                })}
-            />
+                    onViewableItemsChanged={({ viewableItems }) => {
+                        if (viewableItems.length > 0) {
+                            setVisibleIndex(viewableItems[0].index ?? 0);
+                        }
+                    }}
+                    viewabilityConfig={{
+                        itemVisiblePercentThreshold: 80,
+                    }}
+                    getItemLayout={(data, index) => ({
+                        length: 650,
+                        offset: 650 * index,
+                        index,
+                    })}
+                />
 
-        </View>
+
+                <Modalize
+                    ref={modalRef}
+                    modalHeight={500}
+                    handleStyle={{ backgroundColor: '#ccc' }}
+                    withHandle={true}
+                    onClosed={() => setIsMenuOpen(false)}
+                    panGestureComponentEnabled={false}
+                    flatListProps={{
+                        data: comments,
+                        keyExtractor: (item) => item.id,
+                        renderItem: ({ item }) => (
+                            <View >
+                                <Text >{item.user}</Text>
+                                <Text>{item.text}</Text>
+                            </View>
+                        ),
+                        keyboardShouldPersistTaps: 'handled',
+
+                    }}
+                />
+
+            </KeyboardAvoidingView>
+            {
+                isMenuOpen && <View className='m-2 border-2 p-2 bg-white border-gray-500 justify-end '>
+                    <TextInput placeholder="comment here" />
+                </View>
+            }
+
+
+        </View >
     )
 }
 

@@ -8,7 +8,7 @@ const comments = [
     // ... ممكن تعليقات أكتر
 ];
 
-export default function CommentsModal() {
+export default function CommentsCard() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const modalRef = useRef<Modalize>(null);
 
