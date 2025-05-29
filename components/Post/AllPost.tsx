@@ -8,6 +8,8 @@ import { userDataFace } from 'types/interfaces/store/UserFace';
 import { Image } from 'expo-image';
 import ImageViewing from 'react-native-image-viewing';
 
+import { Drawer } from 'react-native-paper';
+
 interface propsFace {
     post: PostFace;
     ownerData: userDataFace;
@@ -69,6 +71,10 @@ export default function AllPost({ post, ownerData }: propsFace) {
                 :
                 <Text className='text-lg'>{post.body.split(" ").splice(0, 4).join(" ")}{post.body.split(" ").length > 5 && <TouchableOpacity onPress={() => setIsShowMoreTxt(true)}><Text className=' opacity-50'>...more.</Text></TouchableOpacity>}</Text>
             }
+
+
+
+
         </View >
     );
 }

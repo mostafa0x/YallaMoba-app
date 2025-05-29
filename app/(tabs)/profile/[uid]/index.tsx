@@ -168,7 +168,7 @@ export default function Proflie() {
                     data={ownerPosts}
                     numColumns={3}
                     keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => <PostView post={item} />}
+                    renderItem={({ item, index }) => <PostView post={item} Index={index} />}
                     columnWrapperStyle={{}}
                     style={{ backgroundColor: '#ffffff' }}
                     ListHeaderComponent={<>

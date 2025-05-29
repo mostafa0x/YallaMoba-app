@@ -7,9 +7,10 @@ import { useRouter } from 'expo-router';
 
 interface PostViewProps {
     post: PostFace;
+    Index: number
 }
 
-export default function PostView({ post }: PostViewProps) {
+export default function PostView({ post, Index }: PostViewProps) {
     const thumbnailPlaceholder =
         'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM='
     const router = useRouter()
@@ -19,7 +20,7 @@ export default function PostView({ post }: PostViewProps) {
 
 
     return (
-        <TouchableOpacity onPress={() => router.push({ pathname: "/Posts" })}>
+        <TouchableOpacity onPress={() => router.push({ pathname: "/Posts", params: { index: Index.toString() } })}>
             <View style={{ position: 'relative' }} >
                 {isVideo ? (
                     <>
