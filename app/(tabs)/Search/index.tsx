@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Icon, Searchbar } from 'react-native-paper'
 import { useRouter } from 'expo-router'
 import callToast from 'components/toast'
+import { ClearHistroySerach, GetHistroySerach, SetHistroySerach } from 'services/storage'
 
 
 export default function Search() {
@@ -11,16 +12,41 @@ export default function Search() {
     const [searchTxt, setSearchTxt] = useState<string>('')
     const searchBarRef = useRef<React.ComponentRef<typeof Searchbar>>(null);
 
-    const handleSerach = (srearchItem: string) => {
+    const handleClearHistroy = async () => {
+        await ClearHistroySerach()
+        setSearchHistory([])
+        callToast({ type: 'success', text1: "Yalla Moba", text2: "Cleared history" })
+    }
+
+    const handleDelete = async (itemIndex: number) => {
+        const newHistory = searchHistory.filter((item, index) => index !== itemIndex)
+        setSearchHistory(newHistory)
+        await SetHistroySerach(newHistory)
+
+    }
+    const handleSerach = async (srearchItem: string) => {
         const foundItem = searchHistory.includes(srearchItem)
         if (!foundItem) {
             const NewArray = [srearchItem, ...searchHistory]
             setSearchHistory(NewArray)
+            await SetHistroySerach(NewArray)
         }
         setSearchTxt('')
         searchBarRef.current?.clear()
     }
 
+
+    useEffect(() => {
+        const fetchHistory = async () => {
+            const resHS: string[] | null = await GetHistroySerach()
+            resHS ? setSearchHistory(resHS) : await SetHistroySerach([])
+            // resHS ? setSearchHistory(resHS) : setSearchHistory([])
+        }
+        fetchHistory()
+        return () => {
+
+        }
+    }, [])
 
     return (
         <View className='flex-1 bg-white'>
@@ -50,11 +76,7 @@ export default function Search() {
 
                     </View>
                     <View className=''>
-                        <TouchableOpacity onPress={() => {
-                            setSearchHistory([])
-                            callToast({ type: 'success', text1: "Yalla Moba", text2: "Cleared history" })
-                        }
-                        }>
+                        <TouchableOpacity onPress={handleClearHistroy}>
                             <Icon size={35} source='trash-can' />
                         </TouchableOpacity>
 
@@ -66,9 +88,14 @@ export default function Search() {
 
 
                         {searchHistory.map((item, index: number) => {
-                            return <TouchableOpacity key={index} onPress={() => handleSerach(item)}>
-                                <Text className='text-xl'>{item}</Text>
-                            </TouchableOpacity>
+                            return <View className='flex-row justify-between pr-2' key={index}>
+                                <TouchableOpacity className='w-[400px]' onPress={() => handleSerach(item)}>
+                                    <Text className='text-xl'>{item}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleDelete(index)}>
+                                    <Icon size={25} source={"close"} />
+                                </TouchableOpacity>
+                            </View>
                         })}
                     </View>
 

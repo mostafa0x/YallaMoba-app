@@ -6,7 +6,7 @@ import { userDataFace } from 'types/interfaces/store/UserFace';
 export const storeUserInfo = async (userToken: string, userData: userDataFace) => {
   try {
     await AsyncStorage.multiSet([
-      ['@userData',  JSON.stringify(userData)],
+      ['@userData', JSON.stringify(userData)],
       ['@userToken', userToken],
     ]);
   } catch (error) {
@@ -33,5 +33,33 @@ export const clearUserInfo = async () => {
   } catch (error) {
     console.error('Error clearing user info:', error);
     throw `Error clearing user info:, ${error}`;
+  }
+};
+
+export const SetHistroySerach = async (value: string[]) => {
+  try {
+    await AsyncStorage.setItem('@HistroySer', JSON.stringify(value));
+    return true;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const GetHistroySerach = async () => {
+  try {
+    const dataRaw = await AsyncStorage.getItem('@HistroySer');
+    const data = dataRaw ? JSON.parse(dataRaw) : null;
+    return data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const ClearHistroySerach = async () => {
+  try {
+    await AsyncStorage.removeItem('@HistroySer');
+    return true;
+  } catch (err) {
+    throw err;
   }
 };

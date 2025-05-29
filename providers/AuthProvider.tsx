@@ -16,6 +16,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
     useEffect(() => {
         let isMounted = true;
+        dispatch(changeUserLoading(true));
         const timer = setTimeout(() => {
             getUserInfo(dispatch).finally(() => {
                 if (isMounted) setIsReady(true);
