@@ -23,6 +23,8 @@ export interface userDataFace {
   UID: string;
   uid?: string;
   popularity: string;
+  followingcount: number;
+  followerscount: number;
 }
 
 // followers: followersFace;

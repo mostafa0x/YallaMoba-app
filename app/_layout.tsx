@@ -1,3 +1,4 @@
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import '../global.css'
 import { Provider } from 'react-redux';
 import { store } from '../lib/Store/index';
@@ -16,26 +17,28 @@ import ActionSheet from 'providers/ActionSheet';
 
 const query = new QueryClient()
 export default function RootLayout() {
-
     return (
-        <QueryClientProvider client={query}>
-            <SafeAreaProvider>
-                <Provider store={store}>
-                    <ProvidersContexts>
-                        <AuthProvider>
-                            <SafeAreaView style={{ flex: 1 }}>
-                                <ActionSheet>
-                                    <>
-                                        <Stack screenOptions={{ headerShown: false }} />
-                                        <BottomNav />
-                                        <Toast />
-                                    </>
-                                </ActionSheet>
-                            </SafeAreaView>
-                        </AuthProvider>
-                    </ProvidersContexts>
-                </Provider>
-            </SafeAreaProvider>
-        </QueryClientProvider>
+        <GestureHandlerRootView >
+            <QueryClientProvider client={query}>
+                <SafeAreaProvider>
+                    <Provider store={store}>
+                        <ProvidersContexts>
+                            <AuthProvider>
+                                <SafeAreaView style={{ flex: 1 }}>
+                                    <ActionSheet>
+                                        <>
+                                            <Stack screenOptions={{ headerShown: false }} />
+                                            <BottomNav />
+                                            <Toast />
+                                        </>
+                                    </ActionSheet>
+                                </SafeAreaView>
+                            </AuthProvider>
+                        </ProvidersContexts>
+                    </Provider>
+                </SafeAreaProvider>
+            </QueryClientProvider>
+        </GestureHandlerRootView>
+
     );
 }

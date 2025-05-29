@@ -1,20 +1,15 @@
 import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ActivityIndicator } from 'react-native-paper'
-import { followersFace } from 'types/interfaces/store/ProfileFace'
 
 interface props {
-    count: followersFace[] | null
+    count: number | null | undefined
 }
 export default function TextHeader({ count }: props) {
 
-
-
     return (
-
-        <ActivityIndicator animating={count ? false : true} >
-            <Text style={Style.headerTextTop}>{count?.length}</Text>
-        </ActivityIndicator>
+        count ? <Text style={Style.headerTextTop
+        } > {count}</Text > : <ActivityIndicator animating={true} />
 
     )
 }

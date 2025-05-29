@@ -79,6 +79,8 @@ export default function Proflie() {
                     return item;
                 })
             );
+            console.log(data.ownerData);
+
             dispatch(fillProfile({
                 ownerData: data?.ownerData ?? null,
                 ownerPosts: updatedPosts ?? null,
@@ -188,11 +190,11 @@ export default function Proflie() {
                                     <Text style={Style.headerTextBottom}>posts.</Text>
                                 </View>
                                 <View>
-                                    <TextHeader count={ownerFollowers ?? null} />
+                                    <TextHeader count={ownerData?.followerscount} />
                                     <Text style={Style.headerTextBottom}>follwers.</Text>
                                 </View>
                                 <View>
-                                    <TextHeader count={ownerFollowing ?? null} />
+                                    <TextHeader count={ownerData?.followingcount} />
                                     <Text style={Style.headerTextBottom}>following.</Text>
                                 </View>
                             </View>

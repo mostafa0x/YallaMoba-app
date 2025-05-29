@@ -14,6 +14,8 @@ export interface PostFace {
   created_at: string;
   updated_at: string;
   icon?: string | undefined;
+  likecount: number;
+  commentcount: number;
 }
 export interface followersFace {
   id: string;

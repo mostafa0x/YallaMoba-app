@@ -21,13 +21,7 @@
           "recordAudioAndroid": true
         }
       ],
-      [
-        "expo-video",
-        {
-          "supportsBackgroundPlayback": true,
-          "supportsPictureInPicture": true
-        }
-      ]
+      ["expo-video", {}]
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",

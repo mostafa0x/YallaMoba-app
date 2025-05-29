@@ -14,41 +14,36 @@ export default function Post() {
     const [imagePosts, setImagePost] = useState<PostFace[]>([])
     const flatListRef = useRef<FlatList | null>(null)
     const { index } = useLocalSearchParams()
-
+    const [isVisible, setVisibleIndex] = useState(0)
     const parsedIndexRaw = Array.isArray(index) ? index[0] : index;
     const parsedIndex = imagePosts.length != 0 ? Math.min(
         imagePosts.length - 1,
         Math.max(0, Number(parsedIndexRaw))
     ) : 0
-    useEffect(() => {
-        if (ownerPosts) {
-            const ImgPosts = ownerPosts
-                ?.map((post) => {
-                    if (post.files?.[0]) {
-                        const path = post.files?.[0]
-                        const type = post.files?.[0].split(".").pop()
-                        const isVideo = ['mp4', 'mov', 'webm'].includes(type ?? '')
-
-                        if (!isVideo) return post
-                    }
-
-                })
-                .filter((post): post is PostFace => post !== undefined)
-            setImagePost(ImgPosts)
-        }
-
-    }, [ownerPosts])
     // useEffect(() => {
-    //     if (imagePosts.length > 0) {
-    //         const parsedIndexRaw = Array.isArray(index) ? index[0] : index;
-    //         const parsedIndex = Math.min(
-    //             imagePosts.length - 1,
-    //             Math.max(0, Number(parsedIndexRaw))
-    //         ); setTimeout(() => {
-    //             flatListRef.current?.scrollToIndex({ index: parsedIndex, animated: true });
-    //         }, 100);
+    //     if (ownerPosts) {
+    //         const ImgPosts = ownerPosts
+    //             ?.map((post) => {
+    //                 if (post.files?.[0]) {
+    //                     const path = post.files?.[0]
+    //                     const type = post.files?.[0].split(".").pop()
+    //                     const isVideo = ['mp4', 'mov', 'webm'].includes(type ?? '')
+
+    //                     if (!isVideo) return post
+    //                 }
+
+    //             })
+    //             .filter((post): post is PostFace => post !== undefined)
+    //         setImagePost(ImgPosts)
     //     }
-    // }, [imagePosts, index])
+
+    // }, [ownerPosts])
+
+    // useEffect(() => {
+
+    //     flatListRef.current?.scrollToIndex({ index: parsedIndex, animated: true })
+    // }, [imagePosts])
+
 
     return (
         <View style={Style.continer}>
@@ -58,26 +53,32 @@ export default function Post() {
             </View>
             <FlatList
                 ref={flatListRef}
-                data={imagePosts}
+                data={ownerPosts}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) =>
-                    ownerData ? <AllPost post={item} ownerData={ownerData} /> : null
+                renderItem={({ item, index }) =>
+                    ownerData ? (
+                        <AllPost
+                            post={item}
+                            ownerData={ownerData}
+                            isVisible={index === isVisible}
+                        />
+                    ) : null
                 }
+                onViewableItemsChanged={({ viewableItems }) => {
+                    if (viewableItems.length > 0) {
+                        setVisibleIndex(viewableItems[0].index ?? 0);
+                    }
+                }}
+                viewabilityConfig={{
+                    itemVisiblePercentThreshold: 80,
+                }}
                 getItemLayout={(data, index) => ({
-                    length: ITEM_HEIGHT,
-                    offset: ITEM_HEIGHT * index,
+                    length: 650,
+                    offset: 650 * index,
                     index,
                 })}
-                initialScrollIndex={parsedIndex}
-                onScrollToIndexFailed={(info) => {
-                    setTimeout(() => {
-                        flatListRef.current?.scrollToIndex({
-                            index: info.index,
-                            animated: true,
-                        });
-                    }, 500);
-                }}
             />
+
         </View>
     )
 }
