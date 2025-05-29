@@ -8,6 +8,14 @@ import { useRouter } from 'expo-router';
 import { useFormik } from 'formik';
 import { validationSchemaAddPost } from 'lib/Validations/AddPostSchema';
 import axiosClient from 'lib/api/axiosClient';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { StateFace } from 'types/interfaces/store/StateFace';
+
+interface fromFace {
+    body: string
+    files: any
+}
 
 interface MediaAsset {
     uri: string;
@@ -16,6 +24,7 @@ interface MediaAsset {
 }
 
 const AddPostScreen: React.FC = () => {
+    const { userToken } = useSelector((state: StateFace) => state.UserReducer)
     const [media, setMedia] = useState<MediaAsset | null>(null);
     const [caption, setCaption] = useState<string>('');
     const { showActionSheetWithOptions } = useActionSheet();
@@ -24,17 +33,37 @@ const AddPostScreen: React.FC = () => {
         player.loop = true;
         player.play();
     });
+    function handleFormData(formValues: fromFace) {
+        const formData = new FormData();
+        formData.append("body", formValues.body);
 
+        const file = formValues.files;
+        if (file) {
+            const uriParts = file.uri.split('.');
+            const fileType = uriParts[uriParts.length - 1];
+
+            formData.append("files", {
+                uri: file.uri,
+                name: file.fileName || `upload.${fileType}`,
+                type: file.type === 'video' ? `video/${fileType}` : `image/${fileType}`,
+            } as any); // `as any` to bypass TypeScript warning
+        }
+
+        handleAddPost(formData);
+    }
 
     const handleAddPost = async (formvalues: any) => {
+
         try {
-
-            const res = await axiosClient.post('/posts/', formvalues)
-            console.log(res.data);
-
-        } catch (err) {
-            console.log(err);
-
+            const res = await axios.post('https://yalla-moba-v2.vercel.app/api/posts/', formvalues, {
+                headers: {
+                    "Authorization": `Bearer ${userToken}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            console.log(res.data.message);
+        } catch (err: any) {
+            console.log(err?.response?.data);
         }
 
     }
@@ -44,7 +73,7 @@ const AddPostScreen: React.FC = () => {
             body: '',
             files: null
         }, validationSchema: validationSchemaAddPost,
-        onSubmit: handleAddPost
+        onSubmit: handleFormData
     })
 
 
