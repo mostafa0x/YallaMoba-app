@@ -39,8 +39,8 @@ export default function AllPost({ post, ownerData }: propsFace) {
                     style={Style.img}
                     source={{ uri: imageUrl }}
                 />
-            </TouchableOpacity>
 
+            </TouchableOpacity>
             <ImageViewing
                 images={images}
                 imageIndex={0}
@@ -48,11 +48,19 @@ export default function AllPost({ post, ownerData }: propsFace) {
                 onRequestClose={() => setVisible(false)}
             />
 
-            <View className='flex-row justify-start gap-5 pl-5'>
-                <Icon size={30} source={'cards-heart-outline'} />
-                <Icon size={30} source={'comment-outline'} />
-                <Icon size={30} source={'share'} />
+            <View className='flex-row justify-start gap-10  items-center'>
+                <View className='flex-row items-center gap-2'>
+                    <Icon size={35} source={'cards-heart-outline'} />
+                    <Text className='text-xl'>79.</Text>
+                </View>
+                <View className='flex-row items-center gap-2'>
+                    <Icon size={35} source={'comment-outline'} />
+                    <Text className='text-xl'>55.</Text>
+                </View>
+                <Icon size={35} source={'share'} />
             </View>
+
+            <Text className='text-lg'>{post.body.split(" ").splice(0, 4).join(" ")}{post.body.split(" ").length > 5 && "...more"}</Text>
         </View >
     );
 }
@@ -61,6 +69,11 @@ const Style = StyleSheet.create({
     img: {
         width: '100%',
         height: 650,
-        borderRadius: 10,
+        borderRadius: 20,
+        marginTop: 10
+    }, bot: {
+
+        borderRadius: 20,
+        marginTop: 10
     },
 });
