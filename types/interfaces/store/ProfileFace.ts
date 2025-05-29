@@ -13,6 +13,7 @@ export interface PostFace {
   files: string[] | null;
   created_at: string;
   updated_at: string;
+  icon?: string | undefined;
 }
 export interface followersFace {
   id: string;

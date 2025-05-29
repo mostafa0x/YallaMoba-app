@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useVideoPlayer, VideoPlayer, VideoView } from 'expo-video';
@@ -36,6 +36,7 @@ const AddPostScreen: React.FC = () => {
     const player = useVideoPlayer(media?.uri ?? '', (player: VideoPlayer) => {
         player.loop = true;
         player.play();
+
     });
     function handleFormData(formValues: fromFace) {
         dispatch(ChangeTV(true))
@@ -156,6 +157,17 @@ const AddPostScreen: React.FC = () => {
         );
     };
 
+    useEffect(() => {
+        return () => {
+            if (player) {
+                try {
+                    player.pause(); // أو أي دالة أخرى مثل stop() إن وجدت
+                } catch (e) {
+                    console.warn('Video player cleanup error:', e);
+                }
+            }
+        };
+    }, []);
 
 
     return (

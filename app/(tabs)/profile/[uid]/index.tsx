@@ -12,12 +12,14 @@ import { fillProfile } from 'lib/Store/slices/ProfileSlice';
 import { Image } from 'expo-image';
 import axios from 'axios';
 import { API_BASE_URL } from 'config';
-import { ProfileFace } from 'types/interfaces/store/ProfileFace';
+import { PostFace, ProfileFace } from 'types/interfaces/store/ProfileFace';
 import PostView from 'components/Post/postView';
 import * as Clipboard from "expo-clipboard"
 import callToast from 'components/toast';
 import useProfile from 'Hooks/useProfile';
 import TextHeader from 'components/Profile/TextHeader';
+import * as VideoThumbnails from 'expo-video-thumbnails';
+
 
 export default function Proflie() {
     const { uid } = useLocalSearchParams()
@@ -28,6 +30,23 @@ export default function Proflie() {
     const dispatch = useDispatch()
     const { data, isLoading, error, isError, refetch } = useProfile(uid as string, headers)
 
+
+    const generateThumbnail = async (URL: string | undefined) => {
+        if (!URL) return
+        try {
+            const { uri } = await VideoThumbnails.getThumbnailAsync(
+                URL,
+                {
+                    time: 15000,
+                }
+            );
+            return uri
+        } catch (e) {
+            console.warn(e);
+        }
+    };
+
+
     useEffect(() => {
         if (!data) {
             dispatch(fillProfile({
@@ -36,16 +55,46 @@ export default function Proflie() {
             }));
         }
 
-        dispatch(fillProfile({
-            ownerData: data?.ownerData ?? null,
-            ownerPosts: data?.ownerPosts ?? null,
-        }));
+        const processThumbnails = async () => {
+            if (!data) return;
+
+            const updatedPosts = await Promise.all(
+                data.ownerPosts.map(async (item: PostFace) => {
+                    const firstFile = item.files?.[0];
+                    const type = firstFile?.split('.').pop()?.toLowerCase();
+
+                    if (typeof firstFile === 'string' && ['mp4', 'mov', 'webm'].includes(type ?? '')) {
+                        try {
+                            const thumbnailUri = await generateThumbnail(firstFile);
+                            return {
+                                ...item,
+                                icon: thumbnailUri
+                            };
+                        } catch (err) {
+                            console.error(`Failed to generate thumbnail for ${firstFile}`, err);
+                            return item;
+                        }
+                    }
+
+                    return item;
+                })
+            );
+
+
+            console.log(updatedPosts);
+
+            dispatch(fillProfile({
+                ownerData: data?.ownerData ?? null,
+                ownerPosts: updatedPosts ?? null,
+            }));
+
+
+        };
+        processThumbnails();
+
+
     }, [data])
 
-    useEffect(() => {
-
-
-    }, [ownerPosts])
 
 
     function CheckMyProfile() {

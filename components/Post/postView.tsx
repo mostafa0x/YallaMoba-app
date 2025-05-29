@@ -9,7 +9,6 @@ interface PostViewProps {
 }
 
 export default function PostView({ post }: PostViewProps) {
-    const [showVideo, setShowVideo] = useState(false);
     const thumbnailPlaceholder =
         'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM='
 
@@ -21,9 +20,9 @@ export default function PostView({ post }: PostViewProps) {
     return (
         <View style={{ position: 'relative' }}>
             {isVideo ? (
-                <TouchableOpacity onPress={() => setShowVideo(true)}>
+                <TouchableOpacity >
                     <Image
-                        source={{ uri: thumbnailPlaceholder }}
+                        source={{ uri: post.icon }}
                         style={styles.image}
                         contentFit="cover"
                     />
@@ -35,15 +34,18 @@ export default function PostView({ post }: PostViewProps) {
                     />
                 </TouchableOpacity>
             ) : (
-                <Image
-                    source={{ uri: firstFile }}
-                    style={styles.image}
-                    contentFit="cover"
-                />
-            )}
+                <TouchableOpacity>
+                    <Image
+                        source={{ uri: firstFile }}
+                        style={styles.image}
+                        contentFit="cover"
+                    />
+                </TouchableOpacity>
+            )
+            }
 
 
-        </View>
+        </View >
     );
 }
 
