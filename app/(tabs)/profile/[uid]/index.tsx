@@ -35,11 +35,17 @@ export default function Proflie() {
                 ownerPosts: null,
             }));
         }
+
         dispatch(fillProfile({
             ownerData: data?.ownerData ?? null,
             ownerPosts: data?.ownerPosts ?? null,
         }));
     }, [data])
+
+    useEffect(() => {
+
+
+    }, [ownerPosts])
 
 
     function CheckMyProfile() {
