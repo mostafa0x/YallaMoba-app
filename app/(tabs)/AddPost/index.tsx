@@ -63,11 +63,12 @@ const AddPostScreen: React.FC = () => {
                 },
             });
             console.log(res.data.message);
+            callToast({ type: 'success', text1: "Yalla Moba", text2: res.data.message ?? "Post created successfully" })
+            router.push("/")
         } catch (err: any) {
             console.log("Upload Error:", err?.response?.data || err.message);
             setErrorMes(err?.response?.data || err.message)
             callToast({ type: 'error', text1: "Yalla Moba", text2: err?.response?.data || err.message })
-
         } finally {
             dispatch(ChangeTV(false))
 
@@ -126,6 +127,7 @@ const AddPostScreen: React.FC = () => {
         }
     };
     const DeletMedia = () => {
+        setErrorMes(null)
         formik.resetForm()
         setMedia(null)
     }
