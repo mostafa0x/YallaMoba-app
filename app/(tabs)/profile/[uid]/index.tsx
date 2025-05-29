@@ -79,20 +79,12 @@ export default function Proflie() {
                     return item;
                 })
             );
-
-
-            console.log(updatedPosts);
-
             dispatch(fillProfile({
                 ownerData: data?.ownerData ?? null,
                 ownerPosts: updatedPosts ?? null,
             }));
-
-
         };
         processThumbnails();
-
-
     }, [data])
 
 
