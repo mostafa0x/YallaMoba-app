@@ -16,7 +16,7 @@ interface propsFace {
 export default function AllPost({ post, ownerData }: propsFace) {
     const imageUrl = post.files?.[0];
     const [visible, setVisible] = useState(false);
-
+    const [isshowMoreTxt, setIsShowMoreTxt] = useState(false)
     const images = imageUrl ? [{ uri: imageUrl }] : [];
 
     return (
@@ -59,8 +59,16 @@ export default function AllPost({ post, ownerData }: propsFace) {
                 </View>
                 <Icon size={35} source={'share'} />
             </View>
+            {isshowMoreTxt ?
+                <View className='flex-col'>
+                    <TouchableOpacity onPress={() => setIsShowMoreTxt(false)}>
+                        <Text className='text-lg'>{post.body} dfsfdsfds dfdsfds fdsfdsdfsfdsv vfsdfdsv cdsfdsv dfsfdsv vfsdfdsv cdsfdsv fsdfdsdsadsad sasadasdsasadsadsadsadsadsadsadsad sdasdsasdsadsadsadfsdfdsdsadsad sasadasdsasadsadsadsadsadsadsadsad sdasdsasdsadsadsad dfsfdsv vfsdfdsv cdsfdsv fsdfdsdsadsad sasadasdsasadsadsadsadsadsadsadsad sdasdsasdsadsadsadsad</Text>
+                    </TouchableOpacity>
 
-            <Text className='text-lg'>{post.body.split(" ").splice(0, 4).join(" ")}{post.body.split(" ").length > 5 && "...more"}</Text>
+                </View>
+                :
+                <Text className='text-lg'>{post.body.split(" ").splice(0, 4).join(" ")}{post.body.split(" ").length > 5 && <TouchableOpacity onPress={() => setIsShowMoreTxt(true)}><Text className=' opacity-50'>...more.</Text></TouchableOpacity>}</Text>
+            }
         </View >
     );
 }
