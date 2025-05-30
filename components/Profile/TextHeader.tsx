@@ -8,8 +8,10 @@ interface props {
 export default function TextHeader({ count }: props) {
 
     return (
-        count ? <Text style={Style.headerTextTop
-        } > {count}</Text > : <ActivityIndicator animating={true} />
+        count ?
+            <Text style={Style.headerTextTop}> {count}</Text >
+            :
+            <ActivityIndicator animating={true} />
 
     )
 }

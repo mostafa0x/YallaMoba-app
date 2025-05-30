@@ -5,6 +5,7 @@ export interface ProfileFace {
   ownerPosts: PostFace[] | null;
   ownerFollowers: followersFace[] | null;
   ownerFollowing: followersFace[] | null;
+  commentsCurrentPost: CommentFace[] | null;
 }
 
 export interface PostFace {
@@ -19,6 +20,26 @@ export interface PostFace {
 }
 export interface followersFace {
   id: string;
+  username: string;
+  avatar: string;
+}
+
+export interface AddCommentFace {
+  id: number;
+  user_id: number;
+  post_id: number;
+  content: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CommentFace {
+  id: number;
+  user_id: number;
+  post_id: number;
+  content: string;
+  created_at: string;
+  updated_at: string;
   username: string;
   avatar: string;
 }

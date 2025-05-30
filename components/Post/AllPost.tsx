@@ -10,6 +10,8 @@ import ImageViewing from 'react-native-image-viewing';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import axiosClient from 'lib/api/axiosClient';
 import callToast from 'components/toast';
+import { useSelector } from 'react-redux';
+import { StateFace } from 'types/interfaces/store/StateFace';
 
 interface propsFace {
     post: PostFace;
@@ -32,6 +34,7 @@ export default function AllPost({ post, ownerData, isVisible, openModal }: props
     const imageUrl = post.files?.[0];
     const [visible, setVisible] = useState(false);
     const [isshowMoreTxt, setIsShowMoreTxt] = useState(false)
+    const { commentsCurrentPost } = useSelector((state: StateFace) => state.ProfileReducer)
     const images = imageUrl ? [{ uri: imageUrl }] : [];
     const path = post.files?.[0]
     const type = post.files?.[0] && post.files?.[0].split(".").pop()
@@ -110,7 +113,7 @@ export default function AllPost({ post, ownerData, isVisible, openModal }: props
                     </TouchableOpacity>
                 </View>
                 <View className='flex-row items-center gap-2'>
-                    <TouchableOpacity className='flex-row items-center gap-2' onPress={openModal}>
+                    <TouchableOpacity className='flex-row items-center gap-2' onPress={() => openModal(post.id)}>
                         <Icon size={35} source={'comment-outline'} />
                         <Text className='text-xl'>{post.commentcount}</Text>
                     </TouchableOpacity>

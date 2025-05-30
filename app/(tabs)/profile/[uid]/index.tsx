@@ -79,7 +79,6 @@ export default function Proflie() {
                     return item;
                 })
             );
-            console.log(data.ownerData);
 
             dispatch(fillProfile({
                 ownerData: data?.ownerData ?? null,

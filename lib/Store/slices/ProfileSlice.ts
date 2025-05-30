@@ -12,6 +12,7 @@ const initialState: ProfileFace = {
   ownerPosts: null,
   ownerFollowers: null,
   ownerFollowing: null,
+  commentsCurrentPost: null,
 };
 const ProfileSlices = createSlice({
   name: 'ProfileSlices',
@@ -20,6 +21,9 @@ const ProfileSlices = createSlice({
     fillProfile: (state, action: ActionProps) => {
       state.ownerData = action.payload.ownerData;
       state.ownerPosts = action.payload.ownerPosts;
+    },
+    ChangeCommentsCurrentPost: (state, action) => {
+      state.commentsCurrentPost = action.payload;
     },
     ChangeOwnerFollowers: (state, action) => {
       state.ownerFollowers = action.payload;
@@ -31,4 +35,9 @@ const ProfileSlices = createSlice({
 });
 
 export const ProfileReducer = ProfileSlices.reducer;
-export const { fillProfile, ChangeOwnerFollowers, ChangeOwnerFollowing } = ProfileSlices.actions;
+export const {
+  fillProfile,
+  ChangeOwnerFollowers,
+  ChangeOwnerFollowing,
+  ChangeCommentsCurrentPost,
+} = ProfileSlices.actions;
