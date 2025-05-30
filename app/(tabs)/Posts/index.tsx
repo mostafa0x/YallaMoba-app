@@ -11,6 +11,8 @@ import { Modalize } from 'react-native-modalize';
 import axiosClient from 'lib/api/axiosClient'
 import callToast from 'components/toast'
 import { ChangeCommentsCurrentPost } from 'lib/Store/slices/ProfileSlice'
+import useGetComments from 'Hooks/useGetComments'
+import CommentItem from 'components/CommentsCard'
 
 
 export default function Post() {
@@ -19,25 +21,23 @@ export default function Post() {
     const dispatch = useDispatch()
     const flatListRef = useRef<FlatList | null>(null)
     const { index } = useLocalSearchParams()
+    const [currPostID, setCurrPostID] = useState(0)
     const [isVisible, setVisibleIndex] = useState(0)
-
+    const { refetch } = useGetComments(currPostID, dispatch)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const modalRef = useRef<Modalize>(null);
 
     const openModal = async (idPost: number) => {
-
+        setCurrPostID(idPost)
         modalRef.current?.open();
         setIsMenuOpen(true)
-        try {
-            const res = await axiosClient.get(`/posts/${idPost}/comments/`)
-            console.log(res.data);
-            dispatch(ChangeCommentsCurrentPost(res.data))
-        } catch (err: any) {
-            console.log(err);
-            callToast({ type: 'error', text1: "Yalla Moba", text2: err.message ?? "Error Comments !" })
 
-        }
     };
+
+    useEffect(() => {
+        currPostID !== 0 && refetch()
+    }, [currPostID])
+
     const closeModle = async () => {
 
         modalRef.current?.close();
@@ -116,39 +116,12 @@ export default function Post() {
                         flatListProps={{
                             data: commentsCurrentPost,
                             keyExtractor: (item) => item.id,
-                            renderItem: ({ item }: { item: CommentFace }) => (
-                                <View style={Style.menu} >
-                                    <View className='flex-row justify-between'>
-                                        <TouchableOpacity
-                                            className='flex-row items-center gap-2'>
-
-                                            <Avatar.Image size={30} source={{ uri: item.avatar }} />
-                                            <Text className='text-2xl'>{item.username}.</Text>
-
-                                        </TouchableOpacity>
-                                        {item.username === userData?.username}
-                                        <View
-                                            style={{
-                                                flexDirection: 'row',
-                                                justifyContent: 'center',
-                                            }}>
-                                            <Menu
-                                                visible={visible}
-                                                onDismiss={closeMenu}
-                                                anchor={<Button onPress={openMenu}>.....</Button>}>
-                                                <Menu.Item onPress={() => { }} title="Edit (onWork)" />
-                                                <Menu.Item title="User Profile" />
-                                                <Divider />
-                                                <Menu.Item style={{}} titleStyle={{ color: "red" }} onPress={() => handleDeleteComment(item.post_id, item.id)} title="Delete" />
-                                            </Menu>
-                                        </View>
-                                    </View>
-                                    <View className='w-full'>
-                                        <Text className=' pl-5 text-xl'>{item.content}</Text>
-                                    </View>
-                                </View >
-
-
+                            renderItem: ({ item }) => (
+                                <CommentItem
+                                    item={item}
+                                    userData={userData}
+                                    handleDeleteComment={handleDeleteComment}
+                                />
                             ),
                             ListEmptyComponent: () => (
                                 commentsCurrentPost === null ? (
