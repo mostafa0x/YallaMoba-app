@@ -1,38 +1,44 @@
-import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text } from 'react-native';
+import React, { useState } from 'react';
 import { TextInput, HelperText } from 'react-native-paper';
 
-
 type propsFace = {
-    label: string
-    name: string
-    placeholder: string
-    formik: any
-}
+  label: string;
+  name: string;
+  placeholder: string;
+  formik: any;
+};
 export default function TextField({ label, formik, name, placeholder }: propsFace) {
-    const [hidePassword, setHidePassword] = useState(true)
-
-    const showPassword = () => {
-        hidePassword ? setHidePassword(false) : setHidePassword(true)
-    }
-    return (
-        <>
-            <TextInput
-                value={formik.values?.[name]}
-                secureTextEntry={name === "password" && hidePassword}
-                right={name === "password" && <TextInput.Icon icon={hidePassword ? "eye" : "eye-outline"} onPress={() => showPassword()} />}
-                onChangeText={formik.handleChange(name)}
-                onBlur={formik.handleBlur(name)}
-                error={formik.touched?.[name] && !!formik.errors?.[name]}
-                label={label}
-                className={formik.values?.[name] == "" ? "placeholder:opacity-50" : "placeholder:opacity-100"}
-                placeholder={placeholder}
-
+  const isPassword = ['password', 'repassword'].includes(name);
+  const [hidePassword, setHidePassword] = useState(true);
+  const showPassword = () => {
+    hidePassword ? setHidePassword(false) : setHidePassword(true);
+  };
+  return (
+    <>
+      <TextInput
+        value={formik.values?.[name]}
+        secureTextEntry={isPassword && hidePassword}
+        right={
+          isPassword && (
+            <TextInput.Icon
+              icon={hidePassword ? 'eye' : 'eye-outline'}
+              onPress={() => showPassword()}
             />
-            <HelperText type="error" visible={formik.touched?.[name] && formik.errors?.[name]}>
-                {formik.errors?.[name]}
-            </HelperText>
-
-        </>
-    )
+          )
+        }
+        onChangeText={formik.handleChange(name)}
+        onBlur={formik.handleBlur(name)}
+        error={formik.touched?.[name] && !!formik.errors?.[name]}
+        label={label}
+        className={
+          formik.values?.[name] == '' ? 'placeholder:opacity-50' : 'placeholder:opacity-100'
+        }
+        placeholder={placeholder}
+      />
+      <HelperText type="error" visible={formik.touched?.[name] && !!formik.errors?.[name]}>
+        {formik.errors?.[name]}
+      </HelperText>
+    </>
+  );
 }

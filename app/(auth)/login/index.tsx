@@ -12,55 +12,79 @@ import { changeUserLoading } from 'lib/Store/slices/UserSlice';
 import { Image } from 'expo-image';
 
 export default function Login() {
-    const { isSubmiting, setIsSubmiting, apiError, setApiError } = useContext(authContext)
-    const dispatch = useDispatch()
-    const path = usePathname()
-    const formik = useFormik({
-        initialValues: {
-            identifier: "",
-            password: ""
+  const { isSubmiting, setIsSubmiting, apiError, setApiError } = useContext(authContext);
+  const dispatch = useDispatch();
+  const path = usePathname();
+  const formik = useFormik({
+    initialValues: {
+      identifier: '',
+      password: '',
+    },
+    validationSchema,
+    onSubmit: SubmitLogin,
+  });
 
-        }, validationSchema, onSubmit: SubmitLogin
-    })
-
-    async function SubmitLogin(formvalues: any) {
-        setApiError(null)
-        setIsSubmiting(true)
-        try {
-            await handleLogin(formvalues, dispatch, path)
-        } catch (err: any) {
-            setApiError(err)
-            setIsSubmiting(false)
-        } finally {
-            //empty 
-        }
+  async function SubmitLogin(formvalues: any) {
+    setApiError(null);
+    setIsSubmiting(true);
+    try {
+      await handleLogin(formvalues, dispatch, path);
+    } catch (err: any) {
+      setApiError(err);
+      setIsSubmiting(false);
+    } finally {
+      //empty
     }
+  }
 
-    useEffect(() => {
-        dispatch(changeUserLoading(false))
-        return () => {
-            setIsSubmiting(false)
-        }
-    }, [])
-    return (
-        <View style={{ flex: 1, justifyContent: 'center', padding: 20, gap: 10 }}>
-            <View className=' absolute top-[310px] left-[0px]'>
-                <Image contentFit="contain"
-                    style={{ width: 200, height: 150 }} source={require("../../../assets/laylaIntro.png")} />
-            </View>
+  useEffect(() => {
+    dispatch(changeUserLoading(false));
+    return () => {
+      setIsSubmiting(false);
+    };
+  }, []);
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', padding: 20, gap: 10 }}>
+      <View className=" absolute left-[0px] top-[310px]">
+        <Image
+          contentFit="contain"
+          style={{ width: 200, height: 150 }}
+          source={require('../../../assets/laylaIntro.png')}
+        />
+      </View>
 
-            <Text className='text-blue-500 text-5xl text-center py-16 pl-5 animate-shake animate-infinite'>Yalla Moba</Text>
-            <TextField name='identifier' label="Email or Username" placeholder="enter you email or username" formik={formik} />
-            <TextField name='password' label="Password" placeholder="enter you password" formik={formik} />
-            <Button buttonColor='green' textColor='white' loading={isSubmiting} disabled={isSubmiting} onPress={() => {
-                formik.handleSubmit()
-            }}
-            >Login</Button>
-            {apiError && <Text className='text-lg text-red-500 text-center'>{apiError}</Text>}
-            <Text className='pt-4'>i not have account , <Link href="/register">
-                <Text style={{ textDecorationLine: 'underline' }}>Create Now</Text>
-            </Link></Text>
-
-        </View>
-    );
+      <Text className="animate-shake animate-infinite py-16 pl-5 text-center text-5xl text-blue-500">
+        Yalla Moba
+      </Text>
+      <TextField
+        name="identifier"
+        label="Email or Username"
+        placeholder="enter you email or username"
+        formik={formik}
+      />
+      <TextField
+        name="password"
+        label="Password"
+        placeholder="enter you password"
+        formik={formik}
+      />
+      <Button
+        buttonColor="green"
+        textColor="white"
+        loading={isSubmiting}
+        disabled={isSubmiting}
+        onPress={() => {
+          formik.handleSubmit();
+        }}>
+        Login
+      </Button>
+      {apiError && <Text className="text-center text-lg text-red-500">{apiError}</Text>}
+      <Text className="pt-4">
+        i not have account ,{' '}
+        <Link href="/Register">
+          <Text style={{ textDecorationLine: 'underline' }}>Create Now</Text>
+        </Link>
+      </Text>
+    </View>
+  );
 }

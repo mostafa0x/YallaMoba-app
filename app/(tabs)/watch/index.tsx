@@ -7,7 +7,7 @@ import RootReel from 'components/Reels/layout';
 export default function Watch() {
   return (
     <View className="flex-1 bg-white">
-      <View className="m-2 ">
+      <View className="m-2 mb-0 ">
         <Text className="text-3xl">Reels</Text>
       </View>
 
