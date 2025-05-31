@@ -62,6 +62,13 @@ export default function ResultsSerach() {
           data={data}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => <ResultsSerachItem item={item} />}
+          ListEmptyComponent={() => {
+            return (
+              <View className=" items-center justify-center">
+                <Text className="mt-[200px] text-4xl text-gray-500 opacity-70">Empty Results.</Text>
+              </View>
+            );
+          }}
         />
       </View>
     </View>
