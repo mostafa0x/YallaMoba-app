@@ -1,80 +1,28 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, FlatList, TextInput, StyleSheet, Button, KeyboardAvoidingView, Platform } from 'react-native';
-import { Modalize } from 'react-native-modalize';
+import { View, Text } from 'react-native';
+import React from 'react';
+import { Avatar, Button, Icon } from 'react-native-paper';
 
-const comments = [
-    { id: '1', user: 'Ali', text: 'رائع جدًا 👍' },
-    { id: '2', user: 'Sara', text: 'فين ده؟' },
-    // ... ممكن تعليقات أكتر
-];
-
-export default function CommentsModal() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const modalRef = useRef<Modalize>(null);
-
-    const openModal = () => {
-        modalRef.current?.open();
-        setIsMenuOpen(true)
-    };
-
-    return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
-            <Button title="عرض التعليقات" onPress={openModal} />
-
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                style={{ flex: 1 }}
-            >
-
-                <Modalize
-                    ref={modalRef}
-                    modalHeight={500}
-                    handleStyle={{ backgroundColor: '#ccc' }}
-                    withHandle={true}
-                    panGestureComponentEnabled={false}
-                    flatListProps={{
-                        data: comments,
-                        keyExtractor: (item) => item.id,
-                        renderItem: ({ item }) => (
-                            <View style={styles.comment}>
-                                <Text style={styles.username}>{item.user}</Text>
-                                <Text>{item.text}</Text>
-                            </View>
-                        ),
-                        keyboardShouldPersistTaps: 'handled',
-
-                    }}
-                />
-
-            </KeyboardAvoidingView>
-            {isMenuOpen && <View className='m-2 border-2 p-2 bg-white border-gray-500 justify-end '>
-                <TextInput placeholder="comment here" />
-            </View>}
-
+export default function Watch() {
+  return (
+    <View className="flex-1 bg-white">
+      <View className="m-2 ">
+        <Text className="text-3xl">Reels</Text>
+      </View>
+      <View className="absolute top-[900px] z-[1] ml-6 flex-row items-center gap-2">
+        <Avatar.Image source={{ uri: '' }} size={50} />
+        <Text className="text-lg text-white">NamePlayer</Text>
+        <View className="ml-2 rounded-xl border-2 border-white">
+          <Button textColor="white">Follow</Button>
         </View>
-    );
+      </View>
+      <View className="absolute left-[450px] top-[700px] z-[1]  flex-col items-center gap-10">
+        <Icon color="white" size={40} source={'cards-heart-outline'} />
+        <Icon color="white" size={40} source={'chat-outline'} />
+        <Icon color="white" size={30} source={'share-outline'} />
+      </View>
+      <View className="">
+        <View className="h-[950px] w-full bg-black"></View>
+      </View>
+    </View>
+  );
 }
-
-const styles = StyleSheet.create({
-    comment: {
-        marginBottom: 10,
-    },
-    username: {
-        fontWeight: 'bold',
-    },
-    footer: {
-        paddingVertical: 100,
-        paddingHorizontal: 16,
-        borderTopWidth: 1,
-        borderColor: '#ddd',
-        backgroundColor: 'white',
-    },
-    input: {
-        height: 40,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 8,
-        paddingHorizontal: 10,
-        backgroundColor: '#f9f9f9',
-    },
-});
