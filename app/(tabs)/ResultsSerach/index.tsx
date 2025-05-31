@@ -21,7 +21,6 @@ export default function ResultsSerach() {
     };
     try {
       const res = await axiosClient.post(`/profiles/search/`, JSON);
-      console.log(res.data);
       setIsPageLoading(false);
       setData(res.data);
     } catch (err: any) {
@@ -42,7 +41,7 @@ export default function ResultsSerach() {
     router.back();
   }
   if (isPageLoading) {
-    return <SpinnerLoading />;
+    return <SpinnerLoading txt={`Searching for :  ${contant}`} />;
   }
 
   return (
@@ -51,7 +50,7 @@ export default function ResultsSerach() {
         <View className="flex-row  items-center ">
           <TouchableOpacity onPress={() => router.back()}>
             <View className="">
-              <Icon size={40} source={'close'} />
+              <Icon size={50} source={'arrow-left-thin'} />
             </View>
           </TouchableOpacity>
           <Text className="text-2xl">Results Serach..</Text>
