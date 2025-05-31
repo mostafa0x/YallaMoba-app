@@ -6,7 +6,7 @@ import { Avatar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { StateFace } from 'types/interfaces/store/StateFace';
 import IconRole from 'components/iconRole';
-import SpinnerLoading from 'components/SpinnerLoading';
+
 import { profileContext } from 'contexts/Profile/ProfileContext';
 import { fillProfile } from 'lib/Store/slices/ProfileSlice';
 import { Image } from 'expo-image';
@@ -19,6 +19,7 @@ import callToast from 'components/toast';
 import useProfile from 'Hooks/useProfile';
 import TextHeader from 'components/Profile/TextHeader';
 import * as VideoThumbnails from 'expo-video-thumbnails';
+import SpinnerLoading from 'components/spinnerLoading';
 
 
 export default function Proflie() {

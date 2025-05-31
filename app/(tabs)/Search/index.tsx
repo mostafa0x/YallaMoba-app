@@ -33,6 +33,7 @@ export default function Search() {
         }
         setSearchTxt('')
         searchBarRef.current?.clear()
+        router.push({pathname:"/ResultsSerach",params:{contant:srearchItem}})
     }
 
 
