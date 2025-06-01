@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, TextInput } from 'react-native-paper';
 import TextField from 'components/form/TextField';
 import { useFormik } from 'formik';
@@ -7,10 +7,31 @@ import { Image } from 'expo-image';
 import HeroRole from 'components/HeroRole';
 import DesHeroRole from 'components/DesHeroRole';
 import { RoleFace } from 'types/interfaces/store/UserFace';
+import { useAudioPlayer } from 'expo-audio';
+import { HerosROlesFace } from 'types/interfaces/store/AvatarFace';
 
 export default function Register() {
+  // const audioSource: HerosROlesFace = {
+  //   MM: require('../../../assets/Audio/Heros/les.ogg'),
+  //   Jungle: require('../../../assets/Audio/Heros/haya.ogg'),
+  //   Exp: require('../../../assets/Audio/Heros/yzong.ogg'),
+  //   Mid: require('../../../assets/Audio/Heros/nana.ogg'),
+  //   Roam: require('../../../assets/Audio/Heros/tig.ogg'),
+  // };
+
   const [currStage, setCurrStage] = useState(1);
   const [currRole, setCurrRole] = useState<RoleFace>('Roam');
+  const player = useAudioPlayer(require('../../../assets/Audio/Heros/les.ogg'));
+
+  function handleAudioHero() {
+    player.play();
+  }
+
+  useEffect(() => {
+    handleAudioHero();
+
+    return () => {};
+  }, []);
 
   async function handleRegister() {}
   const formik = useFormik({

@@ -1,7 +1,10 @@
 {
   "expo": {
     "scheme": "yallamoba",
-    "deepLinks": ["https://yallamoba.com", "yallamoba://"],
+    "deepLinks": [
+      "https://yallamoba.com",
+      "yallamoba://"
+    ],
     "name": "Yalla Moba",
     "slug": "yalla-moba",
     "version": "1.0.0",
@@ -21,7 +24,11 @@
           "recordAudioAndroid": true
         }
       ],
-      ["expo-video", {}]
+      [
+        "expo-video",
+        {}
+      ],
+      "expo-audio"
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -31,7 +38,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
