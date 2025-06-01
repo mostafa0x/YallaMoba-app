@@ -9,29 +9,28 @@ import DesHeroRole from 'components/DesHeroRole';
 import { RoleFace } from 'types/interfaces/store/UserFace';
 import { useAudioPlayer } from 'expo-audio';
 import { HerosROlesFace } from 'types/interfaces/store/AvatarFace';
-
 export default function Register() {
-  // const audioSource: HerosROlesFace = {
-  //   MM: require('../../../assets/Audio/Heros/les.ogg'),
-  //   Jungle: require('../../../assets/Audio/Heros/haya.ogg'),
-  //   Exp: require('../../../assets/Audio/Heros/yzong.ogg'),
-  //   Mid: require('../../../assets/Audio/Heros/nana.ogg'),
-  //   Roam: require('../../../assets/Audio/Heros/tig.ogg'),
-  // };
+  const audioSource: HerosROlesFace = {
+    MM: require('../../../assets/Audio/Heros/les.ogg'),
+    Jungle: require('../../../assets/Audio/Heros/haya.ogg'),
+    Exp: require('../../../assets/Audio/Heros/yzong.ogg'),
+    Mid: require('../../../assets/Audio/Heros/nana.ogg'),
+    Roam: require('../../../assets/Audio/Heros/tig.ogg'),
+  };
 
   const [currStage, setCurrStage] = useState(1);
   const [currRole, setCurrRole] = useState<RoleFace>('Roam');
-  const player = useAudioPlayer(require('../../../assets/Audio/Heros/les.ogg'));
+  const player = useAudioPlayer(audioSource[currRole]);
 
   function handleAudioHero() {
     player.play();
   }
 
   useEffect(() => {
-    handleAudioHero();
+    currStage == 2 && handleAudioHero();
 
     return () => {};
-  }, []);
+  }, [currRole]);
 
   async function handleRegister() {}
   const formik = useFormik({
@@ -76,7 +75,6 @@ export default function Register() {
             {'become the shield '.toLocaleUpperCase()}
           </Text>
           <Text className="ml-8 text-3xl font-extrabold text-yellow-400">
-            {' '}
             {'of your team '.toLocaleUpperCase()}
           </Text>
           <Text className="text-m ml-12 mt-6 text-yellow-400 opacity-70">
@@ -84,11 +82,11 @@ export default function Register() {
           </Text>
         </View>
         <View className="absolute left-[5px] top-[160px] flex-row gap-2">
-          <HeroRole Role={'Roam'} currRole={currRole} setCurrRole={setCurrRole} />
-          <HeroRole Role={'Mid'} currRole={currRole} setCurrRole={setCurrRole} />
-          <HeroRole Role={'Jungle'} currRole={currRole} setCurrRole={setCurrRole} />
-          <HeroRole Role={'MM'} currRole={currRole} setCurrRole={setCurrRole} />
-          <HeroRole Role={'Exp'} currRole={currRole} setCurrRole={setCurrRole} />
+          <HeroRole Role="Roam" currRole={currRole} setCurrRole={setCurrRole} />
+          <HeroRole Role="Mid" currRole={currRole} setCurrRole={setCurrRole} />
+          <HeroRole Role="Jungle" currRole={currRole} setCurrRole={setCurrRole} />
+          <HeroRole Role="MM" currRole={currRole} setCurrRole={setCurrRole} />
+          <HeroRole Role="Exp" currRole={currRole} setCurrRole={setCurrRole} />
         </View>
         <View className="items-center">
           <View className="mt-[300px]">

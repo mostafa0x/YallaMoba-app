@@ -4,15 +4,13 @@ import { Image } from 'expo-image';
 import { RoleFace } from 'types/interfaces/store/UserFace';
 import { HerosROlesFace } from 'types/interfaces/store/AvatarFace';
 
-export default function HeroRole({
-  Role,
-  currRole,
-  setCurrRole,
-}: {
+interface props {
   Role: RoleFace;
   currRole: string;
   setCurrRole: any;
-}) {
+}
+
+export default function HeroRole({ Role, currRole, setCurrRole }: props) {
   const HeroRoles: HerosROlesFace = {
     MM: require('../../assets/HeroRoles/les.png'),
     Exp: require('../../assets/HeroRoles/yzong.png'),
@@ -29,7 +27,7 @@ export default function HeroRole({
       className="rounded-2xl border-2">
       <View className={`${currRole == Role ? 'opacity-100' : 'opacity-20'}`}>
         <TouchableOpacity onPress={() => setCurrRole(Role)}>
-          <Image contentFit="cover" style={Style.image} source={CurrentRole} />;
+          <Image contentFit="cover" style={Style.image} source={CurrentRole} />
         </TouchableOpacity>
       </View>
     </View>
