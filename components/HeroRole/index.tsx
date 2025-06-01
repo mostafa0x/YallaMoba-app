@@ -24,8 +24,10 @@ export default function HeroRole({
   const CurrentRole = HeroRoles[Role];
 
   return (
-    <View className="border-2 ">
-      <View className={`${currRole == Role ? 'opacity-100' : 'opacity-50'}`}>
+    <View
+      style={{ borderColor: currRole == Role ? '#9d94d4' : '#483D8B' }}
+      className="rounded-2xl border-2">
+      <View className={`${currRole == Role ? 'opacity-100' : 'opacity-20'}`}>
         <TouchableOpacity onPress={() => setCurrRole(Role)}>
           <Image contentFit="cover" style={Style.image} source={CurrentRole} />;
         </TouchableOpacity>
@@ -37,6 +39,7 @@ export default function HeroRole({
 const Style = StyleSheet.create({
   image: {
     width: 90,
-    height: 200,
+    height: 220,
+    borderRadius: 13,
   },
 });
