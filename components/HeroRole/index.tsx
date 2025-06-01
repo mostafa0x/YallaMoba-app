@@ -16,7 +16,7 @@ export default function HeroRole({
   const HeroRoles: HerosROlesFace = {
     MM: require('../../assets/HeroRoles/les.png'),
     Exp: require('../../assets/HeroRoles/yzong.png'),
-    Jungle: require('../../assets/HeroRoles/lance.png'),
+    Jungle: require('../../assets/HeroRoles/haya.png'),
     Mid: require('../../assets/HeroRoles/nana.png'),
     Roam: require('../../assets/HeroRoles/tig.png'),
   };

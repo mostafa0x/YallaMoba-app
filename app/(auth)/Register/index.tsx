@@ -51,14 +51,14 @@ export default function Register() {
     return (
       <View className="flex-1 justify-center bg-[#2d2564]">
         <View className=" absolute left-[130px] top-[50px]">
-          <Text className="text-3xl font-extrabold text-white">
+          <Text className="text-3xl font-extrabold text-yellow-400">
             {'become the shield '.toLocaleUpperCase()}
           </Text>
-          <Text className="ml-6 text-3xl font-extrabold text-white">
+          <Text className="ml-8 text-3xl font-extrabold text-yellow-400">
             {' '}
             {'of your team '.toLocaleUpperCase()}
           </Text>
-          <Text className="text-m ml-12 mt-6 text-yellow-200 opacity-70">
+          <Text className="text-m ml-12 mt-6 text-yellow-400 opacity-70">
             {`master the ${currRole} role `.toLocaleUpperCase()}
           </Text>
         </View>
