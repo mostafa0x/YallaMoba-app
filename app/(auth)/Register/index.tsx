@@ -3,9 +3,13 @@ import React, { useState } from 'react';
 import { Button, TextInput } from 'react-native-paper';
 import TextField from 'components/form/TextField';
 import { useFormik } from 'formik';
+import { Image } from 'expo-image';
+import HeroRole from 'components/HeroRole';
 
 export default function Register() {
   const [currStage, setCurrStage] = useState(1);
+  const [currRole, setCurrRole] = useState('');
+
   async function handleRegister() {}
   const formik = useFormik({
     initialValues: {
@@ -44,7 +48,14 @@ export default function Register() {
   if (currStage == 2) {
     return (
       <View className="flex-1 justify-center bg-white">
-        <View className="m-10">
+        <View className="items-center">
+          <View className="flex-row gap-1">
+            <HeroRole Role={'Roam'} currRole={currRole} setCurrRole={setCurrRole} />
+            <HeroRole Role={'Mid'} currRole={currRole} setCurrRole={setCurrRole} />
+            <HeroRole Role={'Jungle'} currRole={currRole} setCurrRole={setCurrRole} />
+            <HeroRole Role={'MM'} currRole={currRole} setCurrRole={setCurrRole} />
+            <HeroRole Role={'Exp'} currRole={currRole} setCurrRole={setCurrRole} />
+          </View>
           <Text>22222</Text>
         </View>
       </View>
