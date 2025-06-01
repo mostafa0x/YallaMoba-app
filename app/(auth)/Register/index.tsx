@@ -30,7 +30,7 @@ export default function Register() {
     currStage == 2 && handleAudioHero();
 
     return () => {};
-  }, [currRole]);
+  }, [currRole, currStage]);
 
   async function handleRegister() {}
   const formik = useFormik({
@@ -90,7 +90,7 @@ export default function Register() {
         </View>
         <View className="items-center">
           <View className="mt-[300px]">
-            <DesHeroRole Role={currRole} />
+            <DesHeroRole Role={currRole} currRole={currRole} />
           </View>
         </View>
         <View className="mt-32 items-center align-middle">
