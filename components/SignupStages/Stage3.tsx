@@ -5,11 +5,11 @@ import TextField from 'components/form/TextField';
 import { Button } from 'react-native-paper';
 
 interface props {
-  setCurrStage: any;
+  handleSetCurrStage: any;
   formik: any;
 }
 
-export default function Stage3({ setCurrStage, formik }: props) {
+export default function Stage3({ handleSetCurrStage, formik }: props) {
   return (
     <View className="flex-1 bg-[#2d2564]">
       <View className="ml-18 mt-28 items-center">
@@ -25,6 +25,7 @@ export default function Stage3({ setCurrStage, formik }: props) {
               no one can take exits names
             </Text>
             <TextField
+              signup={true}
               label={'username'}
               name={'username'}
               placeholder={'username'}

@@ -8,10 +8,11 @@ import { RoleFace } from 'types/interfaces/store/UserFace';
 interface props {
   currRole: RoleFace;
   setCurrRole: any;
-  setCurrStage: any;
+  handleSetCurrStage: any;
 }
 
-export default function Stage2({ currRole, setCurrRole, setCurrStage }: props) {
+export default function Stage2({ currRole, setCurrRole, handleSetCurrStage }: props) {
+  const onStage = 2;
   return (
     <View className="flex-1 justify-center bg-[#2d2564]">
       <View className=" absolute left-[130px] top-[50px]">
@@ -39,7 +40,7 @@ export default function Stage2({ currRole, setCurrRole, setCurrStage }: props) {
       </View>
       <View className="mt-32 items-center align-middle">
         <View className="">
-          <TouchableOpacity onPress={() => setCurrStage((current: number) => current + 1)}>
+          <TouchableOpacity onPress={() => handleSetCurrStage(onStage)}>
             <Button
               labelStyle={{ fontSize: 20 }}
               style={{ borderRadius: 100 }}

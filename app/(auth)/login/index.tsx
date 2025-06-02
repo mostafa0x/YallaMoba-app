@@ -44,7 +44,8 @@ export default function Login() {
     };
   }, []);
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: 20, gap: 10 }}>
+    <View
+      style={{ flex: 1, justifyContent: 'center', padding: 20, gap: 10, backgroundColor: 'white' }}>
       <View className=" absolute left-[0px] top-[310px]">
         <Image
           contentFit="contain"

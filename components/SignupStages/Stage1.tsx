@@ -5,10 +5,11 @@ import { Button } from 'react-native-paper';
 
 interface props {
   formik: any;
-  setCurrStage: any;
+  handleSetCurrStage: any;
 }
 
-export default function Stage1({ setCurrStage, formik }: props) {
+export default function Stage1({ handleSetCurrStage, formik }: props) {
+  const onStage = 1;
   return (
     <View className="flex-1 justify-center bg-white">
       <View className="m-10">
@@ -17,10 +18,7 @@ export default function Stage1({ setCurrStage, formik }: props) {
         <TextField label={'password'} name={'password'} placeholder={''} formik={formik} />
         <TextField label={'repasword'} name={'repassword'} placeholder={''} formik={formik} />
         <View className="m-5">
-          <Button
-            onPress={() => setCurrStage((current: number) => current + 1)}
-            buttonColor="green"
-            textColor="white">
+          <Button onPress={() => handleSetCurrStage(onStage)} buttonColor="green" textColor="white">
             Next
           </Button>
         </View>
