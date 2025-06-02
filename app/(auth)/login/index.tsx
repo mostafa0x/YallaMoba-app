@@ -40,6 +40,7 @@ export default function Login() {
   useEffect(() => {
     dispatch(changeUserLoading(false));
     return () => {
+      formik.resetForm();
       setIsSubmiting(false);
     };
   }, []);

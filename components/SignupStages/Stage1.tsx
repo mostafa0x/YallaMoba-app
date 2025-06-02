@@ -17,9 +17,21 @@ export default function Stage1({ handleSetCurrStage, formik }: props) {
         <Text className="text-5xl text-yellow-400">Create_Account.</Text>
       </View>
       <View className="m-10  flex-1 justify-center ">
-        <TextField label={'email'} name={'email'} placeholder={''} formik={formik} />
-        <TextField label={'password'} name={'password'} placeholder={''} formik={formik} />
-        <TextField label={'repasword'} name={'repassword'} placeholder={''} formik={formik} />
+        <TextField signup={true} label={'email'} name={'email'} placeholder={''} formik={formik} />
+        <TextField
+          signup={true}
+          label={'password'}
+          name={'password'}
+          placeholder={''}
+          formik={formik}
+        />
+        <TextField
+          signup={true}
+          label={'repasword'}
+          name={'repassword'}
+          placeholder={''}
+          formik={formik}
+        />
 
         <View className="m-16">
           <Button onPress={() => handleSetCurrStage(onStage)} buttonColor="green" textColor="white">

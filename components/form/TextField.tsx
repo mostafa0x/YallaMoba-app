@@ -27,11 +27,13 @@ export default function TextField({ label, formik, name, placeholder, signup }: 
         right={
           isPassword && (
             <TextInput.Icon
+              color={hidePassword ? 'white' : 'white'}
               icon={hidePassword ? 'eye' : 'eye-outline'}
               onPress={() => showPassword()}
             />
           )
         }
+        style={signup && { backgroundColor: '#4f4497' }}
         textColor={signup ? 'black' : 'black'}
         onChangeText={formik.handleChange(name)}
         onBlur={formik.handleBlur(name)}
@@ -41,6 +43,21 @@ export default function TextField({ label, formik, name, placeholder, signup }: 
           formik.values?.[name] == '' ? 'placeholder:opacity-50' : 'placeholder:opacity-100'
         }
         placeholder={placeholder}
+        theme={
+          signup
+            ? {
+                colors: {
+                  primary: 'white',
+                  onSurfaceVariant: '#bb9cc0',
+                },
+              }
+            : {
+                colors: {
+                  primary: '#1f1d1d75',
+                  onSurfaceVariant: '#3a3a3a',
+                },
+              }
+        }
       />
       <HelperText type="error" visible={!!isError}>
         {formik.errors?.[name]}

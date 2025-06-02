@@ -14,6 +14,12 @@ import Stage2 from 'components/SignupStages/Stage2';
 import Stage3 from 'components/SignupStages/Stage3';
 import { useRouter } from 'expo-router';
 import { SignUpvalidationSchema } from 'lib/Validations/SignuoSchema';
+import axiosClient from 'lib/api/axiosClient';
+import callToast from 'components/toast';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { changeUserLoading, fillUserInfo } from 'lib/Store/slices/UserSlice';
+import { storeUserInfo } from 'services/storage';
 
 export default function Register() {
   const audioSource: HerosROlesFace = {
@@ -24,6 +30,7 @@ export default function Register() {
     Roam: require('../../../assets/Audio/Heros/tig.ogg'),
   };
   const router = useRouter();
+  const dispatch = useDispatch();
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [currStage, setCurrStage] = useState(1);
   const [currRole, setCurrRole] = useState<RoleFace>('Roam');
@@ -60,7 +67,6 @@ export default function Register() {
         password: !!formik.errors.password,
         repassword: !!formik.errors.repassword,
       };
-      console.log(Erros);
       if (!Erros.email && !Erros.password && !Erros.repassword) {
         setCurrStage(current + 1);
       }
@@ -104,8 +110,32 @@ export default function Register() {
 
   async function handleRegister(formValuse: any) {
     setIsSubmiting(true);
-
     console.log(formValuse);
+
+    try {
+      const res = await axios.post(
+        `https://yalla-moba-v2.vercel.app/api/users/register/`,
+        formValuse
+      );
+      const data = res.data;
+      callToast({
+        type: 'success',
+        text1: 'Register',
+        text2: res.data.message ?? 'An account has been registered successfully',
+      });
+      dispatch(changeUserLoading(true));
+      dispatch(fillUserInfo({ userToken: data.token, userData: data.user }));
+      await storeUserInfo(data.token, data.user);
+      router.push('/');
+    } catch (err: any) {
+      console.log(err);
+      callToast({
+        type: 'error',
+        text1: 'Register',
+        text2: err?.response?.data?.error ?? 'Error register !',
+      });
+      setIsSubmiting(false);
+    }
   }
 
   if (currStage == 1) {
@@ -126,4 +156,7 @@ export default function Register() {
       <Stage3 isSubmiting={isSubmiting} handleSetCurrStage={handleSetCurrStage} formik={formik} />
     );
   }
+}
+function dispatch(arg0: any) {
+  throw new Error('Function not implemented.');
 }
