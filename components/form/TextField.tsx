@@ -32,7 +32,7 @@ export default function TextField({ label, formik, name, placeholder, signup }: 
             />
           )
         }
-        contentStyle={signup && { backgroundColor: '#facc15' }}
+        textColor={signup ? 'black' : 'black'}
         onChangeText={formik.handleChange(name)}
         onBlur={formik.handleBlur(name)}
         error={formik.touched?.[name] && !!formik.errors?.[name]}

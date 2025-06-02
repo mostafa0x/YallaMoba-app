@@ -29,8 +29,8 @@ export default function DesHeroRole({ Role, currRole }: { Role: RoleFace; currRo
   }, [currRole]);
 
   return (
-    <View style={{ margin: 20 }}>
-      <Animated.Text style={{ fontSize: 18, color: 'white', opacity }}>
+    <View style={{ margin: 25 }}>
+      <Animated.Text style={{ fontSize: 15, color: 'white', opacity }}>
         {desHeroRoles[Role]}
       </Animated.Text>
     </View>

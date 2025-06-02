@@ -19,20 +19,20 @@ export default function GenderList({ gender, formik }: props) {
   }
   return (
     <View className=" items-center justify-center">
-      <View className="flex-row gap-10">
+      <View className="flex-row items-center gap-10">
         <TouchableOpacity onPress={ChangeGender}>
-          <Text className="text-[80px] font-light text-white ">{'<'}</Text>
+          <Icon color={'white'} size={40} source="less-than" />
         </TouchableOpacity>
         <View className="">
           <Icon
             color={gender == 'Male' ? 'blue' : 'deeppink'}
             source={gender == 'Male' ? 'gender-male' : 'gender-female'}
-            size={100}
+            size={40}
           />
           <Text className="text-center text-sm text-white opacity-60">{gender}</Text>
         </View>
         <TouchableOpacity onPress={ChangeGender}>
-          <Text className="text-[80px] font-light text-white ">{'>'}</Text>
+          <Icon color={'white'} size={40} source="greater-than" />
         </TouchableOpacity>
       </View>
     </View>

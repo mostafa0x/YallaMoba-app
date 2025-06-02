@@ -23,7 +23,7 @@ export default function Stage3({ handleSetCurrStage, formik, isSubmiting }: prop
       <View className=" items-center">
         <GenderList formik={formik} gender={formik.values.gender} />
 
-        <View className=" mt-28">
+        <View className=" mt-20">
           <View className="w-[250px]">
             <Text className="mb-2 text-[11px] text-gray-300 opacity-50">
               no one can take exits names

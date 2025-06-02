@@ -34,7 +34,7 @@ export default function Stage2({ currRole, setCurrRole, handleSetCurrStage }: pr
         <HeroRole Role="Exp" currRole={currRole} setCurrRole={setCurrRole} />
       </View>
       <View className="items-center">
-        <View className="mt-[300px]">
+        <View className="mt-[220px]">
           <DesHeroRole Role={currRole} currRole={currRole} />
         </View>
       </View>
