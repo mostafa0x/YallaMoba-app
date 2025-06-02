@@ -8,12 +8,23 @@ import { StateFace } from 'types/interfaces/store/StateFace';
 
 interface props {
   currStage?: number;
+  formik?: any;
 }
-export default function EditAvatar({ currStage }: props) {
+export default function EditAvatar({ currStage, formik }: props) {
   const { avatars, currentAvatarIndex } = useSelector((state: StateFace) => state.AvatarReducer);
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (currStage && formik) {
+      formik.setFieldValue('avatar', avatars[currentAvatarIndex]);
+    }
+
+    return () => {};
+  }, [currentAvatarIndex]);
+
+  useEffect(() => {
+    if (currStage && formik) formik.setFieldValue('avatar', avatars[currentAvatarIndex]);
+
     return () => {};
   }, []);
   return (

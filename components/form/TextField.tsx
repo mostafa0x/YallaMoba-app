@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextInput, HelperText } from 'react-native-paper';
 
 type propsFace = {
@@ -11,13 +11,17 @@ type propsFace = {
 };
 export default function TextField({ label, formik, name, placeholder, signup }: propsFace) {
   const isPassword = ['password', 'repassword'].includes(name);
+  const isUserName = ['username'].includes(name);
   const [hidePassword, setHidePassword] = useState(true);
+  const isError: boolean = formik.touched?.[name] && !!formik.errors?.[name];
+
   const showPassword = () => {
     hidePassword ? setHidePassword(false) : setHidePassword(true);
   };
   return (
     <>
       <TextInput
+        maxLength={isUserName ? 14 : 100}
         value={formik.values?.[name]}
         secureTextEntry={isPassword && hidePassword}
         right={
@@ -38,7 +42,7 @@ export default function TextField({ label, formik, name, placeholder, signup }: 
         }
         placeholder={placeholder}
       />
-      <HelperText type="error" visible={formik.touched?.[name] && !!formik.errors?.[name]}>
+      <HelperText type="error" visible={!!isError}>
         {formik.errors?.[name]}
       </HelperText>
     </>

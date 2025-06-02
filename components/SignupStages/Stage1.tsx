@@ -10,10 +10,13 @@ interface props {
 
 export default function Stage1({ handleSetCurrStage, formik }: props) {
   const onStage = 1;
+
+  function CheckAfterNext() {
+    //   handleSetCurrStage(onStage);
+  }
   return (
     <View className="flex-1 justify-center bg-white">
       <View className="m-10">
-        <TextField label={'username'} name={'username'} placeholder={''} formik={formik} />
         <TextField label={'email'} name={'email'} placeholder={''} formik={formik} />
         <TextField label={'password'} name={'password'} placeholder={''} formik={formik} />
         <TextField label={'repasword'} name={'repassword'} placeholder={''} formik={formik} />
