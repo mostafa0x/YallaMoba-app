@@ -49,7 +49,6 @@ export default function Register() {
     }
     if (currStage == 2) {
     }
-
     setCurrStage(current + 1);
   }
 

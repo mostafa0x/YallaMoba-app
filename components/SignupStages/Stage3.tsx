@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import EditAvatar from 'components/form/EditAvatar';
 import TextField from 'components/form/TextField';
 import { ActivityIndicator, Button } from 'react-native-paper';
+import GenderList from 'components/GenderList';
 
 interface props {
   handleSetCurrStage: any;
@@ -20,6 +21,8 @@ export default function Stage3({ handleSetCurrStage, formik, isSubmiting }: prop
         <EditAvatar formik={formik} currStage={3} />
       </View>
       <View className=" items-center">
+        <GenderList formik={formik} gender={formik.values.gender} />
+
         <View className=" mt-28">
           <View className="w-[250px]">
             <Text className="mb-2 text-[11px] text-gray-300 opacity-50">
