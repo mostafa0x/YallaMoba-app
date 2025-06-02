@@ -9,6 +9,10 @@ import DesHeroRole from 'components/DesHeroRole';
 import { RoleFace } from 'types/interfaces/store/UserFace';
 import { useAudioPlayer } from 'expo-audio';
 import { HerosROlesFace } from 'types/interfaces/store/AvatarFace';
+import Stage1 from 'components/SignupStages/Stage1';
+import Stage2 from 'components/SignupStages/Stage2';
+import Stage3 from 'components/SignupStages/Stage3';
+
 export default function Register() {
   const audioSource: HerosROlesFace = {
     MM: require('../../../assets/Audio/Heros/les.ogg'),
@@ -47,66 +51,13 @@ export default function Register() {
   });
 
   if (currStage == 1) {
-    return (
-      <View className="flex-1 justify-center bg-white">
-        <View className="m-10">
-          <TextField label={'username'} name={'username'} placeholder={''} formik={formik} />
-          <TextField label={'email'} name={'email'} placeholder={''} formik={formik} />
-          <TextField label={'password'} name={'password'} placeholder={''} formik={formik} />
-          <TextField label={'repasword'} name={'repassword'} placeholder={''} formik={formik} />
-          <View className="m-5">
-            <Button
-              onPress={() => setCurrStage((current) => current + 1)}
-              buttonColor="green"
-              textColor="white">
-              Next
-            </Button>
-          </View>
-        </View>
-      </View>
-    );
+    return <Stage1 formik={formik} setCurrStage={setCurrStage} />;
   }
 
   if (currStage == 2) {
-    return (
-      <View className="flex-1 justify-center bg-[#2d2564]">
-        <View className=" absolute left-[130px] top-[50px]">
-          <Text className="text-3xl font-extrabold text-yellow-400">
-            {'become the shield '.toLocaleUpperCase()}
-          </Text>
-          <Text className="ml-8 text-3xl font-extrabold text-yellow-400">
-            {'of your team '.toLocaleUpperCase()}
-          </Text>
-          <Text className="text-m ml-12 mt-6 text-yellow-400 opacity-70">
-            {`master the ${currRole} role `.toLocaleUpperCase()}
-          </Text>
-        </View>
-        <View className="absolute left-[5px] top-[160px] flex-row gap-2">
-          <HeroRole Role="Roam" currRole={currRole} setCurrRole={setCurrRole} />
-          <HeroRole Role="Mid" currRole={currRole} setCurrRole={setCurrRole} />
-          <HeroRole Role="Jungle" currRole={currRole} setCurrRole={setCurrRole} />
-          <HeroRole Role="MM" currRole={currRole} setCurrRole={setCurrRole} />
-          <HeroRole Role="Exp" currRole={currRole} setCurrRole={setCurrRole} />
-        </View>
-        <View className="items-center">
-          <View className="mt-[300px]">
-            <DesHeroRole Role={currRole} currRole={currRole} />
-          </View>
-        </View>
-        <View className="mt-32 items-center align-middle">
-          <View className="">
-            <Button
-              labelStyle={{ fontSize: 20 }}
-              style={{ borderRadius: 100 }}
-              contentStyle={{ height: 60, width: 250 }}
-              uppercase={true}
-              buttonColor="#1a8d03"
-              textColor="white">
-              continue with {currRole !== 'Jungle' ? currRole : 'Jg'}
-            </Button>
-          </View>
-        </View>
-      </View>
-    );
+    return <Stage2 setCurrStage={setCurrStage} currRole={currRole} setCurrRole={setCurrRole} />;
+  }
+  if (currStage == 3) {
+    return <Stage3 setCurrStage={setCurrStage} formik={formik} />;
   }
 }
