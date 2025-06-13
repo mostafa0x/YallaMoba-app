@@ -14,6 +14,7 @@ export default function RootReel({ countLikes, countComment }: props) {
     <View>
       <InfoBox />
       <RightBox countLikes={countLikes} countComment={countComment} />
+      <View className="mt-2 h-[1024px] w-full bg-black"></View>
     </View>
   );
 }
