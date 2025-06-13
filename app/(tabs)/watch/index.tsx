@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Avatar, Button, Icon, ActivityIndicator } from 'react-native-paper';
 import ReelBox from 'components/Reels/layout';
@@ -11,6 +11,8 @@ import { StateFace } from 'types/interfaces/store/StateFace';
 import { cheangeReelsData } from 'lib/Store/slices/ReelsSlice';
 
 export default function Watch() {
+  const { height } = Dimensions.get('window');
+
   const { ReelsData } = useSelector((state: StateFace) => state.ReelsReducer);
   const [pageLoading, setPageLoading] = useState(true);
   const dispatch = useDispatch();
@@ -36,22 +38,7 @@ export default function Watch() {
     }
   }, [data]);
 
-  const renderItem = useCallback(
-    ({ item }: any) => (
-      <View
-        style={{ flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderColor: '#eee' }}>
-        <Avatar.Image size={50} source={{ uri: item.avatar }} />
-        <View style={{ marginLeft: 10, flex: 1 }}>
-          <Text style={{ fontWeight: 'bold' }}>{item.username}</Text>
-          <Text>{item.body}</Text>
-          <Text>
-            Likes: {item.likeCount} Comments: {item.commentCount}
-          </Text>
-        </View>
-      </View>
-    ),
-    []
-  );
+  const renderItem = useCallback(({ item }: any) => <RootReel post={item} />, []);
 
   function loadMore() {
     if (page >= totalPage) {
@@ -65,7 +52,7 @@ export default function Watch() {
   }
 
   return (
-    <View className="body flex-1 ">
+    <View className=" flex-1 bg-black">
       <View className="m-2 mb-0 ">
         <Text className="text-3xl">Reels</Text>
       </View>
@@ -84,6 +71,10 @@ export default function Watch() {
       ) : (
         <>
           <FlatList
+            snapToInterval={height}
+            decelerationRate={'fast'}
+            pagingEnabled
+            showsVerticalScrollIndicator={false}
             data={ReelsData}
             keyExtractor={(item) => item.id.toString()}
             renderItem={renderItem}
