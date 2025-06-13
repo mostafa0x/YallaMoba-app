@@ -9,7 +9,7 @@ const ReelsSlice = createSlice({
   initialState,
   reducers: {
     cheangeReelsData: (state, action) => {
-      state.ReelsData = action.payload;
+      state.ReelsData.push(...action.payload);
     },
   },
 });

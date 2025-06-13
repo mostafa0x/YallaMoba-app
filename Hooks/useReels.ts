@@ -2,8 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import axiosClient from 'lib/api/axiosClient';
 
 async function fetchReels(page: number) {
-  const res = await axiosClient.get(`/posts/feed/`);
-
+  const res = await axiosClient.get(`/posts/home?page=${page}`);
   return res.data;
 }
 

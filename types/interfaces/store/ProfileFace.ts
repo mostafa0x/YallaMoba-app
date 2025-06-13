@@ -17,6 +17,7 @@ export interface PostFace {
   icon?: string | undefined;
   likecount: number;
   commentcount: number;
+  likedByUser: boolean;
 }
 export interface followersFace {
   id: string;
