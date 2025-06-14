@@ -12,6 +12,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { Modalize } from 'react-native-modalize';
 import useGetComments from 'Hooks/useGetComments';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 export default function Watch() {
   const { height } = Dimensions.get('window');
@@ -201,8 +204,8 @@ export default function Watch() {
             FooterComponent={
               <View className="flex-row gap-4 pb-2">
                 <TextInput
+                  className="w-[385px]"
                   placeholder="Add a comment..."
-                  style={styles.input}
                   onFocus={() => setIsMenuOpen(true)}
                 />
 
@@ -219,11 +222,27 @@ export default function Watch() {
             flatListProps={{
               data: commentsX.data,
               keyExtractor: (item) => item.id.toString(),
+              ListHeaderComponent: () => {
+                return (
+                  commentsX.isLoading && (
+                    <View className="mt-[200px] flex-row items-center justify-center">
+                      <ActivityIndicator size={100} />
+                    </View>
+                  )
+                );
+              },
               renderItem: ({ item }) => (
-                <View style={styles.comment}>
-                  <Avatar.Image source={{ uri: item.avatar }} size={40} />
-                  <Text style={styles.username}>{item.username}</Text>
-                  <Text>{item.content}</Text>
+                <View className="mx-5 my-10">
+                  <View className="flex-row gap-4">
+                    <Avatar.Image source={{ uri: item.avatar }} size={60} />
+                    <View className="w-[400px] gap-2">
+                      <View className=" flex-row justify-between ">
+                        <Text className="text-lg font-extrabold">{item.username}</Text>
+                        <Text className="text-sm">ago {dayjs(item.updated_at).fromNow()}</Text>
+                      </View>
+                      <Text>{item.content}</Text>
+                    </View>
+                  </View>
                 </View>
               ),
               keyboardShouldPersistTaps: 'handled',
@@ -253,28 +272,3 @@ export default function Watch() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  comment: {
-    marginBottom: 10,
-  },
-  username: {
-    fontWeight: 'bold',
-  },
-  footer: {
-    paddingVertical: 100,
-    paddingHorizontal: 16,
-    borderTopWidth: 1,
-    borderColor: '#ddd',
-    backgroundColor: 'white',
-  },
-  input: {
-    height: 40,
-    width: '75%',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    backgroundColor: '#f9f9f9',
-  },
-});
