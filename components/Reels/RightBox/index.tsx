@@ -77,7 +77,7 @@ export default function RightBox({ countLikes, countComment, isLiked, postId, op
         <Text className="text-lg text-white">{countLikes}</Text>
       </View>
       <View className="items-center">
-        <TouchableOpacity onPress={openModal}>
+        <TouchableOpacity onPress={() => openModal(postId)}>
           <Icon color="white" size={iconSize} source={'chat-outline'} />
         </TouchableOpacity>
         <Text className="text-lg text-white">{countComment}</Text>

@@ -1,6 +1,6 @@
 import { View, Text, Dimensions, ActivityIndicator, StyleSheet } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, TextInput } from 'react-native-paper';
+import { Avatar, Button, TextInput } from 'react-native-paper';
 import useReels from 'Hooks/useReels';
 import { useDispatch, useSelector } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
@@ -11,6 +11,7 @@ import RootReel from 'components/Reels/layout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { Modalize } from 'react-native-modalize';
+import useGetComments from 'Hooks/useGetComments';
 
 export default function Watch() {
   const { height } = Dimensions.get('window');
@@ -26,18 +27,25 @@ export default function Watch() {
   const [file, setFile] = useState('');
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [videoSize, setVideoSize] = useState({ width: 1, height: 1 });
-
+  const [PostId, setPostId] = useState(-1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const modalRef = useRef<Modalize>(null);
   const comments = [
     { id: '1', user: 'Ali', text: 'رائع جدًا 👍' },
     { id: '2', user: 'Sara', text: 'فين ده؟' },
   ];
-
-  const openModal = () => {
+  const commentsX = useGetComments(PostId, dispatch);
+  const openModal = (postId: number) => {
+    setPostId(postId);
     modalRef.current?.open();
     setIsMenuOpen(true);
   };
+
+  useEffect(() => {
+    if (PostId === -1) return;
+    commentsX.refetch();
+    return () => {};
+  }, [PostId]);
 
   const player = useVideoPlayer(file, (player) => {
     player.loop = true;
@@ -186,8 +194,8 @@ export default function Watch() {
           </View>
           <Modalize
             ref={modalRef}
-            modalHeight={500}
-            handleStyle={{ backgroundColor: '#ccc' }}
+            modalHeight={700}
+            handleStyle={{ backgroundColor: '#b9b3b3' }}
             withHandle={true}
             panGestureComponentEnabled={false}
             FooterComponent={
@@ -209,12 +217,13 @@ export default function Watch() {
               </View>
             }
             flatListProps={{
-              data: comments,
-              keyExtractor: (item) => item.id,
+              data: commentsX.data,
+              keyExtractor: (item) => item.id.toString(),
               renderItem: ({ item }) => (
                 <View style={styles.comment}>
-                  <Text style={styles.username}>{item.user}</Text>
-                  <Text>{item.text}</Text>
+                  <Avatar.Image source={{ uri: item.avatar }} size={40} />
+                  <Text style={styles.username}>{item.username}</Text>
+                  <Text>{item.content}</Text>
                 </View>
               ),
               keyboardShouldPersistTaps: 'handled',
