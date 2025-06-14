@@ -13,7 +13,12 @@ export default function RootReel({ post }: props) {
   return (
     <View className="">
       <InfoBox post={post} />
-      <RightBox countLikes={post.likeCount} countComment={post.commentCount} />
+      <RightBox
+        countLikes={post.likeCount}
+        countComment={post.commentCount}
+        isLiked={post.likedByUser}
+        postId={post.id}
+      />
     </View>
   );
 }

@@ -11,8 +11,31 @@ const ReelsSlice = createSlice({
     cheangeReelsData: (state, action) => {
       state.ReelsData.push(...action.payload);
     },
+    LikeReelPost: (state, action) => {
+      const postId = action.payload;
+      const postIndex = state.ReelsData.findIndex((post) => post.id === postId);
+      if (postIndex !== -1) {
+        state.ReelsData[postIndex] = {
+          ...state.ReelsData[postIndex],
+          likedByUser: true,
+          likeCount: parseInt(state.ReelsData[postIndex].likeCount) + 1,
+        };
+      }
+    },
+
+    unLikeReelPost: (state, action) => {
+      const postId = action.payload;
+      const postIndex = state.ReelsData.findIndex((post) => post.id === postId);
+      if (postIndex !== -1) {
+        state.ReelsData[postIndex] = {
+          ...state.ReelsData[postIndex],
+          likedByUser: false,
+          likeCount: parseInt(state.ReelsData[postIndex].likeCount) - 1,
+        };
+      }
+    },
   },
 });
 
 export const ReelsReducer = ReelsSlice.reducer;
-export const { cheangeReelsData } = ReelsSlice.actions;
+export const { cheangeReelsData, LikeReelPost, unLikeReelPost } = ReelsSlice.actions;

@@ -173,6 +173,7 @@ export default function Watch() {
           </View>
           <FlatList
             data={ReelsData}
+            extraData={ReelsData}
             keyExtractor={(item, index) => item.id.toString() + '_' + index}
             renderItem={renderItem}
             snapToInterval={POST_HEIGHT}
