@@ -7,9 +7,10 @@ import { ReelPostFace } from 'types/interfaces/store/ReelsFace';
 
 interface props {
   post: ReelPostFace;
+  openModal: any;
 }
 
-export default function RootReel({ post }: props) {
+export default function RootReel({ post, openModal }: props) {
   return (
     <View className="">
       <InfoBox post={post} />
@@ -18,6 +19,7 @@ export default function RootReel({ post }: props) {
         countComment={post.commentCount}
         isLiked={post.likedByUser}
         postId={post.id}
+        openModal={openModal}
       />
     </View>
   );

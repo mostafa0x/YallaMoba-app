@@ -11,9 +11,10 @@ interface props {
   countComment: number;
   isLiked: boolean;
   postId: number;
+  openModal: any;
 }
 
-export default function RightBox({ countLikes, countComment, isLiked, postId }: props) {
+export default function RightBox({ countLikes, countComment, isLiked, postId, openModal }: props) {
   const dispatch = useDispatch();
   const iconSize = 30;
   const [likeLoading, setLikeLoading] = React.useState(false);
@@ -76,7 +77,7 @@ export default function RightBox({ countLikes, countComment, isLiked, postId }: 
         <Text className="text-lg text-white">{countLikes}</Text>
       </View>
       <View className="items-center">
-        <TouchableOpacity>
+        <TouchableOpacity onPress={openModal}>
           <Icon color="white" size={iconSize} source={'chat-outline'} />
         </TouchableOpacity>
         <Text className="text-lg text-white">{countComment}</Text>

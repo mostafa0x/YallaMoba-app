@@ -2,9 +2,17 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { Avatar, Button } from 'react-native-paper';
 import { ReelPostFace } from 'types/interfaces/store/ReelsFace';
+import { useSelector } from 'react-redux';
+import { StateFace } from 'types/interfaces/store/StateFace';
 
 export default function InfoBox({ post }: { post: ReelPostFace }) {
+  const { userData } = useSelector((state: StateFace) => state.UserReducer);
   const [isShowMore, setIsShowMore] = useState(false);
+  const isFollowingUser = '';
+  const isMyPost = post.username === userData?.username;
+
+  async function handleFollow() {}
+
   return (
     <View className="absolute top-[845px] z-[1] ml-6 gap-2">
       <View className="flex-row items-center gap-2">
@@ -15,9 +23,13 @@ export default function InfoBox({ post }: { post: ReelPostFace }) {
           </Text>
           <Text className=" text-white">{post.username}</Text>
         </View>
-        <View className="ml-2 rounded-xl border-2 border-white">
-          <Button textColor="white">Follow</Button>
-        </View>
+        {!isMyPost && (
+          <TouchableOpacity onPress={handleFollow}>
+            <View className="ml-2 rounded-xl border-2 border-white">
+              <Button textColor="white">Follow</Button>
+            </View>
+          </TouchableOpacity>
+        )}
       </View>
       <TouchableOpacity
         activeOpacity={isShowMore ? 0 : 0.5}

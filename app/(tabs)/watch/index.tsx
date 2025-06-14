@@ -1,6 +1,6 @@
-import { View, Text, Dimensions, ActivityIndicator } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Button } from 'react-native-paper';
+import { View, Text, Dimensions, ActivityIndicator, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Button, TextInput } from 'react-native-paper';
 import useReels from 'Hooks/useReels';
 import { useDispatch, useSelector } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
@@ -10,6 +10,7 @@ import { useVideoPlayer, VideoView } from 'expo-video';
 import RootReel from 'components/Reels/layout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
+import { Modalize } from 'react-native-modalize';
 
 export default function Watch() {
   const { height } = Dimensions.get('window');
@@ -25,6 +26,18 @@ export default function Watch() {
   const [file, setFile] = useState('');
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [videoSize, setVideoSize] = useState({ width: 1, height: 1 });
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const modalRef = useRef<Modalize>(null);
+  const comments = [
+    { id: '1', user: 'Ali', text: 'رائع جدًا 👍' },
+    { id: '2', user: 'Sara', text: 'فين ده؟' },
+  ];
+
+  const openModal = () => {
+    modalRef.current?.open();
+    setIsMenuOpen(true);
+  };
 
   const player = useVideoPlayer(file, (player) => {
     player.loop = true;
@@ -89,7 +102,7 @@ export default function Watch() {
 
       return (
         <View>
-          <RootReel post={item} />
+          <RootReel post={item} openModal={openModal} />
           <View
             style={{
               height: POST_HEIGHT,
@@ -132,7 +145,7 @@ export default function Watch() {
         </View>
       );
     },
-    [file, isVideoLoading, videoSize]
+    [file, isVideoLoading]
   );
 
   const handleVideoLoad = (status: any) => {
@@ -171,9 +184,46 @@ export default function Watch() {
           <View>
             <Text className="p-3 text-3xl text-white">Reels</Text>
           </View>
+          <Modalize
+            ref={modalRef}
+            modalHeight={500}
+            handleStyle={{ backgroundColor: '#ccc' }}
+            withHandle={true}
+            panGestureComponentEnabled={false}
+            FooterComponent={
+              <View className="flex-row gap-4 pb-2">
+                <TextInput
+                  placeholder="Add a comment..."
+                  style={styles.input}
+                  onFocus={() => setIsMenuOpen(true)}
+                />
+
+                <Button
+                  mode="contained"
+                  onPress={() => {
+                    // Handle comment submission
+                    setIsMenuOpen(false);
+                  }}>
+                  Submit
+                </Button>
+              </View>
+            }
+            flatListProps={{
+              data: comments,
+              keyExtractor: (item) => item.id,
+              renderItem: ({ item }) => (
+                <View style={styles.comment}>
+                  <Text style={styles.username}>{item.user}</Text>
+                  <Text>{item.text}</Text>
+                </View>
+              ),
+              keyboardShouldPersistTaps: 'handled',
+            }}
+          />
+
           <FlatList
             data={ReelsData}
-            extraData={ReelsData}
+            extraData={file}
             keyExtractor={(item, index) => item.id.toString() + '_' + index}
             renderItem={renderItem}
             snapToInterval={POST_HEIGHT}
@@ -194,3 +244,28 @@ export default function Watch() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  comment: {
+    marginBottom: 10,
+  },
+  username: {
+    fontWeight: 'bold',
+  },
+  footer: {
+    paddingVertical: 100,
+    paddingHorizontal: 16,
+    borderTopWidth: 1,
+    borderColor: '#ddd',
+    backgroundColor: 'white',
+  },
+  input: {
+    height: 40,
+    width: '75%',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    backgroundColor: '#f9f9f9',
+  },
+});
