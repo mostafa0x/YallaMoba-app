@@ -11,10 +11,9 @@ interface props {
 
 export default function RootReel({ post }: props) {
   return (
-    <View>
+    <View className="">
       <InfoBox post={post} />
       <RightBox countLikes={post.likeCount} countComment={post.commentCount} />
-      <View className={`mt-2 h-[1024px] w-full bg-black`}></View>
     </View>
   );
 }
