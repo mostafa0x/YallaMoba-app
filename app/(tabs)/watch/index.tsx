@@ -63,7 +63,7 @@ export default function Watch() {
       const fileType = getFileType(fileUrl);
       if (fileType === 'video') {
         setFile(fileUrl);
-        //  setIsVideoLoading(true); // نبدأ نحط اللودنج أول ما الفيديو يتغير
+        setIsVideoLoading(true);
       } else {
         setFile('');
         setIsVideoLoading(false);
@@ -74,16 +74,10 @@ export default function Watch() {
   const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
 
   useEffect(() => {
-    console.log(VideoPlayerStatus);
-
-    return () => {
-      if (VideoPlayerStatus === 'loading' || VideoPlayerStatus == 'error') {
-        setIsVideoLoading(true);
-      } else {
-        setIsVideoLoading(false);
-      }
-    };
-  }, [VideoPlayerStatus, file, setIsVideoLoading]);
+    if (VideoPlayerStatus === 'readyToPlay' || VideoPlayerStatus == 'idle') {
+      setIsVideoLoading(false);
+    }
+  }, [VideoPlayerStatus, file]);
 
   const renderItem = useCallback(
     ({ item }: any) => {
@@ -110,21 +104,27 @@ export default function Watch() {
                       height: '100%',
                       alignItems: 'center',
                     }}>
-                    <VideoView
-                      player={player}
-                      style={{ width: calculatedWidth, height: POST_HEIGHT - 100 }}
-                      //   onLoad={handleVideoLoad}
-                      allowsFullscreen={false}
-                      nativeControls={false}
-                      contentFit="fill"
-                    />
+                    {isVideoLoading ? (
+                      <View className=" h-full w-full items-center justify-center">
+                        <ActivityIndicator size={50} color={'white'} />
+                      </View>
+                    ) : (
+                      <VideoView
+                        player={player}
+                        style={{ width: calculatedWidth, height: POST_HEIGHT - 100 }}
+                        //   onLoad={handleVideoLoad}
+                        allowsFullscreen={false}
+                        nativeControls={false}
+                        contentFit="fill"
+                      />
+                    )}
                   </View>
                 </>
               ) : null
             ) : (
               <Image
                 source={{ uri: fileUrl }}
-                style={{ width: '100%', height: '85%' }}
+                style={{ width: '100%', height: '90%' }}
                 contentFit="fill"
               />
             )}
@@ -146,7 +146,7 @@ export default function Watch() {
     if (isFetchingMore || pageLoading) return;
     if (page >= totalPage) {
       setIsFetchingMore(false);
-      console.log('No more pages to fetch');
+      console.log('No more pages');
       return;
     }
     setIsFetchingMore(true);
@@ -157,14 +157,14 @@ export default function Watch() {
     <View className="flex-1 bg-black">
       {isError ? (
         <View className="flex-1 items-center justify-center">
-          <Text className="text-2xl">Error: {error?.message}</Text>
+          <Text className="text-2xl text-white">Error: {error?.message}</Text>
           <Button mode="contained" onPress={() => refetch()}>
             Retry
           </Button>
         </View>
       ) : pageLoading ? (
-        <View className="flex-1 items-center justify-center">
-          <Text className="text-2xl">Loading...</Text>
+        <View className="flex-1  items-center justify-center">
+          <Text className="text-2xl text-white">Loading...</Text>
         </View>
       ) : (
         <>

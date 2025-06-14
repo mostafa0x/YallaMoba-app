@@ -9,19 +9,20 @@ interface props {
 
 export default function RightBox({ countLikes, countComment }: props) {
   const iconSize = 30;
+
   return (
-    <View className="absolute left-[470px] top-[700px] z-[1]  flex-col gap-5">
+    <View className="absolute left-[470px] top-[720px] z-[1]  flex-col gap-5">
       <View className="items-center">
         <TouchableOpacity>
           <Icon color="white" size={iconSize} source={'cards-heart-outline'} />
         </TouchableOpacity>
-        <Text className="text-2xl text-white">{countLikes}</Text>
+        <Text className="text-lg text-white">{countLikes}</Text>
       </View>
       <View className="items-center">
         <TouchableOpacity>
           <Icon color="white" size={iconSize} source={'chat-outline'} />
         </TouchableOpacity>
-        <Text className="text-2xl text-white">{countComment}</Text>
+        <Text className="text-lg text-white">{countComment}</Text>
       </View>
       <View className="items-center">
         <TouchableOpacity>
