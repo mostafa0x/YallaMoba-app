@@ -49,7 +49,7 @@ export default function NewCommentCard({ item, userData, postId, refetch }: any)
                 visible={visible}
                 onDismiss={closeMenu}
                 anchor={
-                  <Button className="text-2xl" onPress={openMenu}>
+                  <Button className="text-2xl font-bold" onPress={openMenu}>
                     .....
                   </Button>
                 }>

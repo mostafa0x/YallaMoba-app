@@ -17,6 +17,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import callToast from 'components/toast';
 import axiosClient from 'lib/api/axiosClient';
 import NewCommentCard from 'components/CommentCard';
+import ImagesView from 'components/ViewReel/ImagesView';
 dayjs.extend(relativeTime);
 
 export default function Watch() {
@@ -188,11 +189,7 @@ export default function Watch() {
                 </>
               ) : null
             ) : (
-              <Image
-                source={{ uri: fileUrl }}
-                style={{ width: '100%', height: '90%' }}
-                contentFit="fill"
-              />
+              <ImagesView fileUrl={fileUrl} />
             )}
           </View>
         </View>
@@ -239,7 +236,7 @@ export default function Watch() {
           </View>
           <Modalize
             ref={modalRef}
-            modalHeight={700}
+            modalHeight={900}
             handleStyle={{ backgroundColor: '#b9b3b3' }}
             withHandle={true}
             panGestureComponentEnabled={false}
@@ -250,6 +247,7 @@ export default function Watch() {
                   value={content ?? ''}
                   ref={textboxRef}
                   className="w-[385px]"
+                  style={{ borderRadius: 20 }}
                   placeholder="Add a comment..."
                   onFocus={() => setIsMenuOpen(true)}
                   onSubmitEditing={handleAddComment}
@@ -258,6 +256,7 @@ export default function Watch() {
                   <ActivityIndicator size={30} color="black" />
                 ) : (
                   <Button
+                    style={{ padding: 5 }}
                     mode="contained"
                     onPress={() => {
                       handleAddComment();
