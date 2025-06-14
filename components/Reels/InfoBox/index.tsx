@@ -23,13 +23,13 @@ export default function InfoBox({ post }: { post: ReelPostFace }) {
           </Text>
           <Text className=" text-white">{post.username}</Text>
         </View>
-        {!isMyPost && (
+        {/* {!isMyPost && (
           <TouchableOpacity onPress={handleFollow}>
             <View className="ml-2 rounded-xl border-2 border-white">
               <Button textColor="white">Follow</Button>
             </View>
           </TouchableOpacity>
-        )}
+        )} */}
       </View>
       <TouchableOpacity
         activeOpacity={isShowMore ? 0 : 0.5}

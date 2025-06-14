@@ -1,11 +1,11 @@
 import { View, Text, Dimensions, ActivityIndicator, StyleSheet } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Avatar, Button, TextInput } from 'react-native-paper';
+import { Avatar, Button, Divider, Icon, Menu, TextInput } from 'react-native-paper';
 import useReels from 'Hooks/useReels';
 import { useDispatch, useSelector } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
 import { StateFace } from 'types/interfaces/store/StateFace';
-import { cheangeReelsData } from 'lib/Store/slices/ReelsSlice';
+import { addComment, cheangeReelsData } from 'lib/Store/slices/ReelsSlice';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import RootReel from 'components/Reels/layout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,6 +14,9 @@ import { Modalize } from 'react-native-modalize';
 import useGetComments from 'Hooks/useGetComments';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import callToast from 'components/toast';
+import axiosClient from 'lib/api/axiosClient';
+import NewCommentCard from 'components/CommentCard';
 dayjs.extend(relativeTime);
 
 export default function Watch() {
@@ -21,7 +24,13 @@ export default function Watch() {
   const insets = useSafeAreaInsets();
   const POST_HEIGHT = height - insets.bottom;
 
+  const [visible, setVisible] = useState(false);
+
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
   const { ReelsData } = useSelector((state: StateFace) => state.ReelsReducer);
+  const { userData } = useSelector((state: StateFace) => state.UserReducer);
+
   const [pageLoading, setPageLoading] = useState(true);
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
@@ -32,16 +41,17 @@ export default function Watch() {
   const [videoSize, setVideoSize] = useState({ width: 1, height: 1 });
   const [PostId, setPostId] = useState(-1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSubmitComment, setIsSubmitComment] = useState(false);
   const modalRef = useRef<Modalize>(null);
-  const comments = [
-    { id: '1', user: 'Ali', text: 'رائع جدًا 👍' },
-    { id: '2', user: 'Sara', text: 'فين ده؟' },
-  ];
+  const textboxRef = useRef<any | null>(null);
+  const [content, setContent] = useState<string | null>('');
+
   const commentsX = useGetComments(PostId, dispatch);
   const openModal = (postId: number) => {
     setPostId(postId);
     modalRef.current?.open();
     setIsMenuOpen(true);
+    textboxRef.current && textboxRef.current?.focus();
   };
 
   useEffect(() => {
@@ -60,6 +70,38 @@ export default function Watch() {
   useEffect(() => {
     if (page > 1) refetch();
   }, [page]);
+
+  async function handleAddComment() {
+    if (!textboxRef.current || !content) {
+      callToast({
+        type: 'error',
+        text1: 'Comment cannot be empty',
+        text2: 'Please enter a comment.',
+      });
+      return;
+    }
+
+    if (textboxRef.current) {
+      if (isSubmitComment) return;
+      setIsSubmitComment(true);
+      try {
+        const res = await axiosClient.post(`/posts/${PostId}/comments/`, { content });
+        setContent(null);
+        dispatch(addComment(PostId));
+        console.log(res.data);
+        commentsX.refetch();
+      } catch (err) {
+        console.error('Error adding comment:', err);
+        callToast({
+          type: 'error',
+          text1: 'Error adding comment',
+          text2: 'Please try again later.',
+        });
+      } finally {
+        setIsSubmitComment(false);
+      }
+    }
+  }
 
   useEffect(() => {
     if (data) {
@@ -204,24 +246,41 @@ export default function Watch() {
             FooterComponent={
               <View className="flex-row gap-4 pb-2">
                 <TextInput
+                  onChange={(e) => setContent(e.nativeEvent.text)}
+                  value={content ?? ''}
+                  ref={textboxRef}
                   className="w-[385px]"
                   placeholder="Add a comment..."
                   onFocus={() => setIsMenuOpen(true)}
+                  onSubmitEditing={handleAddComment}
                 />
-
-                <Button
-                  mode="contained"
-                  onPress={() => {
-                    // Handle comment submission
-                    setIsMenuOpen(false);
-                  }}>
-                  Submit
-                </Button>
+                {isSubmitComment ? (
+                  <ActivityIndicator size={30} color="black" />
+                ) : (
+                  <Button
+                    mode="contained"
+                    onPress={() => {
+                      handleAddComment();
+                      setIsMenuOpen(false);
+                    }}>
+                    Submit
+                  </Button>
+                )}
               </View>
             }
             flatListProps={{
               data: commentsX.data,
+
               keyExtractor: (item) => item.id.toString(),
+              ListEmptyComponent: () => {
+                return (
+                  !commentsX.isLoading && (
+                    <View className="mt-20 items-center">
+                      <Text className="text-2xl text-gray-500">No Comments yet..</Text>
+                    </View>
+                  )
+                );
+              },
               ListHeaderComponent: () => {
                 return (
                   commentsX.isLoading && (
@@ -233,16 +292,41 @@ export default function Watch() {
               },
               renderItem: ({ item }) => (
                 <View className="mx-5 my-10">
-                  <View className="flex-row gap-4">
+                  {/* <View className="flex-row gap-4">
                     <Avatar.Image source={{ uri: item.avatar }} size={60} />
                     <View className="w-[400px] gap-2">
                       <View className=" flex-row justify-between ">
                         <Text className="text-lg font-extrabold">{item.username}</Text>
-                        <Text className="text-sm">ago {dayjs(item.updated_at).fromNow()}</Text>
+                        <View className="w-[120px] flex-row">
+                          <Text className=" text-right text-sm opacity-60">
+                            {dayjs(item.updated_at).fromNow()}
+                            {item.username === userData?.username && (
+                              <Menu
+                                visible={visible}
+                                onDismiss={closeMenu}
+                                anchor={<Button onPress={openMenu}>.....</Button>}>
+                                <Menu.Item onPress={() => {}} title="Edit (onWork)" />
+                                <Menu.Item title="User Profile" />
+                                <Divider />
+                                <Menu.Item
+                                  titleStyle={{ color: 'red' }}
+                                  //  onPress={() => handleDeleteComment(item.post_id, item.id)}
+                                  title="Delete"
+                                />
+                              </Menu>
+                            )}
+                          </Text>
+                        </View>
                       </View>
                       <Text>{item.content}</Text>
                     </View>
-                  </View>
+                  </View> */}
+                  <NewCommentCard
+                    item={item}
+                    userData={userData}
+                    postId={PostId}
+                    refetch={commentsX.refetch}
+                  />
                 </View>
               ),
               keyboardShouldPersistTaps: 'handled',

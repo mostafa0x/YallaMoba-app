@@ -82,11 +82,11 @@ export default function RightBox({ countLikes, countComment, isLiked, postId, op
         </TouchableOpacity>
         <Text className="text-lg text-white">{countComment}</Text>
       </View>
-      <View className="items-center">
+      {/* <View className="items-center">
         <TouchableOpacity>
           <Icon color="white" size={iconSize} source={'share-outline'} />
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 }
