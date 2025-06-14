@@ -6,7 +6,7 @@ import { ReelPostFace } from 'types/interfaces/store/ReelsFace';
 export default function InfoBox({ post }: { post: ReelPostFace }) {
   const [isShowMore, setIsShowMore] = useState(false);
   return (
-    <View className="absolute top-[872px] z-[1] ml-6 gap-2">
+    <View className="absolute top-[877px] z-[1] ml-6 gap-2">
       <View className="flex-row items-center gap-2">
         <Avatar.Image source={{ uri: post.avatar }} size={50} />
         <Text className="text-lg text-white">{post.username}</Text>

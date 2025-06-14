@@ -1,6 +1,6 @@
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text, Dimensions, ActivityIndicator } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Button } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import useReels from 'Hooks/useReels';
 import { useDispatch, useSelector } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
@@ -13,7 +13,6 @@ import { Image } from 'expo-image';
 
 export default function Watch() {
   const { height } = Dimensions.get('window');
-  const BOTTOM_NAV_HEIGHT = 60; // أو الارتفاع الحقيقي عندك
   const insets = useSafeAreaInsets();
   const POST_HEIGHT = height - insets.bottom;
 
@@ -24,11 +23,16 @@ export default function Watch() {
   const [totalPage, setTotalPage] = useState(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [file, setFile] = useState('');
+  const [isVideoLoading, setIsVideoLoading] = useState(false);
+  const [videoSize, setVideoSize] = useState({ width: 1, height: 1 });
+
   const player = useVideoPlayer(file, (player) => {
     player.loop = true;
+    player.play();
   });
-  const { data, isError, error, refetch } = useReels(page);
 
+  const { data, isError, error, refetch } = useReels(page);
+  const VideoPlayerStatus = player.status;
   useEffect(() => {
     if (page > 1) refetch();
   }, [page]);
@@ -52,25 +56,91 @@ export default function Watch() {
     return 'image';
   };
 
-  const renderItem = useCallback(({ item }: any) => {
-    const fileUrl = item.files?.[0] ?? null;
-    const fileType = getFileType(fileUrl);
-
-    return (
-      <View style={{ height: POST_HEIGHT, width: '100%' }}>
-        <RootReel post={item} />
-        {fileType === 'video' ? (
-          <VideoView player={player} style={{ width: '100%', height: '100%' }} contentFit="cover" />
-        ) : (
-          <Image
-            source={{ uri: fileUrl }}
-            style={{ marginTop: 36, width: '100%', height: '87%' }}
-            contentFit="fill"
-          />
-        )}
-      </View>
-    );
+  const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
+    if (viewableItems.length > 0) {
+      const firstVisibleItem = viewableItems[0].item;
+      const fileUrl = firstVisibleItem.files?.[0] ?? null;
+      const fileType = getFileType(fileUrl);
+      if (fileType === 'video') {
+        setFile(fileUrl);
+        //  setIsVideoLoading(true); // نبدأ نحط اللودنج أول ما الفيديو يتغير
+      } else {
+        setFile('');
+        setIsVideoLoading(false);
+      }
+    }
   }, []);
+
+  const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
+
+  useEffect(() => {
+    console.log(VideoPlayerStatus);
+
+    return () => {
+      if (VideoPlayerStatus === 'loading' || VideoPlayerStatus == 'error') {
+        setIsVideoLoading(true);
+      } else {
+        setIsVideoLoading(false);
+      }
+    };
+  }, [VideoPlayerStatus, file, setIsVideoLoading]);
+
+  const renderItem = useCallback(
+    ({ item }: any) => {
+      const fileUrl = item.files?.[0] ?? null;
+      const fileType = getFileType(fileUrl);
+
+      const videoAspectRatio = videoSize.width / videoSize.height;
+      const calculatedWidth = POST_HEIGHT * videoAspectRatio;
+
+      return (
+        <View>
+          <RootReel post={item} />
+          <View
+            style={{
+              height: POST_HEIGHT,
+              width: '100%',
+            }}>
+            {fileType === 'video' ? (
+              fileUrl === file ? (
+                <>
+                  <View
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      alignItems: 'center',
+                    }}>
+                    <VideoView
+                      player={player}
+                      style={{ width: calculatedWidth, height: POST_HEIGHT - 100 }}
+                      //   onLoad={handleVideoLoad}
+                      allowsFullscreen={false}
+                      nativeControls={false}
+                      contentFit="fill"
+                    />
+                  </View>
+                </>
+              ) : null
+            ) : (
+              <Image
+                source={{ uri: fileUrl }}
+                style={{ width: '100%', height: '85%' }}
+                contentFit="fill"
+              />
+            )}
+          </View>
+        </View>
+      );
+    },
+    [file, isVideoLoading, videoSize]
+  );
+
+  const handleVideoLoad = (status: any) => {
+    const { videoWidth, videoHeight } = status;
+    if (videoWidth && videoHeight) {
+      setVideoSize({ width: videoWidth, height: videoHeight });
+    }
+  };
 
   function loadMore() {
     if (isFetchingMore || pageLoading) return;
@@ -98,6 +168,9 @@ export default function Watch() {
         </View>
       ) : (
         <>
+          <View>
+            <Text className="p-3 text-3xl text-white">Reels</Text>
+          </View>
           <FlatList
             data={ReelsData}
             keyExtractor={(item, index) => item.id.toString() + '_' + index}
@@ -112,6 +185,8 @@ export default function Watch() {
             onEndReachedThreshold={0.3}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ height: ReelsData.length * POST_HEIGHT }}
+            onViewableItemsChanged={onViewableItemsChanged}
+            viewabilityConfig={viewabilityConfig}
           />
         </>
       )}
