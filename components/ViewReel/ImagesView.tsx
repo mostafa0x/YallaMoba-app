@@ -13,7 +13,7 @@ export default function ImagesView({ fileUrl }: Props) {
     <View style={{ width: screenWidth, height: screenHeight, backgroundColor: 'black' }}>
       <Image
         source={{ uri: fileUrl }}
-        style={{ width: '100%', height: '90%' }}
+        style={{ width: '100%', height: '86%' }}
         contentFit="contain"
       />
     </View>

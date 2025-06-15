@@ -18,6 +18,7 @@ import callToast from 'components/toast';
 import axiosClient from 'lib/api/axiosClient';
 import NewCommentCard from 'components/CommentCard';
 import ImagesView from 'components/ViewReel/ImagesView';
+import ReelItem from 'components/ReelItem';
 dayjs.extend(relativeTime);
 
 export default function Watch() {
@@ -67,7 +68,6 @@ export default function Watch() {
   });
 
   const { data, isError, error, refetch } = useReels(page);
-  const VideoPlayerStatus = player.status;
   useEffect(() => {
     if (page > 1) refetch();
   }, [page]);
@@ -140,54 +140,67 @@ export default function Watch() {
 
   const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
 
-  useEffect(() => {
-    if (VideoPlayerStatus === 'readyToPlay' || VideoPlayerStatus == 'idle') {
-      setIsVideoLoading(false);
-    }
-  }, [VideoPlayerStatus, file]);
+  // useEffect(() => {
+  //   if (VideoPlayerStatus === 'readyToPlay' || VideoPlayerStatus == 'idle') {
+  //     setIsVideoLoading(false);
+  //   }
+  // }, [VideoPlayerStatus, file]);
   const VideoViewX = useCallback(() => {}, []);
 
+  // const renderItem = useCallback(
+  //   ({ item }: any) => {
+  //     const fileUrl = item.files?.[0] ?? null;
+  //     const fileType = getFileType(fileUrl);
+
+  //     const videoAspectRatio = videoSize.width / videoSize.height;
+  //     const calculatedWidth = POST_HEIGHT * videoAspectRatio;
+
+  //     return (
+  //       <View>
+  //         <RootReel post={item} openModal={openModal} />
+  //         <View
+  //           style={{
+  //             height: POST_HEIGHT,
+  //             width: '100%',
+  //           }}>
+  //           {fileType === 'video' ? (
+  //             fileUrl === file ? (
+  //               <View
+  //                 style={{
+  //                   width: '100%',
+  //                   height: '100%',
+  //                   alignItems: 'center',
+  //                 }}>
+  //                 <VideoView
+  //                   player={player}
+  //                   style={{ width: calculatedWidth, height: POST_HEIGHT - 100 }}
+  //                   allowsFullscreen={false}
+  //                   nativeControls={false}
+  //                   contentFit="fill"
+  //                 />
+  //               </View>
+  //             ) : null
+  //           ) : (
+  //             <ImagesView fileUrl={fileUrl} />
+  //           )}
+  //         </View>
+  //       </View>
+  //     );
+  //   },
+  //   [file]
+  // );
   const renderItem = useCallback(
-    ({ item }: any) => {
-      const fileUrl = item.files?.[0] ?? null;
-      const fileType = getFileType(fileUrl);
-
-      const videoAspectRatio = videoSize.width / videoSize.height;
-      const calculatedWidth = POST_HEIGHT * videoAspectRatio;
-
-      return (
-        <View>
-          <RootReel post={item} openModal={openModal} />
-          <View
-            style={{
-              height: POST_HEIGHT,
-              width: '100%',
-            }}>
-            {fileType === 'video' ? (
-              fileUrl === file ? (
-                <View
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    alignItems: 'center',
-                  }}>
-                  <VideoView
-                    player={player}
-                    style={{ width: calculatedWidth, height: POST_HEIGHT - 100 }}
-                    allowsFullscreen={false}
-                    nativeControls={false}
-                    contentFit="fill"
-                  />
-                </View>
-              ) : null
-            ) : (
-              <ImagesView fileUrl={fileUrl} />
-            )}
-          </View>
-        </View>
-      );
-    },
-    [file]
+    ({ item }: any) => (
+      <ReelItem
+        player={player}
+        item={item}
+        PostId={PostId}
+        active={file === (item.files?.[0] ?? '')}
+        openModal={openModal}
+        POST_HEIGHT={POST_HEIGHT}
+      />
+    ),
+    [file, POST_HEIGHT]
   );
 
   const handleVideoLoad = (status: any) => {
