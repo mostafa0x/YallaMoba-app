@@ -140,11 +140,7 @@ export default function Watch() {
 
   const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
 
-  // useEffect(() => {
-  //   if (VideoPlayerStatus === 'readyToPlay' || VideoPlayerStatus == 'idle') {
-  //     setIsVideoLoading(false);
-  //   }
-  // }, [VideoPlayerStatus, file]);
+
   const VideoViewX = useCallback(() => {}, []);
 
   // const renderItem = useCallback(
