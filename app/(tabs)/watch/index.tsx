@@ -9,7 +9,6 @@ import { addComment, cheangeReelsData } from 'lib/Store/slices/ReelsSlice';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import RootReel from 'components/Reels/layout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Image } from 'expo-image';
 import { Modalize } from 'react-native-modalize';
 import useGetComments from 'Hooks/useGetComments';
 import dayjs from 'dayjs';
@@ -18,6 +17,8 @@ import callToast from 'components/toast';
 import axiosClient from 'lib/api/axiosClient';
 import NewCommentCard from 'components/CommentCard';
 import ImagesView from 'components/ViewReel/ImagesView';
+import VideoPlayerView from 'components/ViewReel/VideoView';
+import ReelItem from 'components/ReelItem';
 dayjs.extend(relativeTime);
 
 export default function Watch() {
@@ -157,41 +158,15 @@ export default function Watch() {
       return (
         <View>
           <RootReel post={item} openModal={openModal} />
-          <View
-            style={{
-              height: POST_HEIGHT,
-              width: '100%',
-            }}>
-            {fileType === 'video' ? (
-              fileUrl === file ? (
-                <>
-                  <View
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      alignItems: 'center',
-                    }}>
-                    {isVideoLoading ? (
-                      <View className=" h-full w-full items-center justify-center">
-                        <ActivityIndicator size={50} color={'white'} />
-                      </View>
-                    ) : (
-                      <VideoView
-                        player={player}
-                        style={{ width: calculatedWidth, height: POST_HEIGHT - 100 }}
-                        //   onLoad={handleVideoLoad}
-                        allowsFullscreen={false}
-                        nativeControls={false}
-                        contentFit="fill"
-                      />
-                    )}
-                  </View>
-                </>
-              ) : null
-            ) : (
-              <ImagesView fileUrl={fileUrl} />
-            )}
-          </View>
+          <ReelItem
+            item={item}
+            isActive={file === (item.files?.[0] ?? '')}
+            setFile={setFile}
+            videoLoading={isVideoLoading}
+            setVideoLoading={setIsVideoLoading}
+            setVideoSize={setVideoSize}
+            videoSize={videoSize}
+          />
         </View>
       );
     },
@@ -227,7 +202,7 @@ export default function Watch() {
         </View>
       ) : pageLoading ? (
         <View className="flex-1  items-center justify-center">
-          <Text className="text-2xl text-white">Loading...</Text>
+          <ActivityIndicator size={50} />
         </View>
       ) : (
         <>
@@ -291,35 +266,6 @@ export default function Watch() {
               },
               renderItem: ({ item }) => (
                 <View className="mx-5 my-10">
-                  {/* <View className="flex-row gap-4">
-                    <Avatar.Image source={{ uri: item.avatar }} size={60} />
-                    <View className="w-[400px] gap-2">
-                      <View className=" flex-row justify-between ">
-                        <Text className="text-lg font-extrabold">{item.username}</Text>
-                        <View className="w-[120px] flex-row">
-                          <Text className=" text-right text-sm opacity-60">
-                            {dayjs(item.updated_at).fromNow()}
-                            {item.username === userData?.username && (
-                              <Menu
-                                visible={visible}
-                                onDismiss={closeMenu}
-                                anchor={<Button onPress={openMenu}>.....</Button>}>
-                                <Menu.Item onPress={() => {}} title="Edit (onWork)" />
-                                <Menu.Item title="User Profile" />
-                                <Divider />
-                                <Menu.Item
-                                  titleStyle={{ color: 'red' }}
-                                  //  onPress={() => handleDeleteComment(item.post_id, item.id)}
-                                  title="Delete"
-                                />
-                              </Menu>
-                            )}
-                          </Text>
-                        </View>
-                      </View>
-                      <Text>{item.content}</Text>
-                    </View>
-                  </View> */}
                   <NewCommentCard
                     item={item}
                     userData={userData}
