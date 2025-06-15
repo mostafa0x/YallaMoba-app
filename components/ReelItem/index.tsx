@@ -42,7 +42,7 @@ const ReelItem = memo(({ item, POST_HEIGHT, file, setFile, videoSize, openModal 
       <View style={{ height: POST_HEIGHT, width: '100%' }}>
         {fileType === 'video' ? (
           fileUrl === file ? (
-            <VideoPlayerView player={player} isVideoLoading={isVideoLoading} />
+            <VideoPlayerView player={player} />
           ) : null
         ) : fileUrl ? (
           <ImagesView fileUrl={fileUrl} />

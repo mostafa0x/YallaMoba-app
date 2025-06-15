@@ -1,10 +1,10 @@
 import { View, Text, Dimensions } from 'react-native';
 import React, { useState } from 'react';
 import { ActivityIndicator } from 'react-native-paper';
-import { VideoView as ExpoVideoView } from 'expo-video';
+import { VideoView as ExpoVideoView, VideoView } from 'expo-video';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function VideoPlayerView({ isVideoLoading, player }: any) {
+export default function VideoPlayerView({ player }: any) {
   const { height } = Dimensions.get('window');
   const insets = useSafeAreaInsets();
   const POST_HEIGHT = height - insets.bottom;
@@ -20,19 +20,13 @@ export default function VideoPlayerView({ isVideoLoading, player }: any) {
         height: '100%',
         alignItems: 'center',
       }}>
-      {isVideoLoading ? (
-        <View className=" h-full w-full items-center justify-center">
-          <ActivityIndicator size={50} color={'white'} />
-        </View>
-      ) : (
-        <ExpoVideoView
-          player={player}
-          style={{ width: calculatedWidth, height: POST_HEIGHT - 70 }}
-          allowsFullscreen={false}
-          nativeControls={false}
-          contentFit="fill"
-        />
-      )}
+      <VideoView
+        player={player}
+        style={{ width: calculatedWidth, height: POST_HEIGHT - 70 }}
+        allowsFullscreen={false}
+        nativeControls={false}
+        contentFit="fill"
+      />
     </View>
   );
 }

@@ -19,6 +19,7 @@ import NewCommentCard from 'components/CommentCard';
 import ImagesView from 'components/ViewReel/ImagesView';
 import VideoPlayerView from 'components/ViewReel/VideoView';
 import ReelItem from 'components/ReelItem';
+import CommentsView from 'components/CommentsView';
 dayjs.extend(relativeTime);
 
 export default function Watch() {
@@ -51,16 +52,17 @@ export default function Watch() {
   const commentsX = useGetComments(PostId, dispatch);
   const openModal = (postId: number) => {
     setPostId(postId);
-    modalRef.current?.open();
+    // modalRef.current?.open();
     setIsMenuOpen(true);
-    textboxRef.current && textboxRef.current?.focus();
+
+    // textboxRef.current && textboxRef.current?.focus();
   };
 
-  useEffect(() => {
-    if (PostId === -1) return;
-    commentsX.refetch();
-    return () => {};
-  }, [PostId]);
+  // useEffect(() => {
+  //   if (PostId === -1) return;
+  //   commentsX.refetch();
+  //   return () => {};
+  // }, [PostId]);
 
   const player = useVideoPlayer(file, (player) => {
     player.loop = true;
@@ -73,37 +75,37 @@ export default function Watch() {
     if (page > 1) refetch();
   }, [page]);
 
-  async function handleAddComment() {
-    if (!textboxRef.current || !content) {
-      callToast({
-        type: 'error',
-        text1: 'Comment cannot be empty',
-        text2: 'Please enter a comment.',
-      });
-      return;
-    }
+  // async function handleAddComment() {
+  //   if (!textboxRef.current || !content) {
+  //     callToast({
+  //       type: 'error',
+  //       text1: 'Comment cannot be empty',
+  //       text2: 'Please enter a comment.',
+  //     });
+  //     return;
+  //   }
 
-    if (textboxRef.current) {
-      if (isSubmitComment) return;
-      setIsSubmitComment(true);
-      try {
-        const res = await axiosClient.post(`/posts/${PostId}/comments/`, { content });
-        setContent(null);
-        dispatch(addComment(PostId));
-        console.log(res.data);
-        commentsX.refetch();
-      } catch (err) {
-        console.error('Error adding comment:', err);
-        callToast({
-          type: 'error',
-          text1: 'Error adding comment',
-          text2: 'Please try again later.',
-        });
-      } finally {
-        setIsSubmitComment(false);
-      }
-    }
-  }
+  //   if (textboxRef.current) {
+  //     if (isSubmitComment) return;
+  //     setIsSubmitComment(true);
+  //     try {
+  //       const res = await axiosClient.post(`/posts/${PostId}/comments/`, { content });
+  //       setContent(null);
+  //       dispatch(addComment(PostId));
+  //       console.log(res.data);
+  //       commentsX.refetch();
+  //     } catch (err) {
+  //       console.error('Error adding comment:', err);
+  //       callToast({
+  //         type: 'error',
+  //         text1: 'Error adding comment',
+  //         text2: 'Please try again later.',
+  //       });
+  //     } finally {
+  //       setIsSubmitComment(false);
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     if (data) {
@@ -157,28 +159,26 @@ export default function Watch() {
 
       return (
         <View>
-          <RootReel post={item} openModal={openModal} />
+          {/* <RootReel post={item} openModal={openModal} /> */}
           <ReelItem
             item={item}
             isActive={file === (item.files?.[0] ?? '')}
-            setFile={setFile}
-            videoLoading={isVideoLoading}
-            setVideoLoading={setIsVideoLoading}
             setVideoSize={setVideoSize}
             videoSize={videoSize}
+            openModal={openModal}
           />
         </View>
       );
     },
-    [file, isVideoLoading]
+    [file]
   );
 
-  const handleVideoLoad = (status: any) => {
-    const { videoWidth, videoHeight } = status;
-    if (videoWidth && videoHeight) {
-      setVideoSize({ width: videoWidth, height: videoHeight });
-    }
-  };
+  // const handleVideoLoad = (status: any) => {
+  //   const { videoWidth, videoHeight } = status;
+  //   if (videoWidth && videoHeight) {
+  //     setVideoSize({ width: videoWidth, height: videoHeight });
+  //   }
+  // };
 
   function loadMore() {
     if (isFetchingMore || pageLoading) return;
@@ -209,7 +209,7 @@ export default function Watch() {
           <View>
             <Text className="p-3 text-3xl text-white">Reels</Text>
           </View>
-          <Modalize
+          {/* <Modalize
             ref={modalRef}
             modalHeight={900}
             handleStyle={{ backgroundColor: '#b9b3b3' }}
@@ -276,7 +276,8 @@ export default function Watch() {
               ),
               keyboardShouldPersistTaps: 'handled',
             }}
-          />
+          /> */}
+          <CommentsView isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} postId={PostId} />
 
           <FlatList
             data={ReelsData}
