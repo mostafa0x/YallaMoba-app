@@ -145,6 +145,7 @@ export default function Watch() {
       setIsVideoLoading(false);
     }
   }, [VideoPlayerStatus, file]);
+  const VideoViewX = useCallback(() => {}, []);
 
   const renderItem = useCallback(
     ({ item }: any) => {
@@ -164,29 +165,20 @@ export default function Watch() {
             }}>
             {fileType === 'video' ? (
               fileUrl === file ? (
-                <>
-                  <View
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      alignItems: 'center',
-                    }}>
-                    {isVideoLoading ? (
-                      <View className=" h-full w-full items-center justify-center">
-                        <ActivityIndicator size={50} color={'white'} />
-                      </View>
-                    ) : (
-                      <VideoView
-                        player={player}
-                        style={{ width: calculatedWidth, height: POST_HEIGHT - 100 }}
-                        //   onLoad={handleVideoLoad}
-                        allowsFullscreen={false}
-                        nativeControls={false}
-                        contentFit="fill"
-                      />
-                    )}
-                  </View>
-                </>
+                <View
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    alignItems: 'center',
+                  }}>
+                  <VideoView
+                    player={player}
+                    style={{ width: calculatedWidth, height: POST_HEIGHT - 100 }}
+                    allowsFullscreen={false}
+                    nativeControls={false}
+                    contentFit="fill"
+                  />
+                </View>
               ) : null
             ) : (
               <ImagesView fileUrl={fileUrl} />
@@ -195,7 +187,7 @@ export default function Watch() {
         </View>
       );
     },
-    [file, isVideoLoading]
+    [file]
   );
 
   const handleVideoLoad = (status: any) => {
