@@ -47,7 +47,7 @@ const ReelItem = ({ player, item, active, openModal, PostId, POST_HEIGHT }: Prop
           />
         ) : null
       ) : (
-        <ImagesView fileUrl={fileUrl} />
+        <ImagesView fileUrl={fileUrl} POST_HEIGHT={POST_HEIGHT} />
       )}
     </View>
   );

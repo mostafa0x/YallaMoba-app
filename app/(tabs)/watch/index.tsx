@@ -47,7 +47,7 @@ export default function Watch() {
   const modalRef = useRef<Modalize>(null);
   const textboxRef = useRef<any | null>(null);
   const [content, setContent] = useState<string | null>('');
-
+  const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
   const commentsX = useGetComments(PostId, dispatch);
   const openModal = (postId: number) => {
     setPostId(postId);
@@ -138,53 +138,8 @@ export default function Watch() {
     }
   }, []);
 
-  const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
-
-
   const VideoViewX = useCallback(() => {}, []);
 
-  // const renderItem = useCallback(
-  //   ({ item }: any) => {
-  //     const fileUrl = item.files?.[0] ?? null;
-  //     const fileType = getFileType(fileUrl);
-
-  //     const videoAspectRatio = videoSize.width / videoSize.height;
-  //     const calculatedWidth = POST_HEIGHT * videoAspectRatio;
-
-  //     return (
-  //       <View>
-  //         <RootReel post={item} openModal={openModal} />
-  //         <View
-  //           style={{
-  //             height: POST_HEIGHT,
-  //             width: '100%',
-  //           }}>
-  //           {fileType === 'video' ? (
-  //             fileUrl === file ? (
-  //               <View
-  //                 style={{
-  //                   width: '100%',
-  //                   height: '100%',
-  //                   alignItems: 'center',
-  //                 }}>
-  //                 <VideoView
-  //                   player={player}
-  //                   style={{ width: calculatedWidth, height: POST_HEIGHT - 100 }}
-  //                   allowsFullscreen={false}
-  //                   nativeControls={false}
-  //                   contentFit="fill"
-  //                 />
-  //               </View>
-  //             ) : null
-  //           ) : (
-  //             <ImagesView fileUrl={fileUrl} />
-  //           )}
-  //         </View>
-  //       </View>
-  //     );
-  //   },
-  //   [file]
-  // );
   const renderItem = useCallback(
     ({ item }: any) => (
       <ReelItem
@@ -198,13 +153,6 @@ export default function Watch() {
     ),
     [file, POST_HEIGHT]
   );
-
-  const handleVideoLoad = (status: any) => {
-    const { videoWidth, videoHeight } = status;
-    if (videoWidth && videoHeight) {
-      setVideoSize({ width: videoWidth, height: videoHeight });
-    }
-  };
 
   function loadMore() {
     if (isFetchingMore || pageLoading) return;
