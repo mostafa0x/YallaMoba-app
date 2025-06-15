@@ -49,12 +49,12 @@ export default function Watch() {
   const [content, setContent] = useState<string | null>('');
   const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
   const commentsX = useGetComments(PostId, dispatch);
-  const openModal = (postId: number) => {
+
+  const openModal = useCallback((postId: number) => {
     setPostId(postId);
     modalRef.current?.open();
     setIsMenuOpen(true);
-    textboxRef.current && textboxRef.current?.focus();
-  };
+  }, []);
 
   useEffect(() => {
     if (PostId === -1) return;
@@ -138,15 +138,13 @@ export default function Watch() {
     }
   }, []);
 
-  const VideoViewX = useCallback(() => {}, []);
-
   const renderItem = useCallback(
     ({ item }: any) => (
       <ReelItem
+        file={file}
         player={player}
         item={item}
         PostId={PostId}
-        active={file === (item.files?.[0] ?? '')}
         openModal={openModal}
         POST_HEIGHT={POST_HEIGHT}
       />
@@ -154,7 +152,7 @@ export default function Watch() {
     [file, POST_HEIGHT]
   );
 
-  function loadMore() {
+  const loadMore = useCallback(() => {
     if (isFetchingMore || pageLoading) return;
     if (page >= totalPage) {
       setIsFetchingMore(false);
@@ -163,7 +161,7 @@ export default function Watch() {
     }
     setIsFetchingMore(true);
     setPage((curr) => curr + 1);
-  }
+  }, [page, isFetchingMore, pageLoading]);
 
   return (
     <View className="flex-1 bg-black">
@@ -176,7 +174,7 @@ export default function Watch() {
         </View>
       ) : pageLoading ? (
         <View className="flex-1  items-center justify-center">
-          <Text className="text-2xl text-white">Loading...</Text>
+          <ActivityIndicator size={50} />
         </View>
       ) : (
         <>
@@ -240,35 +238,6 @@ export default function Watch() {
               },
               renderItem: ({ item }) => (
                 <View className="mx-5 my-10">
-                  {/* <View className="flex-row gap-4">
-                    <Avatar.Image source={{ uri: item.avatar }} size={60} />
-                    <View className="w-[400px] gap-2">
-                      <View className=" flex-row justify-between ">
-                        <Text className="text-lg font-extrabold">{item.username}</Text>
-                        <View className="w-[120px] flex-row">
-                          <Text className=" text-right text-sm opacity-60">
-                            {dayjs(item.updated_at).fromNow()}
-                            {item.username === userData?.username && (
-                              <Menu
-                                visible={visible}
-                                onDismiss={closeMenu}
-                                anchor={<Button onPress={openMenu}>.....</Button>}>
-                                <Menu.Item onPress={() => {}} title="Edit (onWork)" />
-                                <Menu.Item title="User Profile" />
-                                <Divider />
-                                <Menu.Item
-                                  titleStyle={{ color: 'red' }}
-                                  //  onPress={() => handleDeleteComment(item.post_id, item.id)}
-                                  title="Delete"
-                                />
-                              </Menu>
-                            )}
-                          </Text>
-                        </View>
-                      </View>
-                      <Text>{item.content}</Text>
-                    </View>
-                  </View> */}
                   <NewCommentCard
                     item={item}
                     userData={userData}
@@ -290,8 +259,10 @@ export default function Watch() {
             snapToAlignment="start"
             decelerationRate="fast"
             pagingEnabled
-            removeClippedSubviews={false}
-            bounces={false}
+            removeClippedSubviews={true}
+            windowSize={5}
+            initialNumToRender={3}
+            maxToRenderPerBatch={5}
             onEndReached={loadMore}
             onEndReachedThreshold={0.3}
             showsVerticalScrollIndicator={false}

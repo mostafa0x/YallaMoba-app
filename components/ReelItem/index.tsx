@@ -1,5 +1,5 @@
 import { VideoViewReel } from './VideoViewReel';
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState, useMemo } from 'react';
 import { View, Dimensions, ActivityIndicator, Text } from 'react-native';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import ImagesView from 'components/ViewReel/ImagesView';
@@ -10,20 +10,25 @@ const POST_HEIGHT = height;
 
 interface Props {
   item: any;
-  active: boolean;
   openModal: (postId: number) => void;
   PostId: number;
   POST_HEIGHT: number;
   player: any;
+  file: any;
 }
 
-const ReelItem = ({ player, item, active, openModal, PostId, POST_HEIGHT }: Props) => {
+const ReelItem = ({ player, item, openModal, PostId, POST_HEIGHT, file }: Props) => {
   const fileUrl = item.files?.[0] ?? '';
   const fileType = fileUrl.match(/\.(mp4|mov|webm)$/) ? 'video' : 'image';
   const [videoSize, setVideoSize] = useState({ width: POST_HEIGHT, height: POST_HEIGHT });
   const [loading, setLoading] = useState(true);
-  const videoAspectRatio = videoSize.width / videoSize.height;
-  const calculatedWidth = POST_HEIGHT * videoAspectRatio;
+  const active = file === (item.files?.[0] ?? '');
+
+  const calculatedWidth = useMemo(() => {
+    const aspectRatio = videoSize.width / videoSize.height;
+    return POST_HEIGHT * aspectRatio;
+  }, [videoSize, POST_HEIGHT]);
+
   useEffect(() => {
     if (player.status?.videoWidth && player.status?.videoHeight) {
       const aspectRatio = player.status.videoWidth / player.status.videoHeight;

@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import React from 'react';
+import React, { memo } from 'react';
 import { Icon } from 'react-native-paper';
 import RightBox from './RightBox';
 import InfoBox from './InfoBox';
@@ -10,7 +10,7 @@ interface props {
   openModal: any;
 }
 
-export default function RootReel({ post, openModal }: props) {
+function RootReel({ post, openModal }: props) {
   return (
     <View className="">
       <InfoBox post={post} />
@@ -24,3 +24,5 @@ export default function RootReel({ post, openModal }: props) {
     </View>
   );
 }
+
+export default memo(RootReel);

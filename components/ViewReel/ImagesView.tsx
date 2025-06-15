@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { View, Dimensions, TouchableOpacity, Modal } from 'react-native';
 import { Image } from 'expo-image';
 import ImageViewing from 'react-native-image-viewing';
@@ -8,7 +8,7 @@ interface Props {
   POST_HEIGHT: number;
 }
 
-export default function ImagesView({ fileUrl, POST_HEIGHT }: Props) {
+function ImagesView({ fileUrl, POST_HEIGHT }: Props) {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const [visible, setVisible] = useState(false);
 
@@ -33,3 +33,5 @@ export default function ImagesView({ fileUrl, POST_HEIGHT }: Props) {
     </>
   );
 }
+
+export default memo(ImagesView);
