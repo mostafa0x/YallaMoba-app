@@ -1,62 +1,45 @@
-import { View, Text, Dimensions, ActivityIndicator, StyleSheet } from 'react-native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Avatar, Button, Divider, Icon, Menu, TextInput } from 'react-native-paper';
+import { View, Text, Dimensions, ActivityIndicator } from 'react-native';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Button } from 'react-native-paper';
 import useReels from 'Hooks/useReels';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
 import { StateFace } from 'types/interfaces/store/StateFace';
-import { addComment, cheangeReelsData } from 'lib/Store/slices/ReelsSlice';
-import { useVideoPlayer, VideoView } from 'expo-video';
-import RootReel from 'components/Reels/layout';
+import { cheangeReelsData } from 'lib/Store/slices/ReelsSlice';
+import { useVideoPlayer } from 'expo-video';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Modalize } from 'react-native-modalize';
 import useGetComments from 'Hooks/useGetComments';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import callToast from 'components/toast';
-import axiosClient from 'lib/api/axiosClient';
-import NewCommentCard from 'components/CommentCard';
-import ImagesView from 'components/ViewReel/ImagesView';
-import VideoPlayerView from 'components/ViewReel/VideoView';
 import ReelItem from 'components/ReelItem';
 import CommentsView from 'components/CommentsView';
-dayjs.extend(relativeTime);
 
 export default function Watch() {
   const { height } = Dimensions.get('window');
   const insets = useSafeAreaInsets();
   const POST_HEIGHT = height - insets.bottom;
-
-  const [visible, setVisible] = useState(false);
-
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
   const { ReelsData } = useSelector((state: StateFace) => state.ReelsReducer);
-  const { userData } = useSelector((state: StateFace) => state.UserReducer);
-
+  const { userData } = useSelector((state: StateFace) => state.UserReducer, shallowEqual);
   const [pageLoading, setPageLoading] = useState(true);
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [file, setFile] = useState('');
-  const [isVideoLoading, setIsVideoLoading] = useState(false);
-  const [videoSize, setVideoSize] = useState({ width: 1, height: 1 });
   const [PostId, setPostId] = useState(-1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSubmitComment, setIsSubmitComment] = useState(false);
-  const modalRef = useRef<Modalize>(null);
-  const textboxRef = useRef<any | null>(null);
-  const [content, setContent] = useState<string | null>('');
-
   const commentsX = useGetComments(PostId, dispatch);
-  const openModal = (postId: number) => {
-    setPostId(postId);
-    // modalRef.current?.open();
-    setIsMenuOpen(true);
+  const memoizedCommentsX = useMemo(() => commentsX, [commentsX.data, commentsX.isLoading]);
 
-    // textboxRef.current && textboxRef.current?.focus();
-  };
+  const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
+  const player = useVideoPlayer(file, (player) => {
+    player.loop = true;
+    player.play();
+  });
+  const { data, isError, error, refetch } = useReels(page, 'feed');
+
+  const openModal = useCallback((postId: number) => {
+    setPostId(postId);
+    setIsMenuOpen(true);
+  }, []);
 
   // useEffect(() => {
   //   if (PostId === -1) return;
@@ -64,48 +47,9 @@ export default function Watch() {
   //   return () => {};
   // }, [PostId]);
 
-  const player = useVideoPlayer(file, (player) => {
-    player.loop = true;
-    player.play();
-  });
-
-  const { data, isError, error, refetch } = useReels(page);
-  const VideoPlayerStatus = player.status;
   useEffect(() => {
     if (page > 1) refetch();
   }, [page]);
-
-  // async function handleAddComment() {
-  //   if (!textboxRef.current || !content) {
-  //     callToast({
-  //       type: 'error',
-  //       text1: 'Comment cannot be empty',
-  //       text2: 'Please enter a comment.',
-  //     });
-  //     return;
-  //   }
-
-  //   if (textboxRef.current) {
-  //     if (isSubmitComment) return;
-  //     setIsSubmitComment(true);
-  //     try {
-  //       const res = await axiosClient.post(`/posts/${PostId}/comments/`, { content });
-  //       setContent(null);
-  //       dispatch(addComment(PostId));
-  //       console.log(res.data);
-  //       commentsX.refetch();
-  //     } catch (err) {
-  //       console.error('Error adding comment:', err);
-  //       callToast({
-  //         type: 'error',
-  //         text1: 'Error adding comment',
-  //         text2: 'Please try again later.',
-  //       });
-  //     } finally {
-  //       setIsSubmitComment(false);
-  //     }
-  //   }
-  // }
 
   useEffect(() => {
     if (data) {
@@ -133,54 +77,27 @@ export default function Watch() {
       const fileType = getFileType(fileUrl);
       if (fileType === 'video') {
         setFile(fileUrl);
-        setIsVideoLoading(true);
       } else {
         setFile('');
-        setIsVideoLoading(false);
       }
     }
   }, []);
 
-  const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
-
-  useEffect(() => {
-    if (VideoPlayerStatus === 'readyToPlay' || VideoPlayerStatus == 'idle') {
-      setIsVideoLoading(false);
-    }
-  }, [VideoPlayerStatus, file]);
-
   const renderItem = useCallback(
-    ({ item }: any) => {
-      const fileUrl = item.files?.[0] ?? null;
-      const fileType = getFileType(fileUrl);
-
-      const videoAspectRatio = videoSize.width / videoSize.height;
-      const calculatedWidth = POST_HEIGHT * videoAspectRatio;
-
-      return (
-        <View>
-          {/* <RootReel post={item} openModal={openModal} /> */}
-          <ReelItem
-            item={item}
-            isActive={file === (item.files?.[0] ?? '')}
-            setVideoSize={setVideoSize}
-            videoSize={videoSize}
-            openModal={openModal}
-          />
-        </View>
-      );
-    },
-    [file]
+    ({ item }: any) => (
+      <ReelItem
+        file={file}
+        player={player}
+        item={item}
+        PostId={PostId}
+        openModal={openModal}
+        POST_HEIGHT={POST_HEIGHT}
+      />
+    ),
+    [file, POST_HEIGHT]
   );
 
-  // const handleVideoLoad = (status: any) => {
-  //   const { videoWidth, videoHeight } = status;
-  //   if (videoWidth && videoHeight) {
-  //     setVideoSize({ width: videoWidth, height: videoHeight });
-  //   }
-  // };
-
-  function loadMore() {
+  const loadMore = useCallback(() => {
     if (isFetchingMore || pageLoading) return;
     if (page >= totalPage) {
       setIsFetchingMore(false);
@@ -189,7 +106,7 @@ export default function Watch() {
     }
     setIsFetchingMore(true);
     setPage((curr) => curr + 1);
-  }
+  }, [page, isFetchingMore, pageLoading]);
 
   return (
     <View className="flex-1 bg-black">
@@ -209,93 +126,38 @@ export default function Watch() {
           <View>
             <Text className="p-3 text-3xl text-white">Reels</Text>
           </View>
-          {/* <Modalize
-            ref={modalRef}
-            modalHeight={900}
-            handleStyle={{ backgroundColor: '#b9b3b3' }}
-            withHandle={true}
-            panGestureComponentEnabled={false}
-            FooterComponent={
-              <View className="flex-row gap-4 pb-2">
-                <TextInput
-                  onChange={(e) => setContent(e.nativeEvent.text)}
-                  value={content ?? ''}
-                  ref={textboxRef}
-                  className="w-[385px]"
-                  style={{ borderRadius: 20 }}
-                  placeholder="Add a comment..."
-                  onFocus={() => setIsMenuOpen(true)}
-                  onSubmitEditing={handleAddComment}
-                />
-                {isSubmitComment ? (
-                  <ActivityIndicator size={30} color="black" />
-                ) : (
-                  <Button
-                    style={{ padding: 5 }}
-                    mode="contained"
-                    onPress={() => {
-                      handleAddComment();
-                      setIsMenuOpen(false);
-                    }}>
-                    Submit
-                  </Button>
-                )}
-              </View>
-            }
-            flatListProps={{
-              data: commentsX.data,
 
-              keyExtractor: (item) => item.id.toString(),
-              ListEmptyComponent: () => {
-                return (
-                  !commentsX.isLoading && (
-                    <View className="mt-20 items-center">
-                      <Text className="text-2xl text-gray-500">No Comments yet..</Text>
-                    </View>
-                  )
-                );
-              },
-              ListHeaderComponent: () => {
-                return (
-                  commentsX.isLoading && (
-                    <View className="mt-[200px] flex-row items-center justify-center">
-                      <ActivityIndicator size={100} />
-                    </View>
-                  )
-                );
-              },
-              renderItem: ({ item }) => (
-                <View className="mx-5 my-10">
-                  <NewCommentCard
-                    item={item}
-                    userData={userData}
-                    postId={PostId}
-                    refetch={commentsX.refetch}
-                  />
-                </View>
-              ),
-              keyboardShouldPersistTaps: 'handled',
-            }}
-          /> */}
-          <CommentsView isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} postId={PostId} />
+          <CommentsView
+            commentsX={memoizedCommentsX}
+            userData={userData}
+            PostId={PostId}
+            isMenuOpen={isMenuOpen}
+            setIsMenuOpen={setIsMenuOpen}
+          />
 
           <FlatList
             data={ReelsData}
-            extraData={file}
-            keyExtractor={(item, index) => item.id.toString() + '_' + index}
+            keyExtractor={(item, index) => `${item.id}-${index}`}
             renderItem={renderItem}
             snapToInterval={POST_HEIGHT}
             snapToAlignment="start"
             decelerationRate="fast"
             pagingEnabled
-            removeClippedSubviews={false}
-            bounces={false}
+            removeClippedSubviews={true}
+            windowSize={5}
+            initialNumToRender={3}
+            maxToRenderPerBatch={5}
             onEndReached={loadMore}
             onEndReachedThreshold={0.3}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ height: ReelsData.length * POST_HEIGHT }}
             onViewableItemsChanged={onViewableItemsChanged}
             viewabilityConfig={viewabilityConfig}
+            getItemLayout={(data, index) => ({
+              length: POST_HEIGHT,
+              offset: POST_HEIGHT * index,
+              index,
+            })}
           />
         </>
       )}

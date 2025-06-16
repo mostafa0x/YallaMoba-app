@@ -1,11 +1,11 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { Avatar, Button } from 'react-native-paper';
 import { ReelPostFace } from 'types/interfaces/store/ReelsFace';
 import { useSelector } from 'react-redux';
 import { StateFace } from 'types/interfaces/store/StateFace';
 
-export default function InfoBox({ post }: { post: ReelPostFace }) {
+function InfoBox({ post }: { post: ReelPostFace }) {
   const { userData } = useSelector((state: StateFace) => state.UserReducer);
   const [isShowMore, setIsShowMore] = useState(false);
   const isFollowingUser = '';
@@ -47,3 +47,5 @@ export default function InfoBox({ post }: { post: ReelPostFace }) {
     </View>
   );
 }
+
+export default memo(InfoBox);

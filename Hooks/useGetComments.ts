@@ -6,11 +6,8 @@ import React from 'react';
 import { CommentFace } from 'types/interfaces/store/ProfileFace';
 
 async function handleGetComments(postID: number, dispatch: any) {
-  console.log(postID);
-
   try {
     const res = await axiosClient.get(`/posts/${postID}/comments/`);
-    console.log(res.data);
     dispatch(ChangeCommentsCurrentPost(res.data));
     return res.data;
   } catch (err: any) {

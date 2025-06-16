@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { Avatar, Button, Divider, Menu } from 'react-native-paper';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { deleteComment } from 'lib/Store/slices/ReelsSlice';
 dayjs.extend(relativeTime);
 
-export default function NewCommentCard({ item, userData, postId, refetch }: any) {
+function NewCommentCard({ item, userData, refetch }: any) {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const openMenu = () => setVisible(true);
@@ -67,3 +67,5 @@ export default function NewCommentCard({ item, userData, postId, refetch }: any)
     </View>
   );
 }
+
+export default memo(NewCommentCard);

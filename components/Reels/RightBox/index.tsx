@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { memo } from 'react';
 import { ActivityIndicator, Icon } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { LikeReelPost, unLikeReelPost } from 'lib/Store/slices/ReelsSlice';
@@ -14,7 +14,7 @@ interface props {
   openModal: any;
 }
 
-export default function RightBox({ countLikes, countComment, isLiked, postId, openModal }: props) {
+function RightBox({ countLikes, countComment, isLiked, postId, openModal }: props) {
   const dispatch = useDispatch();
   const iconSize = 30;
   const [likeLoading, setLikeLoading] = React.useState(false);
@@ -90,3 +90,5 @@ export default function RightBox({ countLikes, countComment, isLiked, postId, op
     </View>
   );
 }
+
+export default memo(RightBox);
