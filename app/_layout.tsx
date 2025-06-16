@@ -12,6 +12,7 @@ import { Text } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ActionSheet from 'providers/ActionSheet';
 import { PaperProvider } from 'react-native-paper';
+import { VideoPlayerProvider } from 'contexts/VideoPlayerManager';
 
 const query = new QueryClient();
 export default function RootLayout() {

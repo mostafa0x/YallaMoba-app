@@ -4,11 +4,8 @@ import { useSelector } from 'react-redux';
 import { StateFace } from 'types/interfaces/store/StateFace';
 import RootReel from 'components/Reels/layout';
 import ImagesView from 'components/ViewReel/ImagesView';
-import { useVideoManager } from 'components/VideoPlayerManager';
-import { VideoView } from 'expo-video';
+import { useVideoManager } from 'contexts/VideoPlayerManager';
 import { VideoViewReel } from './VideoViewReel';
-
-const { height } = Dimensions.get('window');
 
 const ReelItem = ({ item, openModal, POST_HEIGHT, index }: any) => {
   const { currIndex } = useSelector((state: StateFace) => state.ReelsReducer);
@@ -46,13 +43,6 @@ const ReelItem = ({ item, openModal, POST_HEIGHT, index }: any) => {
           calculatedWidth={calculatedWidth}
           POST_HEIGHT={POST_HEIGHT}
         />
-        // <VideoView
-        //   player={player}
-        //   style={{ width: '100%', height: POST_HEIGHT }}
-        //   allowsFullscreen={true}
-        //   nativeControls={false}
-        //   contentFit="contain"
-        // />
       )}
       {fileType === 'image' && <ImagesView fileUrl={fileUrl} POST_HEIGHT={POST_HEIGHT} />}
     </View>

@@ -1,11 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useVideoPlayer } from 'expo-video';
-import { Dimensions, View } from 'react-native';
-import { useFocusEffect } from 'expo-router';
-import { useEvent } from 'expo';
-
-const { height, width } = Dimensions.get('window');
-const POST_HEIGHT = height;
+import { useFocusEffect, usePathname } from 'expo-router';
 
 interface VideoPlayerContextType {
   playVideo: (url: string) => void;
@@ -24,11 +19,18 @@ const VideoPlayerContext = createContext<VideoPlayerContextType>({
 export const useVideoManager = () => useContext(VideoPlayerContext);
 
 export const VideoPlayerProvider = ({ children }: { children: React.ReactNode }) => {
+  const pathname = usePathname();
   const [path, setPath] = useState<string | null>(null);
   const player = useVideoPlayer(path, (player) => {
     player.loop = true;
   });
-  const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
+
+  useEffect(() => {
+    if (pathname == '/' || pathname == '/watch') {
+      stopVideo();
+    }
+    return () => {};
+  }, [pathname]);
 
   useEffect(() => {
     if (path) {
@@ -46,11 +48,11 @@ export const VideoPlayerProvider = ({ children }: { children: React.ReactNode })
 
   useFocusEffect(
     useCallback(() => {
-      console.log('open');
+      //   console.log('open');
 
       return () => {
         stopVideo();
-        console.log('blur');
+        //  console.log('blur');
       };
     }, [])
   );
