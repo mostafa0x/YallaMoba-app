@@ -21,7 +21,7 @@ const ReelItem = ({ item, openModal, POST_HEIGHT, index }: any) => {
 
   useEffect(() => {
     let callPlayTimeOut: any = null;
-    if (player.playing) stopVideo();
+    stopVideo();
     if (fileType === 'video') {
       if (isActive) {
         callPlayTimeOut = setTimeout(() => {

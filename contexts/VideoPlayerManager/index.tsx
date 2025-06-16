@@ -21,16 +21,19 @@ export const useVideoManager = () => useContext(VideoPlayerContext);
 export const VideoPlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const [path, setPath] = useState<string | null>(null);
-  const player = useVideoPlayer(path, (player) => {
+  const player = useVideoPlayer(path ? { uri: path, useCaching: true } : null, (player) => {
     player.loop = true;
   });
 
   useEffect(() => {
-    if (pathname == '/' || pathname == '/watch') {
-      stopVideo();
+    if (path) {
+      if (pathname !== '/' && pathname !== '/watch') {
+        stopVideo();
+        console.log('exit');
+      }
     }
     return () => {};
-  }, [pathname]);
+  }, [pathname, path]);
 
   useEffect(() => {
     if (path) {
@@ -48,11 +51,11 @@ export const VideoPlayerProvider = ({ children }: { children: React.ReactNode })
 
   useFocusEffect(
     useCallback(() => {
-      //   console.log('open');
+      console.log('open');
 
       return () => {
         stopVideo();
-        //  console.log('blur');
+        console.log('blur');
       };
     }, [])
   );

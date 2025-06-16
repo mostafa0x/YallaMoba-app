@@ -3,6 +3,7 @@ import axiosClient from 'lib/api/axiosClient';
 
 async function fetchReels(page: number, type: string) {
   const res = await axiosClient.get(`/posts/${type}?page=${page}`);
+
   return res.data;
 }
 

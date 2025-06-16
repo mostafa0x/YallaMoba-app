@@ -53,6 +53,9 @@ export default function Home() {
       setPageLoading(false);
       setIsFetchingMore(false);
     }
+    return () => {
+      dispatch(cheangeReelsData([]));
+    };
   }, [data]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {

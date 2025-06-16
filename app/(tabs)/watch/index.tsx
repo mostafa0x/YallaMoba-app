@@ -27,7 +27,7 @@ export default function watch() {
   const commentsX = useGetComments(PostId, dispatch);
   const memoizedCommentsX = useMemo(() => commentsX, [commentsX.data, commentsX.isLoading]);
   const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
-  const { data, isError, error, refetch } = useReels(page, 'home');
+  const { data, isError, error, refetch } = useReels(page, 'feed');
 
   const openModal = useCallback((postId: number) => {
     setPostId(postId);
