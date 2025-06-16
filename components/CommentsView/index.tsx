@@ -1,27 +1,4 @@
 import { View, Text } from 'react-native';
-<<<<<<< HEAD
-import React, { useEffect, useRef, useState } from 'react';
-import { Modalize } from 'react-native-modalize';
-import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
-import useGetComments from 'Hooks/useGetComments';
-import { useDispatch } from 'react-redux';
-import callToast from 'components/toast';
-import { addComment } from 'lib/Store/slices/ReelsSlice';
-import NewCommentCard from 'components/CommentCard';
-import axiosClient from 'lib/api/axiosClient';
-
-export default function CommentsView({ userData, postId, isMenuOpen, setIsMenuOpen }: any) {
-  const dispatch = useDispatch();
-  const [isSubmitComment, setIsSubmitComment] = useState(false);
-  const modalRef = useRef<Modalize>(null);
-  const textboxRef = useRef<any | null>(null);
-  const [content, setContent] = useState<string | null>('');
-  const [PostId, setPostId] = useState(-1);
-
-  const commentsX = useGetComments(PostId, dispatch);
-
-  async function handleAddComment() {
-=======
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Modalize } from 'react-native-modalize';
 import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
@@ -78,7 +55,6 @@ function CommentsView({ commentsX, userData, PostId, isMenuOpen, setIsMenuOpen }
   //     }
   //   }
   const handleAddComment = useCallback(async () => {
->>>>>>> 63be14c
     if (!textboxRef.current || !content) {
       callToast({
         type: 'error',
@@ -95,10 +71,6 @@ function CommentsView({ commentsX, userData, PostId, isMenuOpen, setIsMenuOpen }
         const res = await axiosClient.post(`/posts/${PostId}/comments/`, { content });
         setContent(null);
         dispatch(addComment(PostId));
-<<<<<<< HEAD
-        console.log(res.data);
-=======
->>>>>>> 63be14c
         commentsX.refetch();
       } catch (err) {
         console.error('Error adding comment:', err);
@@ -111,23 +83,12 @@ function CommentsView({ commentsX, userData, PostId, isMenuOpen, setIsMenuOpen }
         setIsSubmitComment(false);
       }
     }
-<<<<<<< HEAD
-  }
-
-  useEffect(() => {
-    if (isMenuOpen) {
-      modalRef.current?.open();
-      setIsMenuOpen(false);
-    }
-
-=======
   }, [textboxRef, content, isSubmitComment, PostId, commentsX, dispatch]);
 
   useEffect(() => {
     if (!modalRef.current) return;
     isMenuOpen && modalRef.current?.open();
     setIsMenuOpen(false);
->>>>>>> 63be14c
     return () => {};
   }, [isMenuOpen]);
 
@@ -147,11 +108,7 @@ function CommentsView({ commentsX, userData, PostId, isMenuOpen, setIsMenuOpen }
             className="w-[385px]"
             style={{ borderRadius: 20 }}
             placeholder="Add a comment..."
-<<<<<<< HEAD
-            onFocus={() => isMenuOpen}
-=======
             onFocus={() => setIsMenuOpen(true)}
->>>>>>> 63be14c
             onSubmitEditing={handleAddComment}
           />
           {isSubmitComment ? (
@@ -162,11 +119,7 @@ function CommentsView({ commentsX, userData, PostId, isMenuOpen, setIsMenuOpen }
               mode="contained"
               onPress={() => {
                 handleAddComment();
-<<<<<<< HEAD
-                // setIsMenuOpen(false);
-=======
                 setIsMenuOpen(false);
->>>>>>> 63be14c
               }}>
               Submit
             </Button>
@@ -210,8 +163,5 @@ function CommentsView({ commentsX, userData, PostId, isMenuOpen, setIsMenuOpen }
     />
   );
 }
-<<<<<<< HEAD
-=======
 
 export default memo(CommentsView);
->>>>>>> 63be14c
