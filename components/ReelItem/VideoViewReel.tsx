@@ -1,3 +1,4 @@
+import { useEvent } from 'expo';
 import { VideoView } from 'expo-video';
 import React, { useState } from 'react';
 import { View } from 'react-native';
@@ -7,45 +8,47 @@ interface props {
   player: any;
   calculatedWidth: number;
   POST_HEIGHT: number;
-  isLoading: boolean;
 }
 
-export function VideoViewReel({ player, calculatedWidth, POST_HEIGHT, isLoading }: props) {
+export function VideoViewReel({ player, calculatedWidth, POST_HEIGHT }: props) {
   const [isReady, setIsReady] = useState(false);
+  const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
 
   return (
     <>
-      {isLoading && (
+      {isPlaying ? (
         <View
           style={{
             width: '100%',
             height: '100%',
             alignItems: 'center',
+          }}
+          onLayout={() => setIsReady(true)}>
+          {isReady && (
+            <VideoView
+              player={player}
+              style={{
+                width: calculatedWidth,
+                height: POST_HEIGHT - 75,
+              }}
+              allowsFullscreen={true}
+              nativeControls={false}
+              contentFit="fill"
+            />
+          )}
+        </View>
+      ) : (
+        <View
+          style={{
+            width: '100%',
+            height: '100%',
+            marginTop: POST_HEIGHT / 3,
+            alignItems: 'center',
             alignContent: 'center',
           }}>
-          <ActivityIndicator size="large" color="white" />
+          <ActivityIndicator size={100} color="white" />
         </View>
       )}
-      <View
-        style={{
-          width: '100%',
-          height: '100%',
-          alignItems: 'center',
-        }}
-        onLayout={() => setIsReady(true)}>
-        {isReady && (
-          <VideoView
-            player={player}
-            style={{
-              width: calculatedWidth,
-              height: POST_HEIGHT - 75,
-            }}
-            allowsFullscreen={true}
-            nativeControls={false}
-            contentFit="fill"
-          />
-        )}
-      </View>
     </>
   );
 }
