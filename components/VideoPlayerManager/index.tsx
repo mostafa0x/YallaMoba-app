@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import { Dimensions, View } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 
 const { height, width } = Dimensions.get('window');
 const POST_HEIGHT = height;
@@ -48,11 +49,24 @@ export const VideoPlayerProvider = ({ children }: { children: React.ReactNode })
     setPath(url);
   };
 
-  const stopVideo = () => {
-    // if (path === null) return;
-    player.pause();
-    // setPath(null);
-  };
+  //   const stopVideo = () => {
+  //     setPath(null);
+  //   };
+
+  const stopVideo = useCallback(() => {
+    setPath(null);
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log('open');
+
+      return () => {
+        stopVideo();
+        console.log('blur');
+      };
+    }, [])
+  );
 
   return (
     <VideoPlayerContext.Provider
