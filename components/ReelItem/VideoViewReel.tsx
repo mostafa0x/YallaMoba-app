@@ -1,8 +1,10 @@
 import { VideoView } from 'expo-video';
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 export function VideoViewReel({ loading, player, calculatedWidth, POST_HEIGHT }: any) {
+  const [isReady, setIsReady] = useState(false);
+
   return (
     <>
       {/* {loading && (
@@ -20,17 +22,20 @@ export function VideoViewReel({ loading, player, calculatedWidth, POST_HEIGHT }:
           width: '100%',
           height: '100%',
           alignItems: 'center',
-        }}>
-        <VideoView
-          player={player}
-          style={{
-            width: calculatedWidth,
-            height: POST_HEIGHT - 75,
-          }}
-          allowsFullscreen={true}
-          nativeControls={false}
-          contentFit="fill"
-        />
+        }}
+        onLayout={() => setIsReady(true)}>
+        {isReady && (
+          <VideoView
+            player={player}
+            style={{
+              width: calculatedWidth,
+              height: POST_HEIGHT - 75,
+            }}
+            allowsFullscreen={true}
+            nativeControls={false}
+            contentFit="fill"
+          />
+        )}
       </View>
     </>
   );

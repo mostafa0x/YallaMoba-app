@@ -29,7 +29,6 @@ import axiosClient from 'lib/api/axiosClient';
 import callToast from 'components/toast';
 import { ChangeCommentsCurrentPost } from 'lib/Store/slices/ProfileSlice';
 import useGetComments from 'Hooks/useGetComments';
-import CommentItem from 'components/CommentsCard';
 
 export default function Post() {
   const { userData } = useSelector((state: StateFace) => state.UserReducer);
@@ -134,11 +133,12 @@ export default function Post() {
               data: commentsCurrentPost,
               keyExtractor: (item) => item.id,
               renderItem: ({ item }) => (
-                <CommentItem
-                  item={item}
-                  userData={userData}
-                  handleDeleteComment={handleDeleteComment}
-                />
+                // <CommentItem
+                //   item={item}
+                //   userData={userData}
+                //   handleDeleteComment={handleDeleteComment}
+                // />
+                <View></View>
               ),
               ListEmptyComponent: () =>
                 commentsCurrentPost === null ? (

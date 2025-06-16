@@ -4,6 +4,8 @@ import { View, Dimensions, ActivityIndicator, Text } from 'react-native';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import ImagesView from 'components/ViewReel/ImagesView';
 import RootReel from 'components/Reels/layout';
+import { useSelector } from 'react-redux';
+import { StateFace } from 'types/interfaces/store/StateFace';
 
 const { height, width: screenWidth } = Dimensions.get('window');
 const POST_HEIGHT = height;
@@ -13,21 +15,37 @@ interface Props {
   openModal: (postId: number) => void;
   PostId: number;
   POST_HEIGHT: number;
-  player: any;
   file: any;
+  index: number;
 }
 
-const ReelItem = ({ player, item, openModal, PostId, POST_HEIGHT, file }: Props) => {
+const ReelItem = ({ item, openModal, POST_HEIGHT, index }: any) => {
+  const { currIndex } = useSelector((state: StateFace) => state.ReelsReducer);
   const fileUrl = item.files?.[0] ?? '';
   const fileType = fileUrl.match(/\.(mp4|mov|webm)$/) ? 'video' : 'image';
-  const [videoSize, setVideoSize] = useState({ width: POST_HEIGHT, height: POST_HEIGHT });
-  const [loading, setLoading] = useState(true);
-  const active = file === (item.files?.[0] ?? '');
+  const isActive = index === currIndex;
+  const player: any = useVideoPlayer(fileUrl, (player) => {
+    player.loop = true;
+    if (isActive) {
+      player.play();
+    } else {
+      player.pause();
+    }
+  });
 
-  const calculatedWidth = useMemo(() => {
-    const aspectRatio = videoSize.width / videoSize.height;
-    return POST_HEIGHT * aspectRatio;
-  }, [videoSize, POST_HEIGHT]);
+  useEffect(() => {
+    isActive && console.log(currIndex);
+  }, [currIndex]);
+
+  useEffect(() => {
+    if (!isActive) {
+      console.log('na');
+
+      player.pause();
+    }
+  }, [isActive]);
+
+  const [videoSize, setVideoSize] = useState({ width: POST_HEIGHT, height: POST_HEIGHT });
 
   useEffect(() => {
     if (player.status?.videoWidth && player.status?.videoHeight) {
@@ -39,13 +57,17 @@ const ReelItem = ({ player, item, openModal, PostId, POST_HEIGHT, file }: Props)
     }
   }, [player.status?.videoWidth, player.status?.videoHeight]);
 
+  const calculatedWidth = useMemo(() => {
+    const aspectRatio = videoSize.width / videoSize.height;
+    return POST_HEIGHT * aspectRatio;
+  }, [videoSize, POST_HEIGHT]);
+
   return (
     <View style={{ height: POST_HEIGHT, width: '100%' }}>
       <RootReel post={item} openModal={openModal} />
       {fileType === 'video' ? (
-        active ? (
+        isActive ? (
           <VideoViewReel
-            loading={loading}
             player={player}
             calculatedWidth={calculatedWidth}
             POST_HEIGHT={POST_HEIGHT}

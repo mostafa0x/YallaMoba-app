@@ -1,5 +1,6 @@
 export interface ReelsFace {
   ReelsData: ReelPostFace[];
+  currIndex: number;
 }
 
 export interface ReelPostFace {
