@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useGetComments from 'Hooks/useGetComments';
 import ReelItem from 'components/ReelItem';
 import CommentsView from 'components/CommentsView';
+import { VideoPlayerProvider } from 'components/VideoPlayerManager';
 
 export default function Home() {
   const { height } = Dimensions.get('window');
@@ -93,49 +94,51 @@ export default function Home() {
   }, [page, isFetchingMore, pageLoading]);
 
   return (
-    <View className="flex-1 bg-black">
-      {isError ? (
-        <View className="flex-1 items-center justify-center">
-          <Text className="text-2xl text-white">Error: {error?.message}</Text>
-          <Button mode="contained" onPress={() => refetch()}>
-            Retry
-          </Button>
-        </View>
-      ) : pageLoading ? (
-        <View className="flex-1  items-center justify-center">
-          <ActivityIndicator size={50} />
-        </View>
-      ) : (
-        <>
-          <View>
-            <Text className="p-3 text-3xl text-white">Reels</Text>
+    <VideoPlayerProvider>
+      <View className="flex-1 bg-black">
+        {isError ? (
+          <View className="flex-1 items-center justify-center">
+            <Text className="text-2xl text-white">Error: {error?.message}</Text>
+            <Button mode="contained" onPress={() => refetch()}>
+              Retry
+            </Button>
           </View>
+        ) : pageLoading ? (
+          <View className="flex-1 items-center justify-center">
+            <ActivityIndicator size={50} />
+          </View>
+        ) : (
+          <>
+            <View>
+              <Text className="p-3 text-3xl text-white">Reels</Text>
+            </View>
 
-          <CommentsView
-            commentsX={memoizedCommentsX}
-            userData={userData}
-            PostId={PostId}
-            isMenuOpen={isMenuOpen}
-            setIsMenuOpen={setIsMenuOpen}
-          />
+            <CommentsView
+              commentsX={memoizedCommentsX}
+              userData={userData}
+              PostId={PostId}
+              isMenuOpen={isMenuOpen}
+              setIsMenuOpen={setIsMenuOpen}
+            />
 
-          <FlashList
-            data={ReelsData}
-            keyExtractor={(item, index) => `${item.id}-${index}`}
-            renderItem={renderItem}
-            estimatedItemSize={POST_HEIGHT}
-            onEndReached={loadMore}
-            onEndReachedThreshold={0.3}
-            snapToInterval={POST_HEIGHT}
-            snapToAlignment="start"
-            decelerationRate="fast"
-            pagingEnabled
-            showsVerticalScrollIndicator={false}
-            viewabilityConfig={viewabilityConfig}
-            onViewableItemsChanged={onViewableItemsChanged}
-          />
-        </>
-      )}
-    </View>
+            <FlashList
+              data={ReelsData}
+              keyExtractor={(item, index) => `${item.id}-${index}`}
+              renderItem={renderItem}
+              estimatedItemSize={POST_HEIGHT}
+              onEndReached={loadMore}
+              onEndReachedThreshold={0.3}
+              snapToInterval={POST_HEIGHT}
+              snapToAlignment="start"
+              decelerationRate="fast"
+              pagingEnabled
+              showsVerticalScrollIndicator={false}
+              viewabilityConfig={viewabilityConfig}
+              onViewableItemsChanged={onViewableItemsChanged}
+            />
+          </>
+        )}
+      </View>
+    </VideoPlayerProvider>
   );
 }

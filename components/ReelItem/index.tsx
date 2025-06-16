@@ -1,81 +1,56 @@
-import { VideoViewReel } from './VideoViewReel';
-import React, { memo, useEffect, useState, useMemo } from 'react';
-import { View, Dimensions, ActivityIndicator, Text } from 'react-native';
-import { VideoView, useVideoPlayer } from 'expo-video';
-import ImagesView from 'components/ViewReel/ImagesView';
-import RootReel from 'components/Reels/layout';
+import React, { memo, useEffect, useMemo, useState } from 'react';
+import { View, Dimensions, Text } from 'react-native';
 import { useSelector } from 'react-redux';
 import { StateFace } from 'types/interfaces/store/StateFace';
+import RootReel from 'components/Reels/layout';
+import ImagesView from 'components/ViewReel/ImagesView';
+import { useVideoManager } from 'components/VideoPlayerManager';
+import { VideoView } from 'expo-video';
+import { VideoViewReel } from './VideoViewReel';
 
-const { height, width: screenWidth } = Dimensions.get('window');
-const POST_HEIGHT = height;
-
-interface Props {
-  item: any;
-  openModal: (postId: number) => void;
-  PostId: number;
-  POST_HEIGHT: number;
-  file: any;
-  index: number;
-}
+const { height } = Dimensions.get('window');
 
 const ReelItem = ({ item, openModal, POST_HEIGHT, index }: any) => {
   const { currIndex } = useSelector((state: StateFace) => state.ReelsReducer);
   const fileUrl = item.files?.[0] ?? '';
   const fileType = fileUrl.match(/\.(mp4|mov|webm)$/) ? 'video' : 'image';
   const isActive = index === currIndex;
-  const player: any = useVideoPlayer(fileUrl, (player) => {
-    player.loop = true;
-    if (isActive) {
-      player.play();
-    } else {
-      player.pause();
-    }
-  });
-
-  useEffect(() => {
-    isActive && console.log(currIndex);
-  }, [currIndex]);
-
-  useEffect(() => {
-    if (!isActive) {
-      console.log('na');
-
-      player.pause();
-    }
-  }, [isActive]);
-
   const [videoSize, setVideoSize] = useState({ width: POST_HEIGHT, height: POST_HEIGHT });
-
-  useEffect(() => {
-    if (player.status?.videoWidth && player.status?.videoHeight) {
-      const aspectRatio = player.status.videoWidth / player.status.videoHeight;
-      setVideoSize({
-        width: POST_HEIGHT * aspectRatio,
-        height: POST_HEIGHT,
-      });
-    }
-  }, [player.status?.videoWidth, player.status?.videoHeight]);
-
+  const { playVideo, stopVideo, currentUrl, player, isLoading } = useVideoManager();
   const calculatedWidth = useMemo(() => {
     const aspectRatio = videoSize.width / videoSize.height;
     return POST_HEIGHT * aspectRatio;
   }, [videoSize, POST_HEIGHT]);
 
+  useEffect(() => {
+    if (fileType === 'video') {
+      stopVideo();
+
+      if (isActive) {
+        playVideo(fileUrl);
+      }
+    }
+  }, [isActive, fileUrl]);
+
   return (
     <View style={{ height: POST_HEIGHT, width: '100%' }}>
       <RootReel post={item} openModal={openModal} />
-      {fileType === 'video' ? (
-        isActive ? (
-          <VideoViewReel
-            player={player}
-            calculatedWidth={calculatedWidth}
-            POST_HEIGHT={POST_HEIGHT}
-          />
-        ) : null
-      ) : (
-        <ImagesView fileUrl={fileUrl} POST_HEIGHT={POST_HEIGHT} />
+      {fileType === 'video' && isActive && currentUrl === fileUrl && (
+        <VideoViewReel
+          player={player}
+          calculatedWidth={calculatedWidth}
+          POST_HEIGHT={POST_HEIGHT}
+          isLoading={isLoading}
+        />
+        // <VideoView
+        //   player={player}
+        //   style={{ width: '100%', height: POST_HEIGHT }}
+        //   allowsFullscreen={true}
+        //   nativeControls={false}
+        //   contentFit="contain"
+        // />
       )}
+      {fileType === 'image' && <ImagesView fileUrl={fileUrl} POST_HEIGHT={POST_HEIGHT} />}
     </View>
   );
 };
