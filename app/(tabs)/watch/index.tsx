@@ -1,8 +1,8 @@
 import { View, Text, Dimensions, ActivityIndicator, StyleSheet } from 'react-native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Avatar, Button, Divider, Icon, Menu, TextInput } from 'react-native-paper';
 import useReels from 'Hooks/useReels';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
 import { StateFace } from 'types/interfaces/store/StateFace';
 import { addComment, cheangeReelsData } from 'lib/Store/slices/ReelsSlice';
@@ -19,6 +19,7 @@ import axiosClient from 'lib/api/axiosClient';
 import NewCommentCard from 'components/CommentCard';
 import ImagesView from 'components/ViewReel/ImagesView';
 import ReelItem from 'components/ReelItem';
+import CommentsView from 'components/CommentsView';
 dayjs.extend(relativeTime);
 
 export default function Watch() {
@@ -31,7 +32,7 @@ export default function Watch() {
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
   const { ReelsData } = useSelector((state: StateFace) => state.ReelsReducer);
-  const { userData } = useSelector((state: StateFace) => state.UserReducer);
+  const { userData } = useSelector((state: StateFace) => state.UserReducer, shallowEqual);
 
   const [pageLoading, setPageLoading] = useState(true);
   const dispatch = useDispatch();
@@ -44,15 +45,16 @@ export default function Watch() {
   const [PostId, setPostId] = useState(-1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSubmitComment, setIsSubmitComment] = useState(false);
-  const modalRef = useRef<Modalize>(null);
   const textboxRef = useRef<any | null>(null);
+  const modalRef = useRef<Modalize>(null);
   const [content, setContent] = useState<string | null>('');
-  const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
   const commentsX = useGetComments(PostId, dispatch);
+  const memoizedCommentsX = useMemo(() => commentsX, [commentsX.data, commentsX.isLoading]);
+
+  const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
 
   const openModal = useCallback((postId: number) => {
     setPostId(postId);
-    modalRef.current?.open();
     setIsMenuOpen(true);
   }, []);
 
@@ -152,6 +154,16 @@ export default function Watch() {
     [file, POST_HEIGHT]
   );
 
+  const LoaderFooter = useCallback(() => {
+    if (!isFetchingMore) return null;
+
+    return (
+      <View style={{ paddingVertical: 20 }}>
+        <ActivityIndicator size={30} color={'white'} />
+      </View>
+    );
+  }, [isFetchingMore]);
+
   const loadMore = useCallback(() => {
     if (isFetchingMore || pageLoading) return;
     if (page >= totalPage) {
@@ -181,7 +193,7 @@ export default function Watch() {
           <View>
             <Text className="p-3 text-3xl text-white">Reels</Text>
           </View>
-          <Modalize
+          {/* <Modalize
             ref={modalRef}
             modalHeight={900}
             handleStyle={{ backgroundColor: '#b9b3b3' }}
@@ -248,12 +260,18 @@ export default function Watch() {
               ),
               keyboardShouldPersistTaps: 'handled',
             }}
+          /> */}
+          <CommentsView
+            commentsX={memoizedCommentsX}
+            userData={userData}
+            PostId={PostId}
+            isMenuOpen={isMenuOpen}
+            setIsMenuOpen={setIsMenuOpen}
           />
 
           <FlatList
             data={ReelsData}
-            extraData={file}
-            keyExtractor={(item, index) => item.id.toString() + '_' + index}
+            keyExtractor={(item, index) => `${item.id}-${index}`}
             renderItem={renderItem}
             snapToInterval={POST_HEIGHT}
             snapToAlignment="start"
@@ -269,6 +287,12 @@ export default function Watch() {
             contentContainerStyle={{ height: ReelsData.length * POST_HEIGHT }}
             onViewableItemsChanged={onViewableItemsChanged}
             viewabilityConfig={viewabilityConfig}
+            ListFooterComponent={LoaderFooter}
+            getItemLayout={(data, index) => ({
+              length: POST_HEIGHT,
+              offset: POST_HEIGHT * index,
+              index,
+            })}
           />
         </>
       )}
