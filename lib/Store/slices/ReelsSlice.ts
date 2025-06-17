@@ -3,7 +3,6 @@ import { ReelsFace } from 'types/interfaces/store/ReelsFace';
 
 const initialState: ReelsFace = {
   ReelsData: [],
-  HomeData: [],
   currIndex: 0,
 };
 const ReelsSlice = createSlice({
@@ -13,8 +12,11 @@ const ReelsSlice = createSlice({
     cheangeReelsData: (state, action) => {
       state.ReelsData.push(...action.payload);
     },
-    cheangeHomeData: (state, action) => {
-      state.HomeData.push(...action.payload);
+    ClearReelsData: (state, action) => {
+      console.log('Clered');
+
+      state.ReelsData = [];
+      state.currIndex = 0;
     },
     changeCurrIndex: (state, action) => {
       state.currIndex = action.payload;
@@ -73,4 +75,5 @@ export const {
   unLikeReelPost,
   addComment,
   deleteComment,
+  ClearReelsData,
 } = ReelsSlice.actions;

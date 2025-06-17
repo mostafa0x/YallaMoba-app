@@ -6,16 +6,14 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { FlashList } from '@shopify/flash-list';
 import { StateFace } from 'types/interfaces/store/StateFace';
 import { changeCurrIndex, cheangeReelsData } from 'lib/Store/slices/ReelsSlice';
-import { useVideoPlayer } from 'expo-video';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useGetComments from 'Hooks/useGetComments';
 import ReelItem from 'components/ReelItem';
 import CommentsView from 'components/CommentsView';
-import useHome from 'Hooks/useHome';
 import { ReelPostFace } from 'types/interfaces/store/ReelsFace';
 import { useFocusEffect } from 'expo-router';
 
-export default function Home() {
+export default function watch() {
   const { height } = Dimensions.get('window');
   const insets = useSafeAreaInsets();
   const POST_HEIGHT = height - insets.bottom;
@@ -37,7 +35,6 @@ export default function Home() {
     useCallback(() => {
       //   console.log('open');
       return () => {
-        dispatch(cheangeReelsData([]));
         console.log('blur');
       };
     }, [])

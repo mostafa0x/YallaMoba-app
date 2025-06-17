@@ -1,11 +1,11 @@
 import { View, Text, Dimensions, ActivityIndicator } from 'react-native';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Ref, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from 'react-native-paper';
 import useReels from 'Hooks/useReels';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { FlashList } from '@shopify/flash-list';
 import { StateFace } from 'types/interfaces/store/StateFace';
-import { changeCurrIndex, cheangeReelsData } from 'lib/Store/slices/ReelsSlice';
+import { changeCurrIndex, cheangeReelsData, ClearReelsData } from 'lib/Store/slices/ReelsSlice';
 import { useVideoPlayer } from 'expo-video';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useGetComments from 'Hooks/useGetComments';
@@ -31,17 +31,30 @@ export default function Home() {
   const commentsX = useGetComments(PostId, dispatch);
   const memoizedCommentsX = useMemo(() => commentsX, [commentsX.data, commentsX.isLoading]);
   const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
-  const { data, isError, error, refetch } = useHome(page);
-
+  const { data, isLoading, isError, error, refetch } = useHome(page);
+  const list = useRef<FlashList<ReelPostFace> | null | undefined>(null);
   useFocusEffect(
     useCallback(() => {
       //   console.log('open');
+      console.log(page);
+
       return () => {
-        dispatch(cheangeReelsData([]));
         console.log('blur');
+        setPostId(-1);
+        setTotalPage(1);
+        setPage(1);
+        setIsFetchingMore(false);
+        dispatch(ClearReelsData(null));
       };
     }, [])
   );
+
+  useEffect(() => {
+    if (list.current) {
+      console.log(list.current);
+    }
+    return () => {};
+  }, [list]);
 
   const openModal = useCallback((postId: number) => {
     setPostId(postId);
@@ -59,7 +72,7 @@ export default function Home() {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
+      //   console.log(data);
       setPage(data.currentPage);
       setTotalPage(data.totalPages);
       dispatch(cheangeReelsData(data.posts));
@@ -83,7 +96,9 @@ export default function Home() {
   );
 
   const loadMore = useCallback(() => {
-    if (isFetchingMore || pageLoading) return;
+    if (isFetchingMore || isLoading || pageLoading) return;
+    // list.current && list.current.scrollToOffset({ offset: 5 });
+
     if (page >= totalPage) {
       setIsFetchingMore(false);
       console.log('No more pages');
@@ -102,7 +117,7 @@ export default function Home() {
             Retry
           </Button>
         </View>
-      ) : pageLoading ? (
+      ) : pageLoading || isLoading ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size={50} />
         </View>
@@ -121,8 +136,9 @@ export default function Home() {
           />
 
           <FlashList
+            ref={list}
             data={ReelsData}
-            keyExtractor={(item: ReelPostFace, index) => `${item.id}-${index}`}
+            keyExtractor={(item, index) => `${item.id}-${index}`}
             renderItem={renderItem}
             estimatedItemSize={POST_HEIGHT}
             onEndReached={loadMore}
@@ -134,6 +150,13 @@ export default function Home() {
             showsVerticalScrollIndicator={false}
             onViewableItemsChanged={onViewableItemsChanged}
             viewabilityConfig={viewabilityConfig}
+            ListFooterComponent={() => {
+              return isFetchingMore ? (
+                <View className="pb-8">
+                  <ActivityIndicator size={50} />
+                </View>
+              ) : null;
+            }}
             ListEmptyComponent={() => {
               return (
                 <View className=" absolute left-[175px] top-[400px] items-center justify-center">

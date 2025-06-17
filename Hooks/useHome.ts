@@ -9,7 +9,7 @@ async function fetchHome(page: number) {
 
 export default function useHome(page: number) {
   return useQuery({
-    queryKey: ['Home'],
+    queryKey: ['home'],
     queryFn: () => fetchHome(page),
     // enabled: false,
   });

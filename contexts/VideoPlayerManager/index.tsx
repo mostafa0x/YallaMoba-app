@@ -27,17 +27,18 @@ export const VideoPlayerProvider = ({ children }: { children: React.ReactNode })
   const player = useVideoPlayer(path ? { uri: path, useCaching: true } : null, (player) => {
     player.loop = true;
   });
-  //const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
 
-  useEffect(() => {
-    if (path) {
-      if (pathname !== '/' && pathname !== '/watch') {
-        stopVideo();
-        console.log('exit');
-      }
-    }
-    return () => {};
-  }, [pathname, path]);
+  const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
+
+  // useEffect(() => {
+  //   if (path) {
+  //     if (pathname !== '/' && pathname !== '/watch') {
+  //       stopVideo();
+  //       console.log('exit');
+  //     }
+  //   }
+  //   return () => {};
+  // }, [pathname, path]);
 
   useEffect(() => {
     if (path) {
