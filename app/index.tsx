@@ -11,6 +11,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useGetComments from 'Hooks/useGetComments';
 import ReelItem from 'components/ReelItem';
 import CommentsView from 'components/CommentsView';
+import useHome from 'Hooks/useHome';
+import { ReelPostFace } from 'types/interfaces/store/ReelsFace';
+import { useFocusEffect } from 'expo-router';
 
 export default function Home() {
   const { height } = Dimensions.get('window');
@@ -28,7 +31,17 @@ export default function Home() {
   const commentsX = useGetComments(PostId, dispatch);
   const memoizedCommentsX = useMemo(() => commentsX, [commentsX.data, commentsX.isLoading]);
   const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
-  const { data, isError, error, refetch } = useReels(page, 'home');
+  const { data, isError, error, refetch } = useHome(page);
+
+  useFocusEffect(
+    useCallback(() => {
+      //   console.log('open');
+      return () => {
+        dispatch(cheangeReelsData([]));
+        console.log('blur');
+      };
+    }, [])
+  );
 
   const openModal = useCallback((postId: number) => {
     setPostId(postId);
@@ -38,7 +51,6 @@ export default function Home() {
   useEffect(() => {
     if (PostId === -1) return;
     commentsX.refetch();
-    return () => {};
   }, [PostId]);
 
   useEffect(() => {
@@ -47,15 +59,13 @@ export default function Home() {
 
   useEffect(() => {
     if (data) {
+      console.log(data);
       setPage(data.currentPage);
       setTotalPage(data.totalPages);
       dispatch(cheangeReelsData(data.posts));
       setPageLoading(false);
       setIsFetchingMore(false);
     }
-    return () => {
-      dispatch(cheangeReelsData([]));
-    };
   }, [data]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
@@ -112,7 +122,7 @@ export default function Home() {
 
           <FlashList
             data={ReelsData}
-            keyExtractor={(item, index) => `${item.id}-${index}`}
+            keyExtractor={(item: ReelPostFace, index) => `${item.id}-${index}`}
             renderItem={renderItem}
             estimatedItemSize={POST_HEIGHT}
             onEndReached={loadMore}
@@ -122,8 +132,15 @@ export default function Home() {
             decelerationRate="fast"
             pagingEnabled
             showsVerticalScrollIndicator={false}
-            viewabilityConfig={viewabilityConfig}
             onViewableItemsChanged={onViewableItemsChanged}
+            viewabilityConfig={viewabilityConfig}
+            ListEmptyComponent={() => {
+              return (
+                <View className=" absolute left-[175px] top-[400px] items-center justify-center">
+                  <Text className="text-2xl text-white opacity-70">Follow some Players !....</Text>
+                </View>
+              );
+            }}
           />
         </>
       )}

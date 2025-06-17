@@ -13,7 +13,7 @@ const ReelItem = ({ item, openModal, POST_HEIGHT, index }: any) => {
   const fileType = fileUrl.match(/\.(mp4|mov|webm)$/) ? 'video' : 'image';
   const isActive = index === currIndex;
   const [videoSize, setVideoSize] = useState({ width: POST_HEIGHT, height: POST_HEIGHT });
-  const { playVideo, stopVideo, currentUrl, player } = useVideoManager();
+  const { playVideo, stopVideo, currentUrl, player, PlayOrPauseVideo } = useVideoManager();
   const calculatedWidth = useMemo(() => {
     const aspectRatio = videoSize.width / videoSize.height;
     return POST_HEIGHT * aspectRatio;
@@ -42,6 +42,7 @@ const ReelItem = ({ item, openModal, POST_HEIGHT, index }: any) => {
           player={player}
           calculatedWidth={calculatedWidth}
           POST_HEIGHT={POST_HEIGHT}
+          PlayOrPauseVideo={PlayOrPauseVideo}
         />
       )}
       {fileType === 'image' && <ImagesView fileUrl={fileUrl} POST_HEIGHT={POST_HEIGHT} />}

@@ -8,9 +8,11 @@ import { useDispatch } from 'react-redux';
 import axiosClient from 'lib/api/axiosClient';
 import { addComment } from 'lib/Store/slices/ReelsSlice';
 import NewCommentCard from 'components/CommentCard';
+import { CommentFace } from 'types/interfaces/store/ProfileFace';
+import { UseQueryResult } from '@tanstack/react-query';
 
 interface props {
-  commentsX: any;
+  commentsX: UseQueryResult<CommentFace[]>;
   userData: userDataFace | null;
   PostId: number;
   isMenuOpen: boolean;
@@ -23,37 +25,6 @@ function CommentsView({ commentsX, userData, PostId, isMenuOpen, setIsMenuOpen }
   const textboxRef = useRef<any | null>(null);
   const [isSubmitComment, setIsSubmitComment] = useState(false);
 
-  //   async function handleAddComment() {
-  //     if (!textboxRef.current || !content) {
-  //       callToast({
-  //         type: 'error',
-  //         text1: 'Comment cannot be empty',
-  //         text2: 'Please enter a comment.',
-  //       });
-  //       return;
-  //     }
-
-  //     if (textboxRef.current) {
-  //       if (isSubmitComment) return;
-  //       setIsSubmitComment(true);
-  //       try {
-  //         const res = await axiosClient.post(`/posts/${PostId}/comments/`, { content });
-  //         setContent(null);
-  //         dispatch(addComment(PostId));
-  //         console.log(res.data);
-  //         commentsX.refetch();
-  //       } catch (err) {
-  //         console.error('Error adding comment:', err);
-  //         callToast({
-  //           type: 'error',
-  //           text1: 'Error adding comment',
-  //           text2: 'Please try again later.',
-  //         });
-  //       } finally {
-  //         setIsSubmitComment(false);
-  //       }
-  //     }
-  //   }
   const handleAddComment = useCallback(async () => {
     if (!textboxRef.current || !content) {
       callToast({

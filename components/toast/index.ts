@@ -24,5 +24,7 @@ export default function callToast(options: ToastOptions) {
     text1: options.text1,
     text2: options.text2,
     visibilityTime: TimeShow,
+    text1Style: { fontSize: 34, color: options.type == 'error' ? 'red' : 'black' },
+    text2Style: { fontSize: 24 },
   });
 }

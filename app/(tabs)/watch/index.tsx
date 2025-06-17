@@ -6,12 +6,16 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { FlashList } from '@shopify/flash-list';
 import { StateFace } from 'types/interfaces/store/StateFace';
 import { changeCurrIndex, cheangeReelsData } from 'lib/Store/slices/ReelsSlice';
+import { useVideoPlayer } from 'expo-video';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useGetComments from 'Hooks/useGetComments';
 import ReelItem from 'components/ReelItem';
 import CommentsView from 'components/CommentsView';
+import useHome from 'Hooks/useHome';
+import { ReelPostFace } from 'types/interfaces/store/ReelsFace';
+import { useFocusEffect } from 'expo-router';
 
-export default function watch() {
+export default function Home() {
   const { height } = Dimensions.get('window');
   const insets = useSafeAreaInsets();
   const POST_HEIGHT = height - insets.bottom;
@@ -27,7 +31,17 @@ export default function watch() {
   const commentsX = useGetComments(PostId, dispatch);
   const memoizedCommentsX = useMemo(() => commentsX, [commentsX.data, commentsX.isLoading]);
   const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
-  const { data, isError, error, refetch } = useReels(page, 'feed');
+  const { data, isError, error, refetch } = useReels(page);
+
+  useFocusEffect(
+    useCallback(() => {
+      //   console.log('open');
+      return () => {
+        dispatch(cheangeReelsData([]));
+        console.log('blur');
+      };
+    }, [])
+  );
 
   const openModal = useCallback((postId: number) => {
     setPostId(postId);
@@ -37,7 +51,6 @@ export default function watch() {
   useEffect(() => {
     if (PostId === -1) return;
     commentsX.refetch();
-    return () => {};
   }, [PostId]);
 
   useEffect(() => {
@@ -46,6 +59,7 @@ export default function watch() {
 
   useEffect(() => {
     if (data) {
+      console.log(data);
       setPage(data.currentPage);
       setTotalPage(data.totalPages);
       dispatch(cheangeReelsData(data.posts));
@@ -108,7 +122,7 @@ export default function watch() {
 
           <FlashList
             data={ReelsData}
-            keyExtractor={(item, index) => `${item.id}-${index}`}
+            keyExtractor={(item: ReelPostFace, index) => `${item.id}-${index}`}
             renderItem={renderItem}
             estimatedItemSize={POST_HEIGHT}
             onEndReached={loadMore}
@@ -118,8 +132,15 @@ export default function watch() {
             decelerationRate="fast"
             pagingEnabled
             showsVerticalScrollIndicator={false}
-            viewabilityConfig={viewabilityConfig}
             onViewableItemsChanged={onViewableItemsChanged}
+            viewabilityConfig={viewabilityConfig}
+            ListEmptyComponent={() => {
+              return (
+                <View className=" absolute left-[175px] top-[400px] items-center justify-center">
+                  <Text className="text-2xl text-white opacity-70">No Videos yet ! ..</Text>
+                </View>
+              );
+            }}
           />
         </>
       )}

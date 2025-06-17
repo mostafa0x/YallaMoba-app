@@ -3,6 +3,7 @@ import { ReelsFace } from 'types/interfaces/store/ReelsFace';
 
 const initialState: ReelsFace = {
   ReelsData: [],
+  HomeData: [],
   currIndex: 0,
 };
 const ReelsSlice = createSlice({
@@ -11,6 +12,9 @@ const ReelsSlice = createSlice({
   reducers: {
     cheangeReelsData: (state, action) => {
       state.ReelsData.push(...action.payload);
+    },
+    cheangeHomeData: (state, action) => {
+      state.HomeData.push(...action.payload);
     },
     changeCurrIndex: (state, action) => {
       state.currIndex = action.payload;

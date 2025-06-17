@@ -1,34 +1,60 @@
 import { useEvent } from 'expo';
 import { VideoView } from 'expo-video';
-import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
+import React, { memo, useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, Button, Icon } from 'react-native-paper';
 
 interface props {
   player: any;
   calculatedWidth: number;
   POST_HEIGHT: number;
+  PlayOrPauseVideo: () => void;
 }
 
-export function VideoViewReel({ player, calculatedWidth, POST_HEIGHT }: props) {
+const VideoViewReel = memo(function VideoViewReel({
+  player,
+  calculatedWidth,
+  POST_HEIGHT,
+  PlayOrPauseVideo,
+}: props) {
   const [isReady, setIsReady] = useState(false);
   const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
+  const { status } = useEvent(player, 'statusChange', { status: player.status });
+  useEffect(() => {
+    console.log(status);
+
+    return () => {};
+  }, [status]);
 
   return (
     <>
-      {!isPlaying && (
+      {status !== 'readyToPlay' && (
         <View
           style={{
             position: 'absolute',
             top: 0,
-            left: 0,
+            left: 210,
             marginTop: POST_HEIGHT / 3,
             alignItems: 'center',
             alignContent: 'center',
+            zIndex: 1,
           }}>
           <ActivityIndicator size={100} color="white" />
         </View>
       )}
+      {!isPlaying && status === 'readyToPlay' && (
+        <View style={{ position: 'absolute', top: 360, left: 175, zIndex: 2 }}>
+          <TouchableOpacity onPress={PlayOrPauseVideo}>
+            <View>
+              <View style={{ top: -18, left: -18, position: 'absolute' }}>
+                <Icon color="black" size={220} source={'play'} />
+              </View>
+              <Icon color="white" size={180} source={'play'} />
+            </View>
+          </TouchableOpacity>
+        </View>
+      )}
+
       <View
         style={{
           width: '100%',
@@ -37,18 +63,22 @@ export function VideoViewReel({ player, calculatedWidth, POST_HEIGHT }: props) {
         }}
         onLayout={() => setIsReady(true)}>
         {isReady && (
-          <VideoView
-            player={player}
-            style={{
-              width: calculatedWidth,
-              height: POST_HEIGHT - 75,
-            }}
-            allowsFullscreen={true}
-            nativeControls={false}
-            contentFit="fill"
-          />
+          <TouchableOpacity activeOpacity={0.7} onPress={PlayOrPauseVideo}>
+            <VideoView
+              player={player}
+              style={{
+                width: calculatedWidth,
+                height: POST_HEIGHT - 75,
+              }}
+              allowsFullscreen={true}
+              nativeControls={false}
+              contentFit="fill"
+            />
+          </TouchableOpacity>
         )}
       </View>
     </>
   );
-}
+});
+
+export { VideoViewReel };

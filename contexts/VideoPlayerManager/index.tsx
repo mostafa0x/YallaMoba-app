@@ -1,10 +1,12 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { useVideoPlayer } from 'expo-video';
+import { useVideoPlayer, SourceChangeEventPayload } from 'expo-video';
 import { useFocusEffect, usePathname } from 'expo-router';
+import { useEvent } from 'expo';
 
 interface VideoPlayerContextType {
   playVideo: (url: string) => void;
   stopVideo: () => void;
+  PlayOrPauseVideo: () => void;
   currentUrl: string | null;
   player: any;
 }
@@ -12,6 +14,7 @@ interface VideoPlayerContextType {
 const VideoPlayerContext = createContext<VideoPlayerContextType>({
   playVideo: () => {},
   stopVideo: () => {},
+  PlayOrPauseVideo: () => {},
   player: null,
   currentUrl: null,
 });
@@ -24,6 +27,7 @@ export const VideoPlayerProvider = ({ children }: { children: React.ReactNode })
   const player = useVideoPlayer(path ? { uri: path, useCaching: true } : null, (player) => {
     player.loop = true;
   });
+  //const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
 
   useEffect(() => {
     if (path) {
@@ -49,10 +53,17 @@ export const VideoPlayerProvider = ({ children }: { children: React.ReactNode })
     setPath(null);
   }, []);
 
+  const PlayOrPauseVideo = useCallback(() => {
+    if (player.playing) {
+      player.pause();
+    } else {
+      player.play();
+    }
+  }, [player]);
+
   useFocusEffect(
     useCallback(() => {
-      console.log('open');
-
+      //   console.log('open');
       return () => {
         stopVideo();
         console.log('blur');
@@ -61,7 +72,8 @@ export const VideoPlayerProvider = ({ children }: { children: React.ReactNode })
   );
 
   return (
-    <VideoPlayerContext.Provider value={{ playVideo, stopVideo, currentUrl: path, player }}>
+    <VideoPlayerContext.Provider
+      value={{ playVideo, stopVideo, currentUrl: path, player, PlayOrPauseVideo }}>
       {children}
     </VideoPlayerContext.Provider>
   );
